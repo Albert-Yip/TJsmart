@@ -31,6 +31,30 @@ int queen_path(bool flag)
     return 0;
 }
 
+void toChar_send(ROIData position_car)
+{
+    int p_x = (int)position_car.center.x;
+    int p_y = (int)position_car.center.y;
+    int p_theta = (int)(position_car.theta*10);
+    printf("%d,%d,%d\n",p_x,p_y,p_theta);
+    char p_char[6];
+    p_char[0] = p_x>>8;
+    p_char[1] = p_x;
+    p_char[2] = p_y>>8;
+    p_char[3] = p_y;
+    p_char[4] = p_theta>>8;
+    p_char[5] = p_theta;
+
+    // printf("%d,",p_char[0]*256+(unsigned char)p_char[1] );
+    // printf("%d,",p_char[2]*256+(unsigned char)p_char[3] );
+    // printf("%d\n",p_char[4]*256+(unsigned char)p_char[5] );
+
+    // for(int i=0;i<6;i++)
+    // {
+    //     printf("%d\n",(unsigned char)p_char[i] );
+    // }
+    uart_send_location(p_char,6);
+}
 
 
 int main(int argc, char const *argv[])
@@ -73,43 +97,27 @@ int main(int argc, char const *argv[])
         VideoCapture cap;
         cap.open(1);
 
-        for(int i=0;i<20;i++)
+        for(int i=0;i<5;i++)
         {
             cap>>Image;
             position_car = maindoCamera();
             if(position_car.center.x == 0)
              {
                 printf("nothing!\n");
-
             }
+            toChar_send(position_car);
         }
         printf("%d\n",num );
     }
     else
-        position_car = maindoPicture();
+        {
+            position_car = maindoPicture();
+            toChar_send(position_car);
+        }
 
 
-    int p_x = (int)position_car.center.x;
-    int p_y = (int)position_car.center.y;
-    int p_theta = (int)(position_car.theta*10);
-    printf("%d,%d,%d\n",p_x,p_y,p_theta);
-    char p_char[6];
-    p_char[0] = p_x>>8;
-    p_char[1] = p_x;
-    p_char[2] = p_y>>8;
-    p_char[3] = p_y;
-    p_char[4] = p_theta>>8;
-    p_char[5] = p_theta;
 
-    printf("%d,",p_char[0]*256+p_char[1] );
-    printf("%d,",p_char[2]*256+p_char[3] );
-    printf("%d\n",p_char[4]*256+(unsigned char)p_char[5] );
-
-    for(int i=0;i<6;i++)
-    {
-        printf("%d\n",(unsigned char)p_char[i] );
-    }
-    uart_send_location(p_char,6);
 
 }
+
 
