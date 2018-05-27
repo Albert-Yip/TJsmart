@@ -46,12 +46,6 @@ int main(int argc, char const *argv[])
     else
         flag1 = 0;
 
-    if(strcmp(argv[2],"0") == 1)
-        flag2 = 1;
-    else
-        flag2 = 0;
-
-
     queen_path(flag1);
 
     char* send_data = (char*) malloc(1+2*2 * NUM * sizeof(char));
@@ -73,7 +67,28 @@ int main(int argc, char const *argv[])
     // char t[2]={0x11,0xef};
     // printf("%d\n",(unsigned char)t[1] );
 
-    ROIData position_car = maindoPicture();
+    ROIData position_car;
+    if(strcmp(argv[2],"0") == 1)
+    {
+        VideoCapture cap;
+        cap.open(1);
+
+        for(int i=0;i<20;i++)
+        {
+            cap>>Image;
+            position_car = maindoCamera();
+            if(position_car.center.x == 0)
+             {
+                printf("nothing!\n");
+
+            }
+        }
+        printf("%d\n",num );
+    }
+    else
+        position_car = maindoPicture();
+
+
     int p_x = (int)position_car.center.x;
     int p_y = (int)position_car.center.y;
     int p_theta = (int)(position_car.theta*10);
@@ -95,18 +110,6 @@ int main(int argc, char const *argv[])
         printf("%d\n",(unsigned char)p_char[i] );
     }
     uart_send_location(p_char,6);
-//     VideoCapture cap;
-//     cap.open(1);
 
-//     for(int i=0 ; i<20;i++)
-//     {
-//         cap>>Image;
-//         if(maindoCamera().center.x == 0)
-//          {
-//             printf("nothing!\n");
-
-//         }
-//     }
-//     printf("%d\n",num );
 }
 
