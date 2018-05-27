@@ -36,7 +36,7 @@ ROIData maindoPicture()
 		if (g_srcImage.data == 0)
 			break;*/
 
-	g_srcImage = imread("a.jpg");
+	g_srcImage = imread("../source/cam/a.jpg");
 
 	if (!g_srcImage.data)
 	{

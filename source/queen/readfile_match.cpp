@@ -13,7 +13,7 @@ void read_and_match()
      **********************************/
     FILE *fp;
     int all_Solution[92][9] = { 0 };
-    if((fp=fopen("queen.txt","r"))==NULL)
+    if((fp=fopen("../source/queen/queen.txt","r"))==NULL)
     {
         printf("can't open file\n");
         exit(1);

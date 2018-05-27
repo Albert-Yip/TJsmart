@@ -5,8 +5,8 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <iostream>
-//#include "Windows.h" 
-#include <stdio.h>  
+//#include "Windows.h"
+#include <stdio.h>
 #include"basichandle.h"
 #include"prehandle.h"
 
@@ -146,7 +146,7 @@ int upline(Mat roi) //上横线检测 有返回1无返回0  1 5 7有
 	int y = 0;
 	int m = 0, n = 0;
 	for (int j = 0; j < roi.rows / 4; j++)
-	{   
+	{
 		int k = 0,b=0;
 		for(int i=0;i<roi.cols;i++)
 		{
@@ -190,7 +190,7 @@ int upline(Mat roi) //上横线检测 有返回1无返回0  1 5 7有
 			}
 			else
 				y = 0;
-			
+
 		}
 	}
 	return 0;
@@ -373,7 +373,7 @@ int leftuprect(Mat roi) //左上横贯间隙  1 2 3 4 7有
 			int f = roi.at<uchar>(j, i);
 			if (f > 0 )
 			{
-				k++; 
+				k++;
 			}
 			if (k > 2)
 				break;
@@ -541,7 +541,7 @@ void CornerPoint(Mat g_srcImage1)
 {
 	cvtColor(g_srcImage1, g_grayImage, CV_BGR2GRAY);
 
-	//设置角点检测参数  
+	//设置角点检测参数
 	std::vector<cv::Point2f> corners;
 	int max_corners = 200;
 	double quality_level = 0.01;
@@ -561,7 +561,7 @@ void CornerPoint(Mat g_srcImage1)
 
 
 
-	//角点检测  
+	//角点检测
 	cv::goodFeaturesToTrack(g_grayImage,
 		corners,
 		max_corners,
@@ -572,10 +572,10 @@ void CornerPoint(Mat g_srcImage1)
 		use_harris,
 		k);
 
-	//分类，将检测到的角点绘制到原图上  
+	//分类，将检测到的角点绘制到原图上
 	int a = 0; int b = 0; int c = 0; int d = 0;
 	for (int i = 0; i < corners.size(); i++)
-	{   
+	{
 		Point2f A, B, C, D;
 		A.x = corners[i].x - 5; A.y = corners[i].y - 5;
 		B.x = corners[i].x + 5; B.y = corners[i].y - 5;
@@ -669,17 +669,17 @@ thetaData getTheta(Mat g_pBinaryImage) {
 		{
 			A = ROIset(g_pBinaryImage, i - 5, j - 10, 10, 10);//A = ROIset(g_pBinaryImage, i - 10, j - 20, 20, 20);
 			dataA[z] = A;
-			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰 
+			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰
 				break;
 			if ((dataA[z].center == dataA[z - 1].center) && z > 0)    //重心重复
 				break;
-			if (z > 0) 
+			if (z > 0)
 			{
 				int mm = abs(dataA[z].theta - dataA[z - 1].theta);
 				if (mm > 15)              //此处为小框总数及角度差阈值调试的好断点
 					break;
 			}
-			//drawROI(g_pBinaryImage2, i - 10, j - 10, 10, 10);		
+			//drawROI(g_pBinaryImage2, i - 10, j - 10, 10, 10);
 			i = A.center.x; j = A.center.y;
 		}
 		if (z > 26&&z<43)
@@ -704,7 +704,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 			float averge=0,sum=0;
 			int zhijiao = 0;
 			for(int kk=0;kk<goodpointa;kk++)
-			{ 
+			{
 				if (fabs(dataA1[kk].theta - 90) < 0.8)
 					zhijiao++;
 				averge += dataA1[kk].theta;
@@ -722,7 +722,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 			}
 			if (mm > 1)
 			{
-				sum = sum / mm; 
+				sum = sum / mm;
 				leftuppoint = 1;
 				if (zhijiao > 0)
 				{
@@ -734,7 +734,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 				return thetapointa;
 			}
 		}
-	
+
 	if (mm < 2|| goodpointa<2)
 	{
 		float averge = 0, sum = 0;
@@ -749,18 +749,18 @@ thetaData getTheta(Mat g_pBinaryImage) {
 		{
 			A = ROIset(g_pBinaryImage, i-5, j - 10, 10, 10);//A = ROIset(g_pBinaryImage, i - 10, j - 20, 20, 20);
 			dataB[z] = A;
-			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰 
+			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰
 				break;
 			if ((dataB[z].center == dataB[z - 1].center) && z > 0)    //重心重复
 				break;
 			if (z > 0)
 			{
 				int mm = abs(dataB[z].theta - dataB[z - 1].theta);
-				if (mm > 15)              
+				if (mm > 15)
 					break;
 			}
 			//drawROI(g_pBinaryImage2, i - 5, j - 10, 10, 10);
-			
+
 			i = A.center.x; j = A.center.y; int controlNum = 0;
 			while (g_pBinaryImage.at<uchar>(j, i) > 50)//为了降低杂点出现的情况
 			{
@@ -821,7 +821,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 					sum += dataB1[hh].theta;
 				}
 			}
-		
+
 			if ((aaa+bbb)>1)
 			{
 				sum = sum / (aaa + bbb);
@@ -835,10 +835,10 @@ thetaData getTheta(Mat g_pBinaryImage) {
 				}
 				if (aaa >= bbb)
 				{
-					leftuppoint = 1; 
+					leftuppoint = 1;
 					thetapointa.num = aaa;
 					return thetapointa;
-					
+
 				}
 				else
 				{
@@ -848,7 +848,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 				}
 			}
 		}
-		if ((goodpointa + goodpointb) < 2 || (aaa + bbb) < 2) 
+		if ((goodpointa + goodpointb) < 2 || (aaa + bbb) < 2)
 		{
 			for (int qq = 0; rightdown[qq].x != 0; qq++)
 			{
@@ -860,7 +860,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 				{
 					A = ROIset(g_pBinaryImage, i - 1, j + 10, 10, 10);//A = ROIset(g_pBinaryImage, i - 10, j - 20, 20, 20);
 					dataC[z] = A;
-					if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰 
+					if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰
 						break;
 					if ((dataC[z].center == dataC[z - 1].center) && z > 0)    //重心重复
 						break;
@@ -969,7 +969,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 						rightdownpoint = 1; thetapointc.num = c1;
 						return thetapointc;
 					}
-					
+
 				}
 			}
 			if (mm <= 1 || (a1 + b1 + c1) <= 1)
@@ -984,7 +984,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 					{
 						A = ROIset(g_pBinaryImage, i - 5, j + 10, 10, 10);//A = ROIset(g_pBinaryImage, i - 10, j - 20, 20, 20);
 						dataD[z] = A;
-						if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰 
+						if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰
 							break;
 						if ((dataD[z].center == dataD[z - 1].center) && z > 0)    //重心重复
 							break;
@@ -995,7 +995,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 								break;
 						}
 						//drawROI(after2, i - 5, j + 10, 10, 10);
-						
+
 						i = A.center.x; j = A.center.y;
 					}//cv::imshow("角点", after2); waitKey(0);
 					if (z > 24 && z<43) //待调 ！！！
@@ -1121,7 +1121,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 		}
 	}
 }
-			
+
 float angleangin(Mat after, Point2f k)
 {
 	if (leftuppoint)
@@ -1134,7 +1134,7 @@ float angleangin(Mat after, Point2f k)
 		{
 			A = ROIset(after, i - 5, j - 10, 10, 10);//A = ROIset(g_pBinaryImage, i - 10, j - 20, 20, 20);
 			dataA[z] = A;
-			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰 
+			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰
 				break;
 			if ((dataA[z].center == dataA[z - 1].center) && z > 0)    //重心重复
 				break;
@@ -1144,7 +1144,7 @@ float angleangin(Mat after, Point2f k)
 				if (mm > 15)              //此处为小框总数及角度差阈值调试的好断点
 					break;
 			}
-			//drawROI(after2, i - 5, j - 10, 10, 10);		
+			//drawROI(after2, i - 5, j - 10, 10, 10);
 			//cv::imshow("角点", after2);
 			//waitKey(0);
 			i = A.center.x; j = A.center.y;
@@ -1154,7 +1154,7 @@ float angleangin(Mat after, Point2f k)
 		{
 			//cv::imshow("角点", g_pBinaryImage2);
 			//waitKey(0);
-			
+
 			for (int i = 0; i < z - 2; i++)
 			{
 				averge += dataA[i].theta;
@@ -1177,7 +1177,7 @@ float angleangin(Mat after, Point2f k)
 		{
 			A = ROIset(after, i - 5, j - 10, 10, 10);//A = ROIset(g_pBinaryImage, i - 10, j - 20, 20, 20);
 			dataB[z] = A;
-			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰 
+			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰
 				break;
 			if ((dataB[z].center == dataB[z - 1].center) && z > 0)    //重心重复
 				break;
@@ -1223,7 +1223,7 @@ float angleangin(Mat after, Point2f k)
 		{
 			A = ROIset(after, i - 1, j + 10, 10, 10);//A = ROIset(g_pBinaryImage, i - 10, j - 20, 20, 20);
 			dataC[z] = A;
-			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰 
+			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰
 				break;
 			if ((dataC[z].center == dataC[z - 1].center) && z > 0)    //重心重复
 				break;
@@ -1240,7 +1240,7 @@ float angleangin(Mat after, Point2f k)
 		float averge = 0;
 		if (z > 24 && z<43) //待调 ！！！
 		{
-			
+
 			for (int i = 0; i < z - 2; i++)
 			{
 				averge += dataC[i].theta;
@@ -1262,7 +1262,7 @@ float angleangin(Mat after, Point2f k)
 		{
 			A = ROIset(after, i - 5, j + 10, 10, 10);//A = ROIset(g_pBinaryImage, i - 10, j - 20, 20, 20);
 			dataD[z] = A;
-			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰 
+			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰
 				break;
 			if ((dataD[z].center == dataD[z - 1].center) && z > 0)    //重心重复
 				break;
@@ -1279,7 +1279,7 @@ float angleangin(Mat after, Point2f k)
 		float averge = 0;
 		if (z > 24 && z<43) //待调 ！！！
 		{
-			
+
 			for (int i = 0; i < z - 2; i++)
 			{
 				averge += dataD[i].theta;
@@ -1292,17 +1292,17 @@ float angleangin(Mat after, Point2f k)
 			return averge - 90;
 	}
 }
-		
+
 Mat ImageRotate(Mat src, Point2f center, double angle)
 {
-	//计算二维旋转的仿射变换矩阵  
+	//计算二维旋转的仿射变换矩阵
 	Mat M = getRotationMatrix2D(center, angle, 1);
 	Mat dst;
 	warpAffine(src, dst, M, cvSize(src.cols, src.rows), CV_INTER_LINEAR);
 	return dst;
 }
 
-// 获取指定像素点放射变换后的新的坐标位置    
+// 获取指定像素点放射变换后的新的坐标位置
 Point2f getPointAffinedPos(Point2f src, Point2f center, double angle)
 {
 	Point2f dst;
@@ -1318,9 +1318,9 @@ Point2f getPointAffinedPos(Point2f src, Point2f center, double angle)
 //返回的是数字所在位置中心和数字的值
 ROIData numbertest(Point2f k,Mat after) {
 	int dets = 3500; //待调！！3500
-	mat[0] = imread("0.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[1]= imread("1.jpg", CV_LOAD_IMAGE_UNCHANGED);mat[2] = imread("2.jpg", CV_LOAD_IMAGE_UNCHANGED);  //注意不加flag默认以三通道读入！！
-	mat[3] = imread("3.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[4] = imread("4.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[5] = imread("5.jpg", CV_LOAD_IMAGE_UNCHANGED);
-	mat[6] = imread("6.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[7] = imread("7.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[8] = imread("8.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[9] = imread("9.jpg", CV_LOAD_IMAGE_UNCHANGED);
+	mat[0] = imread("../source/cam/0.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[1]= imread("../source/cam/1.jpg", CV_LOAD_IMAGE_UNCHANGED);mat[2] = imread("../source/cam/2.jpg", CV_LOAD_IMAGE_UNCHANGED);  //注意不加flag默认以三通道读入！！
+	mat[3] = imread("../source/cam/3.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[4] = imread("../source/cam/4.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[5] = imread("../source/cam/5.jpg", CV_LOAD_IMAGE_UNCHANGED);
+	mat[6] = imread("../source/cam/6.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[7] = imread("../source/cam/7.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[8] = imread("../source/cam/8.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[9] = imread("../source/cam/9.jpg", CV_LOAD_IMAGE_UNCHANGED);
 	ROIData place;
 	/*for (int i = 0; i < 10; i++)
 	{
