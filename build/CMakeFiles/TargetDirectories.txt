@@ -1,0 +1,3 @@
+/home/albert/Desktop/onTX2/build/CMakeFiles/rebuild_cache.dir
+/home/albert/Desktop/onTX2/build/CMakeFiles/edit_cache.dir
+/home/albert/Desktop/onTX2/build/CMakeFiles/queen.dir
