@@ -4,6 +4,7 @@
 #include "find_path.h"
 #include "readfile_match.h"
 #include "global_var.h"
+#include <unistd.h>     /*Unix 标准函数定义*/
 
 #include "uart_interface.h"
 #include "cam_interface.h"
@@ -31,29 +32,96 @@ int queen_path(bool flag)
     return 0;
 }
 
-void toChar_send(ROIData position_car)
+void toChar_send_position(ROIData position_car)
 {
+    char fourByteData[4] = {0,0,0,0};
+
     int p_x = (int)position_car.center.x;
     int p_y = (int)position_car.center.y;
     int p_theta = (int)(position_car.theta*10);
     printf("%d,%d,%d\n",p_x,p_y,p_theta);
-    char p_char[6];
-    p_char[0] = p_x>>8;
-    p_char[1] = p_x;
-    p_char[2] = p_y>>8;
-    p_char[3] = p_y;
-    p_char[4] = p_theta>>8;
-    p_char[5] = p_theta;
+    // char p_char[6];
+    // p_char[0] = p_x>>8;
+    // p_char[1] = p_x;
+    // p_char[2] = p_y>>8;
+    // p_char[3] = p_y;
+    // p_char[4] = p_theta>>8;
+    // p_char[5] = p_theta;
 
     // printf("%d,",p_char[0]*256+(unsigned char)p_char[1] );
     // printf("%d,",p_char[2]*256+(unsigned char)p_char[3] );
     // printf("%d\n",p_char[4]*256+(unsigned char)p_char[5] );
+    fourByteData[1] = p_x>>8;
+    fourByteData[2] = p_x;
+    fourByteData[3] = 'x';
+    uart_send_charList(fourByteData,4);
+
+    fourByteData[1] = p_y>>8;
+    fourByteData[2] = p_y;
+    fourByteData[3] = 'y';
+    uart_send_charList(fourByteData,4);
+
+    fourByteData[1] = p_theta>>8;
+    fourByteData[2] = p_theta;
+    fourByteData[3] = 'a';
+    uart_send_charList(fourByteData,4);
+
+
 
     // for(int i=0;i<6;i++)
     // {
     //     printf("%d\n",(unsigned char)p_char[i] );
     // }
-    uart_send_location(p_char,6);
+    //uart_send_charList(p_char,6);
+}
+
+void toChar_send_path()
+{
+    // char* send_data = (char*) malloc(1+2*2 * NUM * sizeof(char));
+
+    // send_data[0] = 2*NUM;
+
+    // for(int i = 0; i <=NUM-1; i++)
+    // {
+        // send_data[4*i+1] = routeB[i].x;
+        // send_data[4*i+2] = routeB[i].y;
+        // send_data[4*i+3] = routeA[i].x;
+        // send_data[4*i+4] = routeA[i].y;
+        // printf("(%d,%d)\n",send_data[4*i+1],send_data[4*i+2] );
+        // printf("(%d,%d)\n",send_data[4*i+3],send_data[4*i+4] );
+    // }
+
+    // uart_send_charList(send_data,4*NUM+1);
+
+    char fourByteData[4] = {0,0,2*NUM,'N'};
+    uart_send_charList(fourByteData,4);
+
+
+    for(int i=0;i<4;i++)
+    {
+        fourByteData[i]=0;
+    }
+    for(int i=0;i<NUM;i++)
+    {
+        fourByteData[2] = routeB[i].x;
+        fourByteData[3] = 'X';
+        uart_send_charList(fourByteData,4);
+
+        fourByteData[2] = routeB[i].y;
+        fourByteData[3] = 'Y';
+        uart_send_charList(fourByteData,4);
+
+        fourByteData[2] = routeA[i].x;
+        fourByteData[3] = 'X';
+        uart_send_charList(fourByteData,4);
+
+        fourByteData[2] = routeA[i].y;
+        fourByteData[3] = 'Y';
+        uart_send_charList(fourByteData,4);
+
+
+    }
+
 }
 
 
@@ -72,25 +140,10 @@ int main(int argc, char const *argv[])
 
     queen_path(flag1);
 
-    char* send_data = (char*) malloc(1+2*2 * NUM * sizeof(char));
+    printf("\n\n\n\npath send by uart:\n");
+    toChar_send_path();
 
-    send_data[0] = NUM;
-
-    for(int i = 0; i <=NUM-1; i++)
-    {
-        send_data[4*i+1] = routeB[i].x;
-        send_data[4*i+2] = routeB[i].y;
-        send_data[4*i+3] = routeA[i].x;
-        send_data[4*i+4] = routeA[i].y;
-        printf("(%d,%d)\n",send_data[4*i+1],send_data[4*i+2] );
-        printf("(%d,%d)\n",send_data[4*i+3],send_data[4*i+4] );
-    }
-
-    //uart_send_path(send_data,4*NUM+1);
-    uart_send_location(send_data,4*NUM+1);
-    // char t[2]={0x11,0xef};
-    // printf("%d\n",(unsigned char)t[1] );
-
+    printf("\n\n\n\nlocation send by uart:\n");
     ROIData position_car;
     if(strcmp(argv[2],"0") == 1)
     {
@@ -105,19 +158,18 @@ int main(int argc, char const *argv[])
              {
                 printf("nothing!\n");
             }
-            toChar_send(position_car);
+            toChar_send_position(position_car);
         }
         printf("%d\n",num );
     }
     else
         {
             position_car = maindoPicture();
-            toChar_send(position_car);
+            toChar_send_position(position_car);
         }
-
-
-
-
 }
+
+
+
 
 

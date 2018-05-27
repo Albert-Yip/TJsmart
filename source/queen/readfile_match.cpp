@@ -149,17 +149,26 @@ void input_position(bool flag)
 void update_chess()
 {
     chessNode temp;
-    for(int i=0;i<8;i++)
+    //int a = 0;
+    for(int i=7;i>=0;i--)
     {
-        for(int j=0;j<8;j++)
+        for(int j=7;j>=0;j--)
         {
+
             if(chess[i].x == solution[j].x && chess[i].y == solution[j].y)
             {
                 place_behind(chess,i);
                 place_behind(solution,j);
+
+                //a++;
+                break;
             }
         }
     }
+    // if(a!=max_coincide)
+    // {
+    //     printf("update failed!!!!!\na = %d",a);
+    // }
 }
 
 void place_behind(chessNode a[], int i)
