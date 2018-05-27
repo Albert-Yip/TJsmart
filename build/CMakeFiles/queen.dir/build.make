@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/albert/Desktop/onTX2
+CMAKE_SOURCE_DIR = /home/albert/ws/onTX2
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/albert/Desktop/onTX2/build
+CMAKE_BINARY_DIR = /home/albert/ws/onTX2/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/queen.dir/depend.make
@@ -59,16 +59,16 @@ include CMakeFiles/queen.dir/flags.make
 
 CMakeFiles/queen.dir/source/main.cpp.o: CMakeFiles/queen.dir/flags.make
 CMakeFiles/queen.dir/source/main.cpp.o: ../source/main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/albert/Desktop/onTX2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/queen.dir/source/main.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/queen.dir/source/main.cpp.o -c /home/albert/Desktop/onTX2/source/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/albert/ws/onTX2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/queen.dir/source/main.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/queen.dir/source/main.cpp.o -c /home/albert/ws/onTX2/source/main.cpp
 
 CMakeFiles/queen.dir/source/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/queen.dir/source/main.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/albert/Desktop/onTX2/source/main.cpp > CMakeFiles/queen.dir/source/main.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/albert/ws/onTX2/source/main.cpp > CMakeFiles/queen.dir/source/main.cpp.i
 
 CMakeFiles/queen.dir/source/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/queen.dir/source/main.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/albert/Desktop/onTX2/source/main.cpp -o CMakeFiles/queen.dir/source/main.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/albert/ws/onTX2/source/main.cpp -o CMakeFiles/queen.dir/source/main.cpp.s
 
 CMakeFiles/queen.dir/source/main.cpp.o.requires:
 
@@ -83,16 +83,16 @@ CMakeFiles/queen.dir/source/main.cpp.o.provides.build: CMakeFiles/queen.dir/sour
 
 CMakeFiles/queen.dir/source/queen/readfile_match.cpp.o: CMakeFiles/queen.dir/flags.make
 CMakeFiles/queen.dir/source/queen/readfile_match.cpp.o: ../source/queen/readfile_match.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/albert/Desktop/onTX2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/queen.dir/source/queen/readfile_match.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/queen.dir/source/queen/readfile_match.cpp.o -c /home/albert/Desktop/onTX2/source/queen/readfile_match.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/albert/ws/onTX2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/queen.dir/source/queen/readfile_match.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/queen.dir/source/queen/readfile_match.cpp.o -c /home/albert/ws/onTX2/source/queen/readfile_match.cpp
 
 CMakeFiles/queen.dir/source/queen/readfile_match.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/queen.dir/source/queen/readfile_match.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/albert/Desktop/onTX2/source/queen/readfile_match.cpp > CMakeFiles/queen.dir/source/queen/readfile_match.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/albert/ws/onTX2/source/queen/readfile_match.cpp > CMakeFiles/queen.dir/source/queen/readfile_match.cpp.i
 
 CMakeFiles/queen.dir/source/queen/readfile_match.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/queen.dir/source/queen/readfile_match.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/albert/Desktop/onTX2/source/queen/readfile_match.cpp -o CMakeFiles/queen.dir/source/queen/readfile_match.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/albert/ws/onTX2/source/queen/readfile_match.cpp -o CMakeFiles/queen.dir/source/queen/readfile_match.cpp.s
 
 CMakeFiles/queen.dir/source/queen/readfile_match.cpp.o.requires:
 
@@ -107,16 +107,16 @@ CMakeFiles/queen.dir/source/queen/readfile_match.cpp.o.provides.build: CMakeFile
 
 CMakeFiles/queen.dir/source/queen/find_path.cpp.o: CMakeFiles/queen.dir/flags.make
 CMakeFiles/queen.dir/source/queen/find_path.cpp.o: ../source/queen/find_path.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/albert/Desktop/onTX2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/queen.dir/source/queen/find_path.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/queen.dir/source/queen/find_path.cpp.o -c /home/albert/Desktop/onTX2/source/queen/find_path.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/albert/ws/onTX2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/queen.dir/source/queen/find_path.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/queen.dir/source/queen/find_path.cpp.o -c /home/albert/ws/onTX2/source/queen/find_path.cpp
 
 CMakeFiles/queen.dir/source/queen/find_path.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/queen.dir/source/queen/find_path.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/albert/Desktop/onTX2/source/queen/find_path.cpp > CMakeFiles/queen.dir/source/queen/find_path.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/albert/ws/onTX2/source/queen/find_path.cpp > CMakeFiles/queen.dir/source/queen/find_path.cpp.i
 
 CMakeFiles/queen.dir/source/queen/find_path.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/queen.dir/source/queen/find_path.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/albert/Desktop/onTX2/source/queen/find_path.cpp -o CMakeFiles/queen.dir/source/queen/find_path.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/albert/ws/onTX2/source/queen/find_path.cpp -o CMakeFiles/queen.dir/source/queen/find_path.cpp.s
 
 CMakeFiles/queen.dir/source/queen/find_path.cpp.o.requires:
 
@@ -131,16 +131,16 @@ CMakeFiles/queen.dir/source/queen/find_path.cpp.o.provides.build: CMakeFiles/que
 
 CMakeFiles/queen.dir/source/uart/uart.cpp.o: CMakeFiles/queen.dir/flags.make
 CMakeFiles/queen.dir/source/uart/uart.cpp.o: ../source/uart/uart.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/albert/Desktop/onTX2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/queen.dir/source/uart/uart.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/queen.dir/source/uart/uart.cpp.o -c /home/albert/Desktop/onTX2/source/uart/uart.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/albert/ws/onTX2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/queen.dir/source/uart/uart.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/queen.dir/source/uart/uart.cpp.o -c /home/albert/ws/onTX2/source/uart/uart.cpp
 
 CMakeFiles/queen.dir/source/uart/uart.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/queen.dir/source/uart/uart.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/albert/Desktop/onTX2/source/uart/uart.cpp > CMakeFiles/queen.dir/source/uart/uart.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/albert/ws/onTX2/source/uart/uart.cpp > CMakeFiles/queen.dir/source/uart/uart.cpp.i
 
 CMakeFiles/queen.dir/source/uart/uart.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/queen.dir/source/uart/uart.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/albert/Desktop/onTX2/source/uart/uart.cpp -o CMakeFiles/queen.dir/source/uart/uart.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/albert/ws/onTX2/source/uart/uart.cpp -o CMakeFiles/queen.dir/source/uart/uart.cpp.s
 
 CMakeFiles/queen.dir/source/uart/uart.cpp.o.requires:
 
@@ -155,16 +155,16 @@ CMakeFiles/queen.dir/source/uart/uart.cpp.o.provides.build: CMakeFiles/queen.dir
 
 CMakeFiles/queen.dir/source/cam/mainhandle.cpp.o: CMakeFiles/queen.dir/flags.make
 CMakeFiles/queen.dir/source/cam/mainhandle.cpp.o: ../source/cam/mainhandle.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/albert/Desktop/onTX2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/queen.dir/source/cam/mainhandle.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/queen.dir/source/cam/mainhandle.cpp.o -c /home/albert/Desktop/onTX2/source/cam/mainhandle.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/albert/ws/onTX2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/queen.dir/source/cam/mainhandle.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/queen.dir/source/cam/mainhandle.cpp.o -c /home/albert/ws/onTX2/source/cam/mainhandle.cpp
 
 CMakeFiles/queen.dir/source/cam/mainhandle.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/queen.dir/source/cam/mainhandle.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/albert/Desktop/onTX2/source/cam/mainhandle.cpp > CMakeFiles/queen.dir/source/cam/mainhandle.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/albert/ws/onTX2/source/cam/mainhandle.cpp > CMakeFiles/queen.dir/source/cam/mainhandle.cpp.i
 
 CMakeFiles/queen.dir/source/cam/mainhandle.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/queen.dir/source/cam/mainhandle.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/albert/Desktop/onTX2/source/cam/mainhandle.cpp -o CMakeFiles/queen.dir/source/cam/mainhandle.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/albert/ws/onTX2/source/cam/mainhandle.cpp -o CMakeFiles/queen.dir/source/cam/mainhandle.cpp.s
 
 CMakeFiles/queen.dir/source/cam/mainhandle.cpp.o.requires:
 
@@ -179,16 +179,16 @@ CMakeFiles/queen.dir/source/cam/mainhandle.cpp.o.provides.build: CMakeFiles/quee
 
 CMakeFiles/queen.dir/source/cam/basichandle.cpp.o: CMakeFiles/queen.dir/flags.make
 CMakeFiles/queen.dir/source/cam/basichandle.cpp.o: ../source/cam/basichandle.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/albert/Desktop/onTX2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/queen.dir/source/cam/basichandle.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/queen.dir/source/cam/basichandle.cpp.o -c /home/albert/Desktop/onTX2/source/cam/basichandle.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/albert/ws/onTX2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/queen.dir/source/cam/basichandle.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/queen.dir/source/cam/basichandle.cpp.o -c /home/albert/ws/onTX2/source/cam/basichandle.cpp
 
 CMakeFiles/queen.dir/source/cam/basichandle.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/queen.dir/source/cam/basichandle.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/albert/Desktop/onTX2/source/cam/basichandle.cpp > CMakeFiles/queen.dir/source/cam/basichandle.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/albert/ws/onTX2/source/cam/basichandle.cpp > CMakeFiles/queen.dir/source/cam/basichandle.cpp.i
 
 CMakeFiles/queen.dir/source/cam/basichandle.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/queen.dir/source/cam/basichandle.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/albert/Desktop/onTX2/source/cam/basichandle.cpp -o CMakeFiles/queen.dir/source/cam/basichandle.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/albert/ws/onTX2/source/cam/basichandle.cpp -o CMakeFiles/queen.dir/source/cam/basichandle.cpp.s
 
 CMakeFiles/queen.dir/source/cam/basichandle.cpp.o.requires:
 
@@ -203,16 +203,16 @@ CMakeFiles/queen.dir/source/cam/basichandle.cpp.o.provides.build: CMakeFiles/que
 
 CMakeFiles/queen.dir/source/cam/prehandle.cpp.o: CMakeFiles/queen.dir/flags.make
 CMakeFiles/queen.dir/source/cam/prehandle.cpp.o: ../source/cam/prehandle.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/albert/Desktop/onTX2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/queen.dir/source/cam/prehandle.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/queen.dir/source/cam/prehandle.cpp.o -c /home/albert/Desktop/onTX2/source/cam/prehandle.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/albert/ws/onTX2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/queen.dir/source/cam/prehandle.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/queen.dir/source/cam/prehandle.cpp.o -c /home/albert/ws/onTX2/source/cam/prehandle.cpp
 
 CMakeFiles/queen.dir/source/cam/prehandle.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/queen.dir/source/cam/prehandle.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/albert/Desktop/onTX2/source/cam/prehandle.cpp > CMakeFiles/queen.dir/source/cam/prehandle.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/albert/ws/onTX2/source/cam/prehandle.cpp > CMakeFiles/queen.dir/source/cam/prehandle.cpp.i
 
 CMakeFiles/queen.dir/source/cam/prehandle.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/queen.dir/source/cam/prehandle.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/albert/Desktop/onTX2/source/cam/prehandle.cpp -o CMakeFiles/queen.dir/source/cam/prehandle.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/albert/ws/onTX2/source/cam/prehandle.cpp -o CMakeFiles/queen.dir/source/cam/prehandle.cpp.s
 
 CMakeFiles/queen.dir/source/cam/prehandle.cpp.o.requires:
 
@@ -292,7 +292,7 @@ queen: /opt/ros/kinetic/lib/x86_64-linux-gnu/libopencv_objdetect3.so.3.3.1
 queen: /opt/ros/kinetic/lib/x86_64-linux-gnu/libopencv_imgproc3.so.3.3.1
 queen: /opt/ros/kinetic/lib/x86_64-linux-gnu/libopencv_core3.so.3.3.1
 queen: CMakeFiles/queen.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/albert/Desktop/onTX2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX executable queen"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/albert/ws/onTX2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX executable queen"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/queen.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -315,6 +315,6 @@ CMakeFiles/queen.dir/clean:
 .PHONY : CMakeFiles/queen.dir/clean
 
 CMakeFiles/queen.dir/depend:
-	cd /home/albert/Desktop/onTX2/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/albert/Desktop/onTX2 /home/albert/Desktop/onTX2 /home/albert/Desktop/onTX2/build /home/albert/Desktop/onTX2/build /home/albert/Desktop/onTX2/build/CMakeFiles/queen.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/albert/ws/onTX2/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/albert/ws/onTX2 /home/albert/ws/onTX2 /home/albert/ws/onTX2/build /home/albert/ws/onTX2/build /home/albert/ws/onTX2/build/CMakeFiles/queen.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/queen.dir/depend
 
