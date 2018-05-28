@@ -15,6 +15,10 @@
 
 
 #include "global_var.h"
+
+//input function
+void toChar_send_path();
+
 /*******************************************************************
 * 名称：                  UART0_Open
 * 功能：                打开串口并返回串口设备文件描述
@@ -38,7 +42,7 @@ int UART0_Open(int fd,char* port)
     }
     else
     {
-        printf("fcntl=%d\n",fcntl(fd, F_SETFL,0));
+        //printf("fcntl=%d\n",fcntl(fd, F_SETFL,0));
     }
     //测试是否为终端设备
     if(0 == isatty(STDIN_FILENO))
@@ -48,9 +52,10 @@ int UART0_Open(int fd,char* port)
     }
     else
     {
-        printf("isatty success!\n");
+        //printf("Open Serial Port successul!\n");
     }
-    printf("fd->open=%d\n",fd);
+    //printf("fd->open=%d\n",fd);
+    printf("Open Serial Port successul!\n");
     return fd;
 }
 /*******************************************************************
@@ -251,21 +256,21 @@ int UART0_Recv(int fd, char *rcv_buf,int data_len)
     FD_ZERO(&fs_read);
     FD_SET(fd,&fs_read);
 
-    time.tv_sec = 10;
-    time.tv_usec = 0;
+    time.tv_sec = 0;
+    time.tv_usec = 10000;
 
     //使用select实现串口的多路通信
     fs_sel = select(fd+1,&fs_read,NULL,NULL,&time);
-    printf("fs_sel = %d\n",fs_sel);
+    //printf("fs_sel = %d\n",fs_sel);
     if(fs_sel)
     {
         len = read(fd,rcv_buf,data_len);
-        printf("I am right!(version1.2) len = %d fs_sel = %d\n",len,fs_sel);
+        //printf("I am right!(version1.2) len = %d fs_sel = %d\n",len,fs_sel);
         return len;
     }
     else
     {
-        printf("Sorry,I am wrong!");
+        //printf("Sorry,I am wrong!");
         return FALSE;
     }
 }
@@ -358,12 +363,64 @@ void uart_send_charList(char* send_data,int data_len)
 
     len = UART0_Send(fd,send_data,data_len);
     if(len > 0)
-        printf(" sent %d data successful\n",len);
+        printf(" sent %d data successful\n\n",len);
     else
-        printf("send data failed!\n");
+        printf("send data failed!\n\n");
 
     usleep(10000);//10ms
 
     UART0_Close(fd);
 
+}
+
+void uart_read_charFour()
+{
+    int fd;                            //文件描述符
+    int err;                           //返回调用函数的状态
+    int len;
+    int i;
+    //char rcv_buf[100];
+    char read_data[4]={0,0,0,0};
+
+    char addr[] = "/dev/ttyUSB0";
+
+    fd = UART0_Open(fd,addr); //打开串口，返回文件描述符
+    do
+    {
+        err = UART0_Init(fd,9600,0,8,1,'N');
+        printf("Set Port Exactly!\n");
+    }while(FALSE == err || FALSE == fd);
+
+
+    while (1) //循环读取数据
+    {
+        len = UART0_Recv(fd, read_data,4);
+        if(len > 0)
+        {
+            //rcv_buf[len] = '\0';
+            printf("receive data is %s\n",read_data);
+            printf("len = %d\n",len);
+            if(read_data[0]=0x66)
+            {
+                if(read_data[3]=0xff)
+                {
+                    printf("5604 receive successful!\n");
+                    break;
+                }
+                else
+                {
+                    printf("5604 receive failed!\n\n");
+                    printf("sending again now!\n");
+                    toChar_send_path();
+                }
+            }
+
+        }
+        else
+        {
+            printf("cannot receive data\n");
+        }
+        usleep(10000);//10ms;
+    }
+    UART0_Close(fd);
 }

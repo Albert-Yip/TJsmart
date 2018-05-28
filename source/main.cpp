@@ -142,6 +142,12 @@ int main(int argc, char const *argv[])
 
     printf("\n\n\n\npath send by uart:\n");
     toChar_send_path();
+    uart_read_charFour();
+
+    while(1)
+    {
+
+    }
 
     printf("\n\n\n\nlocation send by uart:\n");
     ROIData position_car;
