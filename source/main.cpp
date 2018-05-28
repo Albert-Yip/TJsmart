@@ -145,10 +145,8 @@ int main(int argc, char const *argv[])
 
     uart_read_charFour();
 
-    while(1)
-    {
+    // while(1);
 
-    }
 
     printf("\n\n\n\nlocation send by uart:\n");
     ROIData position_car;
@@ -157,7 +155,8 @@ int main(int argc, char const *argv[])
         VideoCapture cap;
         cap.open(1);
 
-        for(int i=0;i<5;i++)
+        int work_time = 50;
+        while(work_time--)
         {
             cap>>Image;
             position_car = maindoCamera();
