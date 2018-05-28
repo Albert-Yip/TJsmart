@@ -367,7 +367,7 @@ void uart_send_charList(char* send_data,int data_len)
     else
         printf("send data failed!\n\n");
 
-    usleep(10000);//10ms
+    usleep(100000);//100ms
 
     UART0_Close(fd);
 
@@ -398,11 +398,15 @@ void uart_read_charFour()
         if(len > 0)
         {
             //rcv_buf[len] = '\0';
-            printf("receive data is %s\n",read_data);
-            printf("len = %d\n",len);
-            if(read_data[0]=0x66)
+            printf("receive data is\n");
+            for(int i=0;i<4;i++)
             {
-                if(read_data[3]=0xff)
+                printf("%d\n",(unsigned char)read_data[i]);
+            }
+            printf("len = %d\n",len);
+            if(read_data[0]==0x66)
+            {
+                if(read_data[3]==0xff)
                 {
                     printf("5604 receive successful!\n");
                     break;
@@ -420,6 +424,7 @@ void uart_read_charFour()
         {
             printf("cannot receive data\n");
         }
+        //usleep(5000000);//5s;
         usleep(10000);//10ms;
     }
     UART0_Close(fd);

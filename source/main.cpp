@@ -142,6 +142,7 @@ int main(int argc, char const *argv[])
 
     printf("\n\n\n\npath send by uart:\n");
     toChar_send_path();
+
     uart_read_charFour();
 
     while(1)
@@ -164,9 +165,10 @@ int main(int argc, char const *argv[])
              {
                 printf("nothing!\n");
             }
-            toChar_send_position(position_car);
+            else
+                toChar_send_position(position_car);
         }
-        printf("%d\n",num );
+        //printf("%d\n",num );
     }
     else
         {
