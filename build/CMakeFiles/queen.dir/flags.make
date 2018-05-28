@@ -6,5 +6,5 @@ CXX_FLAGS =
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/albert/ws/onTX2/source/queen -I/home/albert/ws/onTX2/source/cam -I/home/albert/ws/onTX2/source/uart -isystem /opt/ros/kinetic/include/opencv-3.3.1-dev -isystem /opt/ros/kinetic/include/opencv-3.3.1-dev/opencv 
+CXX_INCLUDES = -I"/home/albert/Desktop/到 onTX2 的链接/source/queen" -I"/home/albert/Desktop/到 onTX2 的链接/source/cam" -I"/home/albert/Desktop/到 onTX2 的链接/source/uart" -isystem /opt/ros/kinetic/include/opencv-3.3.1-dev -isystem /opt/ros/kinetic/include/opencv-3.3.1-dev/opencv 
 

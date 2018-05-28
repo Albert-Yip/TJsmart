@@ -4,13 +4,13 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/albert/ws/onTX2/source/cam/basichandle.cpp" "/home/albert/ws/onTX2/build/CMakeFiles/queen.dir/source/cam/basichandle.cpp.o"
-  "/home/albert/ws/onTX2/source/cam/mainhandle.cpp" "/home/albert/ws/onTX2/build/CMakeFiles/queen.dir/source/cam/mainhandle.cpp.o"
-  "/home/albert/ws/onTX2/source/cam/prehandle.cpp" "/home/albert/ws/onTX2/build/CMakeFiles/queen.dir/source/cam/prehandle.cpp.o"
-  "/home/albert/ws/onTX2/source/main.cpp" "/home/albert/ws/onTX2/build/CMakeFiles/queen.dir/source/main.cpp.o"
-  "/home/albert/ws/onTX2/source/queen/find_path.cpp" "/home/albert/ws/onTX2/build/CMakeFiles/queen.dir/source/queen/find_path.cpp.o"
-  "/home/albert/ws/onTX2/source/queen/readfile_match.cpp" "/home/albert/ws/onTX2/build/CMakeFiles/queen.dir/source/queen/readfile_match.cpp.o"
-  "/home/albert/ws/onTX2/source/uart/uart.cpp" "/home/albert/ws/onTX2/build/CMakeFiles/queen.dir/source/uart/uart.cpp.o"
+  "/home/albert/Desktop/到 onTX2 的链接/source/cam/basichandle.cpp" "/home/albert/Desktop/到 onTX2 的链接/build/CMakeFiles/queen.dir/source/cam/basichandle.cpp.o"
+  "/home/albert/Desktop/到 onTX2 的链接/source/cam/mainhandle.cpp" "/home/albert/Desktop/到 onTX2 的链接/build/CMakeFiles/queen.dir/source/cam/mainhandle.cpp.o"
+  "/home/albert/Desktop/到 onTX2 的链接/source/cam/prehandle.cpp" "/home/albert/Desktop/到 onTX2 的链接/build/CMakeFiles/queen.dir/source/cam/prehandle.cpp.o"
+  "/home/albert/Desktop/到 onTX2 的链接/source/main.cpp" "/home/albert/Desktop/到 onTX2 的链接/build/CMakeFiles/queen.dir/source/main.cpp.o"
+  "/home/albert/Desktop/到 onTX2 的链接/source/queen/find_path.cpp" "/home/albert/Desktop/到 onTX2 的链接/build/CMakeFiles/queen.dir/source/queen/find_path.cpp.o"
+  "/home/albert/Desktop/到 onTX2 的链接/source/queen/readfile_match.cpp" "/home/albert/Desktop/到 onTX2 的链接/build/CMakeFiles/queen.dir/source/queen/readfile_match.cpp.o"
+  "/home/albert/Desktop/到 onTX2 的链接/source/uart/uart.cpp" "/home/albert/Desktop/到 onTX2 的链接/build/CMakeFiles/queen.dir/source/uart/uart.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

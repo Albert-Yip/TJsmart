@@ -42,7 +42,7 @@ global_var.h
 
 ../source/uart/uart_interface.h
 
-/home/albert/ws/onTX2/source/cam/basichandle.cpp
+/home/albert/Desktop/到 onTX2 的链接/source/cam/basichandle.cpp
 opencv2/opencv.hpp
 -
 opencv2/core/core.hpp
@@ -58,31 +58,31 @@ iostream
 stdio.h
 -
 basichandle.h
-/home/albert/ws/onTX2/source/cam/basichandle.h
+/home/albert/Desktop/到 onTX2 的链接/source/cam/basichandle.h
 prehandle.h
-/home/albert/ws/onTX2/source/cam/prehandle.h
+/home/albert/Desktop/到 onTX2 的链接/source/cam/prehandle.h
 
-/home/albert/ws/onTX2/source/cam/basichandle.h
+/home/albert/Desktop/到 onTX2 的链接/source/cam/basichandle.h
 opencv2/opencv.hpp
 -
 opencv2/highgui/highgui.hpp
-/home/albert/ws/onTX2/source/cam/opencv2/highgui/highgui.hpp
+/home/albert/Desktop/到 onTX2 的链接/source/cam/opencv2/highgui/highgui.hpp
 opencv2/imgproc/imgproc.hpp
-/home/albert/ws/onTX2/source/cam/opencv2/imgproc/imgproc.hpp
+/home/albert/Desktop/到 onTX2 的链接/source/cam/opencv2/imgproc/imgproc.hpp
 
-/home/albert/ws/onTX2/source/cam/mainhandle.cpp
+/home/albert/Desktop/到 onTX2 的链接/source/cam/mainhandle.cpp
 opencv2/opencv.hpp
 -
 opencv2/highgui/highgui.hpp
-/home/albert/ws/onTX2/source/cam/opencv2/highgui/highgui.hpp
+/home/albert/Desktop/到 onTX2 的链接/source/cam/opencv2/highgui/highgui.hpp
 opencv2/imgproc/imgproc.hpp
-/home/albert/ws/onTX2/source/cam/opencv2/imgproc/imgproc.hpp
+/home/albert/Desktop/到 onTX2 的链接/source/cam/opencv2/imgproc/imgproc.hpp
 basichandle.h
-/home/albert/ws/onTX2/source/cam/basichandle.h
+/home/albert/Desktop/到 onTX2 的链接/source/cam/basichandle.h
 prehandle.h
-/home/albert/ws/onTX2/source/cam/prehandle.h
+/home/albert/Desktop/到 onTX2 的链接/source/cam/prehandle.h
 
-/home/albert/ws/onTX2/source/cam/prehandle.cpp
+/home/albert/Desktop/到 onTX2 的链接/source/cam/prehandle.cpp
 opencv2/opencv.hpp
 -
 opencv2/core/core.hpp
@@ -98,17 +98,17 @@ iostream
 stdio.h
 -
 basichandle.h
-/home/albert/ws/onTX2/source/cam/basichandle.h
+/home/albert/Desktop/到 onTX2 的链接/source/cam/basichandle.h
 
-/home/albert/ws/onTX2/source/cam/prehandle.h
+/home/albert/Desktop/到 onTX2 的链接/source/cam/prehandle.h
 opencv2/opencv.hpp
 -
 opencv2/highgui/highgui.hpp
-/home/albert/ws/onTX2/source/cam/opencv2/highgui/highgui.hpp
+/home/albert/Desktop/到 onTX2 的链接/source/cam/opencv2/highgui/highgui.hpp
 opencv2/imgproc/imgproc.hpp
-/home/albert/ws/onTX2/source/cam/opencv2/imgproc/imgproc.hpp
+/home/albert/Desktop/到 onTX2 的链接/source/cam/opencv2/imgproc/imgproc.hpp
 
-/home/albert/ws/onTX2/source/main.cpp
+/home/albert/Desktop/到 onTX2 的链接/source/main.cpp
 stdio.h
 -
 stdlib.h
@@ -116,23 +116,23 @@ stdlib.h
 string.h
 -
 find_path.h
-/home/albert/ws/onTX2/source/find_path.h
+/home/albert/Desktop/到 onTX2 的链接/source/find_path.h
 readfile_match.h
-/home/albert/ws/onTX2/source/readfile_match.h
+/home/albert/Desktop/到 onTX2 的链接/source/readfile_match.h
 global_var.h
-/home/albert/ws/onTX2/source/global_var.h
+/home/albert/Desktop/到 onTX2 的链接/source/global_var.h
 unistd.h
 -
 uart_interface.h
-/home/albert/ws/onTX2/source/uart_interface.h
+/home/albert/Desktop/到 onTX2 的链接/source/uart_interface.h
 cam_interface.h
-/home/albert/ws/onTX2/source/cam_interface.h
+/home/albert/Desktop/到 onTX2 的链接/source/cam_interface.h
 
-/home/albert/ws/onTX2/source/queen/find_path.cpp
+/home/albert/Desktop/到 onTX2 的链接/source/queen/find_path.cpp
 find_path.h
-/home/albert/ws/onTX2/source/queen/find_path.h
+/home/albert/Desktop/到 onTX2 的链接/source/queen/find_path.h
 
-/home/albert/ws/onTX2/source/queen/find_path.h
+/home/albert/Desktop/到 onTX2 的链接/source/queen/find_path.h
 stdio.h
 -
 stdlib.h
@@ -142,23 +142,23 @@ iostream
 time.h
 -
 global_var.h
-/home/albert/ws/onTX2/source/queen/global_var.h
+/home/albert/Desktop/到 onTX2 的链接/source/queen/global_var.h
 
-/home/albert/ws/onTX2/source/queen/global_var.h
+/home/albert/Desktop/到 onTX2 的链接/source/queen/global_var.h
 
-/home/albert/ws/onTX2/source/queen/readfile_match.cpp
+/home/albert/Desktop/到 onTX2 的链接/source/queen/readfile_match.cpp
 readfile_match.h
-/home/albert/ws/onTX2/source/queen/readfile_match.h
+/home/albert/Desktop/到 onTX2 的链接/source/queen/readfile_match.h
 
-/home/albert/ws/onTX2/source/queen/readfile_match.h
+/home/albert/Desktop/到 onTX2 的链接/source/queen/readfile_match.h
 stdio.h
 -
 stdlib.h
 -
 global_var.h
-/home/albert/ws/onTX2/source/queen/global_var.h
+/home/albert/Desktop/到 onTX2 的链接/source/queen/global_var.h
 
-/home/albert/ws/onTX2/source/uart/uart.cpp
+/home/albert/Desktop/到 onTX2 的链接/source/uart/uart.cpp
 stdio.h
 -
 stdlib.h
@@ -178,7 +178,7 @@ errno.h
 string.h
 -
 global_var.h
-/home/albert/ws/onTX2/source/uart/global_var.h
+/home/albert/Desktop/到 onTX2 的链接/source/uart/global_var.h
 
 /opt/ros/kinetic/include/opencv-3.3.1-dev/opencv/cxcore.h
 opencv2/core/core_c.h
