@@ -1,3 +1,0 @@
-/home/albert/Desktop/到 onTX2 的链接/build/CMakeFiles/rebuild_cache.dir
-/home/albert/Desktop/到 onTX2 的链接/build/CMakeFiles/edit_cache.dir
-/home/albert/Desktop/到 onTX2 的链接/build/CMakeFiles/queen.dir
