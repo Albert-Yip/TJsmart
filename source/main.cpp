@@ -145,7 +145,21 @@ int main(int argc, char const *argv[])
 
     uart_read_charFour();
 
-    // while(1);
+    char fourByteDataX[4] = {0,0,100,'x'};
+    char fourByteDataY[4] = {0,0,100,'y'};
+
+    for(int i=0;i<15;i++)
+    {
+        fourByteDataX[2] -= 5*i;
+        fourByteDataY[2] += 5*i;
+        uart_send_charList(fourByteDataX,4);
+        uart_send_charList(fourByteDataY,4);
+        sleep(2);
+    }
+
+    while(1);
+
+
 
 
     printf("\n\n\n\nlocation send by uart:\n");
