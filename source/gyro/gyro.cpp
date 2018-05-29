@@ -1,7 +1,7 @@
 //#include "gyro.h"
 #include "uart_interface.h"
 #include <stdio.h>
-
+//note:when close the UART, nothing will be stored!!!
 int main(int argc, char const *argv[])
 {
     /* code */

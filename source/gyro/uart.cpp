@@ -504,23 +504,40 @@ void uart_read_gyro(char* read_data)
             // printf("%d\n",(unsigned char)read_data[0]);
              //printf("counter=%d\n",counter);
 
-            if(counter==0 && read_data[0]!=0x55)
-                continue;
-            counter++;
-
-
+            if(counter==0)
+            {
+                if((unsigned char)read_data[0] != 0x55)
+                    continue;
+                else
+                counter++;
+            }
+            else if(counter==1)
+            {
+                switch((unsigned char)read_data[1])
+                {
+                case 0x51:
+                case 0x52:
+                case 0x53:
+                    counter++;
+                    break;
+                default:
+                    counter=0;
+                }
+            }
+            else
+                counter++;
         }
-        else
-        {
-            printf("cannot receive data\n");
-        }
+        // else
+        // {
+        //     printf("cannot receive data\n");
+        // }
         //usleep(5000000);//5s;
-        //usleep(500);//0.5ms;
+        usleep(500);//0.5ms;
     }
 
     counter = 0;
     flag=1;
 
 
-    UART0_Close(fd);
+    //UART0_Close(fd);
 }
