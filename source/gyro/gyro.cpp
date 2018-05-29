@@ -5,6 +5,10 @@
 int main(int argc, char const *argv[])
 {
     /* code */
+    unsigned char time0[8]={0};
+    unsigned char time1[8]={0};
+    unsigned int Dtime = 0;
+
     float a[3]={0};
     float w[3]={0};
     float angle[3]={0};
@@ -23,6 +27,22 @@ int main(int argc, char const *argv[])
         {
             switch((unsigned char)temp_buf [1])
             {
+            case 0x50:
+                memcpy(&time0,&time1,8);
+                memcpy(&time1,&temp_buf[2],8);
+                Dtime = (unsigned int)\
+                        (time1[3]-time0[3])*3600*1000 +\
+                        (time1[4]-time0[4])*60*1000 +\
+                        (time1[5]-time0[5])*1000 +\
+                        (time1[6]-time0[6])*256 + (time1[7]-time0[7])
+
+                for(int i=0;i<8;i++)
+                {
+                    printf("%d,", time1[i]);
+                }
+                printf("\nms = %d\n\n"Dtime);
+                break;
+
             case 0x51:
                 for(int i=0;i<3;i++)
                 {
