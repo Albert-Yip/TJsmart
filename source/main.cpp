@@ -14,7 +14,7 @@ extern int num;
 extern Mat Image;
 using namespace std;
 
-int queen_path(bool flag)
+int queen_path(int flag)
 {
     clock_t start, end;
     start = clock();
@@ -40,17 +40,7 @@ void toChar_send_position(ROIData position_car)
     int p_y = (int)position_car.center.y;
     int p_theta = (int)(position_car.theta*10);
     printf("%d,%d,%d\n",p_x,p_y,p_theta);
-    // char p_char[6];
-    // p_char[0] = p_x>>8;
-    // p_char[1] = p_x;
-    // p_char[2] = p_y>>8;
-    // p_char[3] = p_y;
-    // p_char[4] = p_theta>>8;
-    // p_char[5] = p_theta;
 
-    // printf("%d,",p_char[0]*256+(unsigned char)p_char[1] );
-    // printf("%d,",p_char[2]*256+(unsigned char)p_char[3] );
-    // printf("%d\n",p_char[4]*256+(unsigned char)p_char[5] );
     fourByteData[1] = p_x>>8;
     fourByteData[2] = p_x;
     fourByteData[3] = 'x';
@@ -66,32 +56,10 @@ void toChar_send_position(ROIData position_car)
     fourByteData[3] = 'a';
     uart_send_charList(fourByteData,4);
 
-
-
-    // for(int i=0;i<6;i++)
-    // {
-    //     printf("%d\n",(unsigned char)p_char[i] );
-    // }
-    //uart_send_charList(p_char,6);
 }
 
 void toChar_send_path()
 {
-    // char* send_data = (char*) malloc(1+2*2 * NUM * sizeof(char));
-
-    // send_data[0] = 2*NUM;
-
-    // for(int i = 0; i <=NUM-1; i++)
-    // {
-        // send_data[4*i+1] = routeB[i].x;
-        // send_data[4*i+2] = routeB[i].y;
-        // send_data[4*i+3] = routeA[i].x;
-        // send_data[4*i+4] = routeA[i].y;
-        // printf("(%d,%d)\n",send_data[4*i+1],send_data[4*i+2] );
-        // printf("(%d,%d)\n",send_data[4*i+3],send_data[4*i+4] );
-    // }
-
-    // uart_send_charList(send_data,4*NUM+1);
 
     char fourByteData[4] = {0,0,2*NUM,'N'};
     uart_send_charList(fourByteData,4);
@@ -129,33 +97,62 @@ int main(int argc, char const *argv[])
 {
     if(argc != 3)
     {
-        printf("Usage: %s 1/0(input or not) 1/0(for cam) \n",argv[0]);
+        printf("Usage: %s 2/1/0(test/input/not) 1/0(for cam) \n",argv[0]);
         return 0;
     }
-    bool flag1,flag2;
-    if(strcmp(argv[1],"0") == 1)
-        flag1 = 1;
+
+    if(strcmp(argv[1],"2") == 0)//for test =2
+    {
+
+        int *position;
+        int n = 0;
+        printf("please input n : \n");
+        scanf("%d",&n);
+        position = (int*) malloc(n * sizeof(int));
+        for(int i=0;i<n;i++)
+        {
+            printf("please input a position for test %d: \n",i);
+            scanf("%d",position+i);
+        }
+        char fourByteData[4] = {0,0,n,'N'};
+        uart_send_charList(fourByteData,4);
+        for(int i=0;i<n;i++)
+        {
+
+            fourByteData[2] = (*(position+i) - 1) % 8 + 1;
+            fourByteData[3] = 'X';
+            uart_send_charList(fourByteData,4);
+
+            fourByteData[2] = (*(position+i) - 1) / 8 + 1;
+            fourByteData[3] = 'Y';
+            uart_send_charList(fourByteData,4);
+        }
+
+    }
     else
-        flag1 = 0;
+    {
+        queen_path(strcmp(argv[1],"0"));
+        printf("\n\n\n\npath send by uart:\n");
+        toChar_send_path();
+    }
 
-    queen_path(flag1);
 
-    printf("\n\n\n\npath send by uart:\n");
-    toChar_send_path();
+    while(1);
+
 
     uart_read_charFour();
 
-    char fourByteDataX[4] = {0,0,100,'x'};
-    char fourByteDataY[4] = {0,0,100,'y'};
+    // char fourByteDataX[4] = {0,0,100,'x'};
+    // char fourByteDataY[4] = {0,0,100,'y'};
 
-    for(int i=0;i<15;i++)
-    {
-        fourByteDataX[2] -= 5*i;
-        fourByteDataY[2] += 5*i;
-        uart_send_charList(fourByteDataX,4);
-        uart_send_charList(fourByteDataY,4);
-        sleep(2);
-    }
+    // for(int i=0;i<15;i++)
+    // {
+    //     fourByteDataX[2] -= 5*i;
+    //     fourByteDataY[2] += 5*i;
+    //     uart_send_charList(fourByteDataX,4);
+    //     uart_send_charList(fourByteDataY,4);
+    //     sleep(2);
+    // }
 
     while(1);
 
@@ -164,12 +161,12 @@ int main(int argc, char const *argv[])
 
     printf("\n\n\n\nlocation send by uart:\n");
     ROIData position_car;
-    if(strcmp(argv[2],"0") == 1)
+    if(strcmp(argv[2],"0") == 1)//=1
     {
         VideoCapture cap;
         cap.open(1);
 
-        int work_time = 50;
+        int work_time = 1000;
         while(work_time--)
         {
             cap>>Image;

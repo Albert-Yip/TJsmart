@@ -22,8 +22,6 @@ void perm(chessNode list[], int low, int high,int low2, chessNode list2[])
 	int i,j;
 	if (low >high)
 	{
-
-
 		if (low2 >high)
 		{
 
@@ -43,12 +41,8 @@ void perm(chessNode list[], int low, int high,int low2, chessNode list2[])
 					routeB[i].x = list2[i].x;
 					routeA[i].y = list[i].y;
 					routeB[i].y = list2[i].y;
-
-
 				}
 			}
-
-
 		}
 		else
 		{
