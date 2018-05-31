@@ -85,23 +85,62 @@ void read_and_match()
 
     printf("\n\nmax_Index = %d\n", max_Index);
     printf("coincide = %d\n", max_coincide);
+
+
+    //show the result!
     printf("     ");
     for (int i = 1; i <= 8; i++)
         printf("%d ", i);
     printf("\n");
+    int flag_Display = 0;
     for (int y = 1; y <= 8; y++)//y是行号
     {
         printf("  %d  ", y);
         for (int x = 1; x <= 8; x++)//x是列号
         {
-            if (all_Solution[max_Index][y] == x)
+            for(int i=0;i<max_coincide;i++)
             {
-                printf("Q ");
+                if(x == chess[max_coincide+i].x && y == chess[max_coincide+i].y)//in the same place
+                {
+                    printf("@ ");
+                    flag_Display = 1;
+                    break;
+                }
             }
-            else
+            if(!flag_Display)// have not displayed
             {
-                printf(". ");
+                for(int i=0;i<8-max_coincide;i++)
+                {
+                    if(x == chess[i].x && y == chess[i].y)//chess position
+                    {
+                        printf("C ");
+                        flag_Display = 1;
+                        break;
+                    }
+                }
+
+                if(!flag_Display)// have not displayed
+                {
+                    if (all_Solution[max_Index][y] == x)
+                    {
+                        printf("Q ");
+                    }
+                    else
+                    {
+                        printf(". ");
+                    }
+                }
             }
+            flag_Display = 0;
+
+            // if (all_Solution[max_Index][y] == x)
+            // {
+            //     printf("Q ");
+            // }
+            // else
+            // {
+            //     printf(". ");
+            // }
         }
         printf("\n");
     }

@@ -4,7 +4,8 @@
 //global var
 static int n = 0;//全排列计数
 static int minDist = 65535;
-
+#define START_POINT_X 4
+#define START_POINT_Y 9
 int NUM = 8;//will be changed in main
 chessNode* routeA;// will be malloc in main
 chessNode* routeB;//chessNode routeA[NUM], routeB[NUM]
@@ -26,7 +27,7 @@ void perm(chessNode list[], int low, int high,int low2, chessNode list2[])
 		{
 
 			n++;
-			int newDist = list2[0].x + list2[0].y;//起点到第一个棋子距离
+			int newDist = abs(list2[0].x - START_POINT_X) + abs(list2[0].y - START_POINT_Y);//起点到第一个棋子距离
 			for (i = 0; i <= high-1; i++)
 			{
 				newDist += abs(list2[i].x - list[i].x) + abs(list2[i].y - list[i].y)+ abs(list2[i+1].x - list[i].x) + abs(list2[i+1].y - list[i].y);
@@ -72,9 +73,9 @@ void path()
 	clock_t start, end;
 	start = clock();
 	//…calculating…
-	perm(chess, 0, NUM-1,0,solution);
+	perm(solution, 0, NUM-1,0,chess);
 	cout << "minDistance = " << minDist << endl;
-	cout << " (0,0)" << endl;
+	cout << " ("<<START_POINT_X<<","<<START_POINT_Y<<")" << endl;
 	for (int i = 0; i <= NUM-1; i++)
 	{
 		cout << " (" << routeB[i].x << "," << routeB[i].y << ") " ;

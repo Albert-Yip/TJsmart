@@ -14,84 +14,9 @@ extern int num;
 extern Mat Image;
 using namespace std;
 
-int queen_path(int flag)
-{
-    clock_t start, end;
-    start = clock();
-
-    input_position(flag);
-
-    read_and_match();
-    NUM = 8 - max_coincide;
-    routeA = (chessNode*) malloc(NUM * sizeof(chessNode));
-    routeB = (chessNode*) malloc(NUM * sizeof(chessNode));
-    path();
-
-    end = clock();
-    printf("total time = %f\n", (double)(end - start) / CLOCKS_PER_SEC);
-    return 0;
-}
-
-void toChar_send_position(ROIData position_car)
-{
-    char fourByteData[4] = {0,0,0,0};
-
-    int p_x = (int)position_car.center.x;
-    int p_y = (int)position_car.center.y;
-    int p_theta = (int)(position_car.theta*10);
-    printf("%d,%d,%d\n",p_x,p_y,p_theta);
-
-    fourByteData[1] = p_x>>8;
-    fourByteData[2] = p_x;
-    fourByteData[3] = 'x';
-    uart_send_charList(fourByteData,4);
-
-    fourByteData[1] = p_y>>8;
-    fourByteData[2] = p_y;
-    fourByteData[3] = 'y';
-    uart_send_charList(fourByteData,4);
-
-    fourByteData[1] = p_theta>>8;
-    fourByteData[2] = p_theta;
-    fourByteData[3] = 'a';
-    uart_send_charList(fourByteData,4);
-
-}
-
-void toChar_send_path()
-{
-
-    char fourByteData[4] = {0,0,2*NUM,'N'};
-    uart_send_charList(fourByteData,4);
-
-
-    for(int i=0;i<4;i++)
-    {
-        fourByteData[i]=0;
-    }
-    for(int i=0;i<NUM;i++)
-    {
-        fourByteData[2] = routeB[i].x;
-        fourByteData[3] = 'X';
-        uart_send_charList(fourByteData,4);
-
-        fourByteData[2] = routeB[i].y;
-        fourByteData[3] = 'Y';
-        uart_send_charList(fourByteData,4);
-
-        fourByteData[2] = routeA[i].x;
-        fourByteData[3] = 'X';
-        uart_send_charList(fourByteData,4);
-
-        fourByteData[2] = routeA[i].y;
-        fourByteData[3] = 'Y';
-        uart_send_charList(fourByteData,4);
-
-
-    }
-
-}
-
+int queen_path(int flag);
+void toChar_send_position(ROIData position_car);
+void toChar_send_path();
 
 int main(int argc, char const *argv[])
 {
@@ -185,6 +110,85 @@ int main(int argc, char const *argv[])
             position_car = maindoPicture();
             toChar_send_position(position_car);
         }
+}
+
+
+int queen_path(int flag)
+{
+    clock_t start, end;
+    start = clock();
+
+    input_position(flag);
+
+    read_and_match();
+    NUM = 8 - max_coincide;
+    routeA = (chessNode*) malloc(NUM * sizeof(chessNode));
+    routeB = (chessNode*) malloc(NUM * sizeof(chessNode));
+    path();
+
+    end = clock();
+    printf("total time = %f\n", (double)(end - start) / CLOCKS_PER_SEC);
+    return 0;
+}
+
+void toChar_send_position(ROIData position_car)
+{
+    char fourByteData[4] = {0,0,0,0};
+
+    int p_x = (int)position_car.center.x;
+    int p_y = (int)position_car.center.y;
+    int p_theta = (int)(position_car.theta*10);
+    printf("%d,%d,%d\n",p_x,p_y,p_theta);
+
+    fourByteData[1] = p_x>>8;
+    fourByteData[2] = p_x;
+    fourByteData[3] = 'x';
+    uart_send_charList(fourByteData,4);
+
+    fourByteData[1] = p_y>>8;
+    fourByteData[2] = p_y;
+    fourByteData[3] = 'y';
+    uart_send_charList(fourByteData,4);
+
+    fourByteData[1] = p_theta>>8;
+    fourByteData[2] = p_theta;
+    fourByteData[3] = 'a';
+    uart_send_charList(fourByteData,4);
+
+}
+
+void toChar_send_path()
+{
+
+    char fourByteData[4] = {0,0,2*NUM,'N'};
+    uart_send_charList(fourByteData,4);
+
+
+    for(int i=0;i<4;i++)
+    {
+        fourByteData[i]=0;
+    }
+    for(int i=0;i<NUM;i++)
+    {
+        fourByteData[2] = routeB[i].x;
+        fourByteData[3] = 'X';
+        uart_send_charList(fourByteData,4);
+
+        fourByteData[2] = routeB[i].y;
+        fourByteData[3] = 'Y';
+        uart_send_charList(fourByteData,4);
+
+        fourByteData[2] = routeA[i].x;
+        fourByteData[3] = 'X';
+        uart_send_charList(fourByteData,4);
+
+        fourByteData[2] = routeA[i].y;
+        fourByteData[3] = 'Y';
+        uart_send_charList(fourByteData,4);
+
+
+    }
+
 }
 
 

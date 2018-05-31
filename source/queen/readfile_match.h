@@ -11,4 +11,5 @@ void input_position(bool flag);
 //internal use function
 void place_behind(chessNode a[], int i);
 void update_chess();
+void show_result();
 #endif
