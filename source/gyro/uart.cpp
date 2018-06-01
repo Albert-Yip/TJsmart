@@ -473,9 +473,9 @@ void uart_read_charList(char* read_data,int data_len)
     UART0_Close(fd);
 }
 
-void uart_read_gyro(char* read_data)
+void uart_read_gyro(int fd,char* read_data)
 {
-    int fd;                            //文件描述符
+    //int fd;                            //文件描述符
     int err;                           //返回调用函数的状态
     int len;
     int counter = 0;
@@ -483,14 +483,14 @@ void uart_read_gyro(char* read_data)
     //char rcv_buf[100];
 
 
-    char addr[] = "/dev/ttyUSB0";
+    // char addr[] = "/dev/ttyUSB0";
 
-    fd = UART0_Open(fd,addr); //打开串口，返回文件描述符
-    do
-    {
-        err = UART0_Init(fd,9600,0,8,1,'N');
-        printf("Set Port Exactly!\n");
-    }while(FALSE == err || FALSE == fd);
+    // fd = UART0_Open(fd,addr); //打开串口，返回文件描述符
+    // do
+    // {
+    //     err = UART0_Init(fd,9600,0,8,1,'N');
+    //     //printf("Set Port Exactly!\n");
+    // }while(FALSE == err || FALSE == fd);
 
 
     while(counter!=11)

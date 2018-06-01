@@ -1,15 +1,15 @@
-﻿#include <opencv2/opencv.hpp>  
-#include "opencv2/highgui/highgui.hpp"  
-#include "opencv2/imgproc/imgproc.hpp"  
+﻿#include <opencv2/opencv.hpp>
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
 #include"basichandle.h"
 #include"prehandle.h"
 using namespace cv;
 using namespace std;
-#include <time.h> 
-//resize把原图变小再操作？ 利用特征或已知把框取得更小 
+#include <time.h>
+//resize把原图变小再操作？ 利用特征或已知把框取得更小
 //加入阈值调节 注意模板阈值与数字阈值一致 阈值调节后则是否障碍的阈值也变了 模型制作函数完善
 // 最后加入避障如果比赛现场测试发现双面胶贴障碍没用则使用
-//rec_width调节   
+//rec_width调节
 //对棋子 挡板的判断
 //函数的封装              上传前注意读存位置及把main注   rightup框改了 second 两个摄像头的事 nothing的原因
 
@@ -30,11 +30,11 @@ ROIData maindoPicture()
 	ROIData last;
 
 	//连续图片读取处理
-	
+
 	for (; num < 23;num++) {
 		double start, end, cost;
 		start = clock();
-		char filename[70] = "D:/原D/车队/大三下/创意比赛/图像/";
+		char filename[70] = "1.jpg";
 		g_srcImage = Im_read(filename, num);
 		if (g_srcImage.data == 0)
 			continue;
@@ -48,12 +48,12 @@ ROIData maindoPicture()
 		//return nothing;
 	}
 	g_srcImage1 = prospective(g_srcImage);
-	
+
 	CornerPoint(g_srcImage1);
 
 	threshold(g_grayImage, g_pBinaryImage, thre, 255, CV_THRESH_BINARY);//在前面的CornerPoint里有转灰度图
 	g_pBinaryImage1 = g_pBinaryImage.clone();
-	
+
 	thetaData thedata=getTheta(g_pBinaryImage);
 
 	Point2f center; center.x = g_srcImage.cols / 2; center.y = g_srcImage.rows / 2;
@@ -71,7 +71,7 @@ ROIData maindoPicture()
 			a[i].x = 0; a[i].y = 0;
 		}
 		for (int n = 0; n < thedata.num; n++)
-			a[n] = getPointAffinedPos(leftup[thedata.point[n]], center, thedata.theta - 90); 
+			a[n] = getPointAffinedPos(leftup[thedata.point[n]], center, thedata.theta - 90);
 		int i, j;
 		Point2f t;
 		for (j = 0; j < 10; j++)
@@ -96,7 +96,7 @@ ROIData maindoPicture()
 				a[1] = w;
 			}
 		}
-		for (int n = 0; n < thedata.num; n++) 
+		for (int n = 0; n < thedata.num; n++)
 		{
 			if ((a[n].x - rec_width + 10) > 0 && (a[n].y - rec_width + 10) > 0)
 			{
@@ -188,7 +188,7 @@ ROIData maindoPicture()
 		{
 	        if ((a[n].x + rec_width - 10) <after.cols && (a[n].y + rec_width - 10) <after.rows)
 			{
-				k = a[n]; 
+				k = a[n];
 				break;
 			}
 		}
@@ -247,6 +247,7 @@ ROIData maindoPicture()
 		angle = angle+second;
 	}*/
 	number= numbertest(k, after);
+	cout<<number.theta;
 	if (number.theta < 1 || number.theta>64)
 		continue;
 		//return nothing;
@@ -260,8 +261,8 @@ ROIData maindoPicture()
 	last.center.x = location.x; last.center.y = location.y;
 	last.theta = angle;
 
-	char outputfile[70] = "D:/原D/车队/大三下/创意比赛/图像2/";
-	Im_write(outputfile, num, after2);
+	// char outputfile[70] = "D:/原D/车队/大三下/创意比赛/图像2/";
+	// Im_write(outputfile, num, after2);
 	num++;
 	end = clock();
 	cost = ((end - start)/CLOCKS_PER_SEC)*1000;
@@ -499,7 +500,7 @@ ROIData maindoCamera()
 	}
 
 
-//int main() 
+//int main()
 //{
 //	//VideoCapture cap;
 //	//cap.open(1);   //0是电脑摄像头
