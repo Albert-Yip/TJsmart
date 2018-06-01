@@ -1,12 +1,12 @@
-#pragma GCC diagnostic error "-std=c++11"
+ï»¿#pragma GCC diagnostic error "-std=c++11"
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <iostream>
-//#include "Windows.h"
-#include <stdio.h>
+//#include "Windows.h" 
+#include <stdio.h>  
 #include"basichandle.h"
 #include"prehandle.h"
 
@@ -17,30 +17,31 @@ extern Mat g_srcImage, g_srcImage1, g_grayImage,after,after2;
 
 Mat mat[10];
 
-Point2f leftup[20]; //= { 0 };//×óÉÏ  ºìÉ«  ÓÉÓÚLinuxÏÂ²»ÄÜÕâÑùÕûÌå¸³0 ¹ÊÔÚCornerPointº¯ÊıÀïÈ«Ìå¸³0
-Point2f rightup[20] ;//ÓÒÉÏ    ÂÌÉ« È«¾Ö±äÁ¿Î´³õÊ¼»¯µÄÖµÊÇ0  ¾Ö²¿±äÁ¿Debug°æÊÇÌî³ä×Ö·û, ±ÈÈç¿ÉÄÜÊÇ 0xCDCDCDCD µÈ
-                                    //Release°æÊÇÂÒÂë, Ò²¾ÍÊÇÕâ¸öµØ·½Ô­À´(ÔÚÕâÖ®Ç°±»ÆäËû±äÁ¿Ê¹ÓÃµÄÊ±ºò)ÒÅÁôÏÂÀ´µÄÊı¾İ.
-Point2f rightdown[20] ;//ÓÒÏÂ  À¶É«
-Point2f leftdown[20];//×óÏÂ   ºÚÉ«
+Point2f leftup[20]; //= { 0 };//å·¦ä¸Š  çº¢è‰²  ç”±äºLinuxä¸‹ä¸èƒ½è¿™æ ·æ•´ä½“èµ‹0 æ•…åœ¨CornerPointå‡½æ•°é‡Œå…¨ä½“èµ‹0
+Point2f rightup[20] ;//å³ä¸Š    ç»¿è‰² å…¨å±€å˜é‡æœªåˆå§‹åŒ–çš„å€¼æ˜¯0  å±€éƒ¨å˜é‡Debugç‰ˆæ˜¯å¡«å……å­—ç¬¦, æ¯”å¦‚å¯èƒ½æ˜¯ 0xCDCDCDCD ç­‰
+                                    //Releaseç‰ˆæ˜¯ä¹±ç , ä¹Ÿå°±æ˜¯è¿™ä¸ªåœ°æ–¹åŸæ¥(åœ¨è¿™ä¹‹å‰è¢«å…¶ä»–å˜é‡ä½¿ç”¨çš„æ—¶å€™)é—ç•™ä¸‹æ¥çš„æ•°æ®.
+Point2f rightdown[20] ;//å³ä¸‹  è“è‰²
+Point2f leftdown[20];//å·¦ä¸‹   é»‘è‰²
 
 int leftuppoint = 0, rightuppoint = 0, rightdownpoint = 0, leftdownpoint = 0;
-int rec_width = 180;
-//»ñµÃÄ³µãÏñËØÖµ
+int rec_width = 170;
+int thre = 160;//äºŒå€¼åŒ–é˜ˆå€¼
+//è·å¾—æŸç‚¹åƒç´ å€¼
 int get_pixel(Mat & img, Point pt) {
 	if (pt.x < 0 || pt.y < 0 || pt.x >= img.cols || pt.y >= img.rows)
 		return -1;
-	int width = img.cols; //Í¼Æ¬¿í¶È
-	int height = img.rows; //Í¼Æ¬¿í¶Èt;//Í¼Æ¬¸ß¶È
-	uchar* ptr = (uchar*)img.data + pt.y * width; //»ñµÃ»Ò¶ÈÖµÊı¾İÖ¸Õë
+	int width = img.cols; //å›¾ç‰‡å®½åº¦
+	int height = img.rows; //å›¾ç‰‡å®½åº¦t;//å›¾ç‰‡é«˜åº¦
+	uchar* ptr = (uchar*)img.data + pt.y * width; //è·å¾—ç°åº¦å€¼æ•°æ®æŒ‡é’ˆ
 	int intensity = ptr[pt.x];
 	return intensity;
 }
 
-//ÑÓÊ±ÅÄÕÕ
+//å»¶æ—¶æ‹ç…§
 void Fotographieren(int device, int time)
 {
-	VideoCapture capture(device);  //Èç¹ûÊÇ±Ê¼Ç±¾£¬0´ò¿ªµÄÊÇ×Ô´øµÄÉãÏñÍ·£¬1 ´ò¿ªÍâ½ÓµÄÏà»ú
-	capture.set(CAP_PROP_SETTINGS, 1);	  //capture.set(CAP_PROP_SETTINGS, 1);//´ò¿ªfilterÅäÖÃ´°¿Ú£¬Í¨³£Ö»Òª¹´×Ô¶¯ÆØ¹â¾ÍºÃÁË¡£
+	VideoCapture capture(device);  //å¦‚æœæ˜¯ç¬”è®°æœ¬ï¼Œ0æ‰“å¼€çš„æ˜¯è‡ªå¸¦çš„æ‘„åƒå¤´ï¼Œ1 æ‰“å¼€å¤–æ¥çš„ç›¸æœº
+	capture.set(CAP_PROP_SETTINGS, 1);	  //capture.set(CAP_PROP_SETTINGS, 1);//æ‰“å¼€filteré…ç½®çª—å£ï¼Œé€šå¸¸åªè¦å‹¾è‡ªåŠ¨æ›å…‰å°±å¥½äº†ã€‚
 	Mat frame;
 	int k = 0, num = 1;
 
@@ -49,50 +50,50 @@ void Fotographieren(int device, int time)
 		capture >> frame;
 		imshow("video", frame);
 
-		int ch = cvWaitKey(20);//ÕâÀïÒª¶¨ÒåÒ»¸ö²»È»ºóÃæÖØ¸´¸³Öµ»á³ö´í£¬ºÃÏñ»¹²»ÄÜ¶¨ÒåÔÚÑ­»·Ç°,20msÅÄÒ»´Î
-		char q[50] = "picture", *Pctur_name, Pctur_num[5];//qÒª´óÒ»µã£¬²»È»Êı×éÔ½½ç
+		int ch = cvWaitKey(20);//è¿™é‡Œè¦å®šä¹‰ä¸€ä¸ªä¸ç„¶åé¢é‡å¤èµ‹å€¼ä¼šå‡ºé”™ï¼Œå¥½åƒè¿˜ä¸èƒ½å®šä¹‰åœ¨å¾ªç¯å‰,20msæ‹ä¸€æ¬¡
+		char q[50] = "picture", *Pctur_name, Pctur_num[5];//qè¦å¤§ä¸€ç‚¹ï¼Œä¸ç„¶æ•°ç»„è¶Šç•Œ
 
 
 		sprintf(Pctur_num, "%d", num);
-		Pctur_name = strcat(q, Pctur_num);//·¢ÏÖ²»ÄÜÖ±½Óp = strcat("qqq" ,"0" )
+		Pctur_name = strcat(q, Pctur_num);//å‘ç°ä¸èƒ½ç›´æ¥p = strcat("qqq" ,"0" )
 		Pctur_name = strcat(Pctur_name, ".jpg");
-		imwrite(Pctur_name, frame);//±ØĞëÒªÓĞ  .jpg²»È»³ö´í£¬
+		imwrite(Pctur_name, frame);//å¿…é¡»è¦æœ‰  .jpgä¸ç„¶å‡ºé”™ï¼Œ
 		num++;
 
 
-		if (ch == 27)//°´ESCÍË³öÅÄÉã
+		if (ch == 27)//æŒ‰ESCé€€å‡ºæ‹æ‘„
 			break;
-		//Sleep(time);//timeºÁÃëÅÄÒ»´Î£¬¿ÉÒÔ×Ô¼ºÉèÖÃ
+		//Sleep(time);//timeæ¯«ç§’æ‹ä¸€æ¬¡ï¼Œå¯ä»¥è‡ªå·±è®¾ç½®
 	}
 }
 
 
-//°×ÏñËØÍ³¼Æ
+//ç™½åƒç´ ç»Ÿè®¡
 int bSums(Mat src)
 {
 
 	int counter = 0;
-	//µü´úÆ÷·ÃÎÊÏñËØµã
+	//è¿­ä»£å™¨è®¿é—®åƒç´ ç‚¹
 	Mat_<uchar>::iterator it = src.begin<uchar>();
 	Mat_<uchar>::iterator itend = src.end<uchar>();
 	for (; it != itend; ++it)
 	{
-		if ((*it)>0) counter += 1;//¶şÖµ»¯ºó£¬ÏñËØµãÊÇ0»òÕß255
+		if ((*it)>0) counter += 1;//äºŒå€¼åŒ–åï¼Œåƒç´ ç‚¹æ˜¯0æˆ–è€…255
 	}
 	return counter;
 }
 
-//»­³öROIÇøÓò
+//ç”»å‡ºROIåŒºåŸŸ
 void drawROI(Mat & g_pBinaryImage, int x, int y, int width, int height) {
 	rectangle(g_pBinaryImage, cvPoint(x, y), cvPoint(x + width, y + height), cvScalar(255, 255, 255), 1, 4, 0);
 }
 
-//»­µã:°×µãgreyLevel=0£»ºÚµãgreyLevel=255£»
+//ç”»ç‚¹:ç™½ç‚¹greyLevel=0ï¼›é»‘ç‚¹greyLevel=255ï¼›
 void drawCenter(Mat & g_pBinaryImage, Point2f center, int greyLevel, int size) {
 	cv::circle(g_pBinaryImage, center, size, cv::Scalar(greyLevel, greyLevel, greyLevel), -1);
 }
 
-//¶ÁÈëÍ¼Ïñ
+//è¯»å…¥å›¾åƒ
 Mat Im_read(char q[], int num)
 {
 	char Pctur_name[100] = "55", Pctur_num[5];
@@ -103,7 +104,7 @@ Mat Im_read(char q[], int num)
 	return imread(q);
 }
 
-//¶Á³ö±£´æÍ¼Ïñ
+//è¯»å‡ºä¿å­˜å›¾åƒ
 void Im_write(char p[], int num, Mat Image)
 {
 	char  *Pctur_name2, Pctur_num2[5], Pctur_num3[5], Pctur_num4[5];
@@ -123,7 +124,7 @@ ROIData ROIset(Mat & g_pBinaryImage, int x, int y, int width, int height) {
 	if (x < 0)x = 0;
 	if (y < 0)y = 0;
 	if (x >= g_pBinaryImage.cols)x = g_pBinaryImage.cols - 1;
-	if (y >= g_pBinaryImage.rows)y = g_pBinaryImage.rows - 1;//¿ÉÒÔ¸ÄÎªÔ½½ç²»×ö»òÌø¹ı¶ø²»ÊÇÂÒ×ö
+	if (y >= g_pBinaryImage.rows)y = g_pBinaryImage.rows - 1;//å¯ä»¥æ”¹ä¸ºè¶Šç•Œä¸åšæˆ–è·³è¿‡è€Œä¸æ˜¯ä¹±åš
 	if (x + width > g_pBinaryImage.cols)width = g_pBinaryImage.cols - x;
 	if (y + height > g_pBinaryImage.rows)height = g_pBinaryImage.rows - y;
 	Mat imageROI = g_pBinaryImage(Rect(x, y, width, height));
@@ -141,12 +142,12 @@ ROIData ROIset(Mat & g_pBinaryImage, int x, int y, int width, int height) {
 	return A;
 }
 
-int upline(Mat roi) //ÉÏºáÏß¼ì²â ÓĞ·µ»Ø1ÎŞ·µ»Ø0  1 5 7ÓĞ
+int upline(Mat roi) //ä¸Šæ¨ªçº¿æ£€æµ‹ æœ‰è¿”å›1æ— è¿”å›0  1 5 7æœ‰
 {
 	int y = 0;
 	int m = 0, n = 0;
 	for (int j = 0; j < roi.rows / 4; j++)
-	{
+	{   
 		int k = 0,b=0;
 		for(int i=0;i<roi.cols;i++)
 		{
@@ -190,13 +191,13 @@ int upline(Mat roi) //ÉÏºáÏß¼ì²â ÓĞ·µ»Ø1ÎŞ·µ»Ø0  1 5 7ÓĞ
 			}
 			else
 				y = 0;
-
+			
 		}
 	}
 	return 0;
 }
 
-int leftline(Mat roi) //×óÊúÏß¼ì²â    0ÓĞ
+int leftline(Mat roi) //å·¦ç«–çº¿æ£€æµ‹    0æœ‰
 {
 	int y = 0;
 	int m = 0, n = 0;
@@ -251,7 +252,7 @@ int leftline(Mat roi) //×óÊúÏß¼ì²â    0ÓĞ
 	return 0;
 }
 
-int downline(Mat roi) //ÏÂºáÏß¼ì²â      2¡¢4ÓĞ
+int downline(Mat roi) //ä¸‹æ¨ªçº¿æ£€æµ‹      2ã€4æœ‰
 {
 	int y = 0;
 	int m = 0, n = 0;
@@ -306,7 +307,7 @@ int downline(Mat roi) //ÏÂºáÏß¼ì²â      2¡¢4ÓĞ
 	return 0;
 }
 
-int rightline(Mat roi) //ÓÒÊúÏß¼ì²â    0 1 4ÓĞ
+int rightline(Mat roi) //å³ç«–çº¿æ£€æµ‹    0 1 4æœ‰
 {
 	int y = 0;
 	int m = 0, n = 0;
@@ -361,7 +362,7 @@ int rightline(Mat roi) //ÓÒÊúÏß¼ì²â    0 1 4ÓĞ
 	return 0;
 }
 
-int leftuprect(Mat roi) //×óÉÏºá¹á¼äÏ¶  1 2 3 4 7ÓĞ
+int leftuprect(Mat roi) //å·¦ä¸Šæ¨ªè´¯é—´éš™  1 2 3 4 7æœ‰
 {
 	int y = 0;
 	int m = 0, n = 0;
@@ -373,7 +374,7 @@ int leftuprect(Mat roi) //×óÉÏºá¹á¼äÏ¶  1 2 3 4 7ÓĞ
 			int f = roi.at<uchar>(j, i);
 			if (f > 0 )
 			{
-				k++;
+				k++; 
 			}
 			if (k > 2)
 				break;
@@ -405,7 +406,7 @@ int leftuprect(Mat roi) //×óÉÏºá¹á¼äÏ¶  1 2 3 4 7ÓĞ
 	return 0;
 }
 
-int leftdownrect(Mat roi) //×óÏÂºá¹á¼äÏ¶  1 2 3 4 5 7ÓĞ
+int leftdownrect(Mat roi) //å·¦ä¸‹æ¨ªè´¯é—´éš™  1 2 3 4 5 7æœ‰
 {
 	int y = 0;
 	int m = 0, n = 0;
@@ -449,7 +450,7 @@ int leftdownrect(Mat roi) //×óÏÂºá¹á¼äÏ¶  1 2 3 4 5 7ÓĞ
 	return 0;
 }
 
-int rightuprect(Mat roi) //ÓÒÉÏºá¹á¼äÏ¶  5 6ÓĞ
+int rightuprect(Mat roi) //å³ä¸Šæ¨ªè´¯é—´éš™  5 6æœ‰
 {
 	int y = 0;
 	int m = 0, n = 0;
@@ -493,7 +494,7 @@ int rightuprect(Mat roi) //ÓÒÉÏºá¹á¼äÏ¶  5 6ÓĞ
 	return 0;
 }
 
-int rightdownrect(Mat roi) //ÓÒÏÂºá¹á¼äÏ¶  2 7ÓĞ
+int rightdownrect(Mat roi) //å³ä¸‹æ¨ªè´¯é—´éš™  2 7æœ‰
 {
 	int y = 0;
 	int m = 0, n = 0;
@@ -537,15 +538,143 @@ int rightdownrect(Mat roi) //ÓÒÏÂºá¹á¼äÏ¶  2 7ÓĞ
 	return 0;
 }
 
+int centercross(Mat roi) //ä¸­é—´çº¿è¿‡ç™½çº¿æ£€æµ‹ï¼Œä¸ºäº†åŒºåˆ†0å’Œ8    3 5 8 9
+{
+	int y = 0;
+	int m = 0, n = 0,i= roi.cols / 2,j=0,s=0,z=0;int k = 0, b = 0;
+	for (; j < roi.rows; j++)
+	{
+		int f = roi.at<uchar>(j, i);
+		if (f > 50 && k == 0)
+		{
+			k++; b = j;
+		}
+		if ((j - b) == 1)
+		{
+			if (f > 50)
+			{
+				k++; b = j;
+				if (k > 3)
+				{
+					m = 1; break;
+				}
+			}
+			else
+				k = 0;
+		}
+	}
+	if (m == 1)
+	{
+		j++;int k = 0, b = 0;
+		for (; j < roi.rows; j++)
+		{
+			int f = roi.at<uchar>(j, i);
+			if (f == 0 && k == 0)
+			{
+				k++; b = j;
+			}
+			if ((j - b) == 1)
+			{
+				if (f ==0)
+				{
+					k++; b = j;
+					if (k > 3)
+					{
+						n = 1; break;
+					}
+				}
+				else
+					k = 0;
+			}
+		}
+	}
+	if(n==1)
+	{
+		j++;int k = 0, b = 0;
+		for (; j < roi.rows; j++)
+		{		
+			int f = roi.at<uchar>(j, i);
+			if (f > 50 && k == 0)
+			{
+				k++; b = j;
+			}
+			if ((j - b) == 1)
+			{
+				if (f > 50)
+				{
+					k++; b = j;
+					if (k > 3)
+					{
+						s = 1; break;
+					}
+				}
+				else
+					k = 0;
+			}
+		}
+	}
+	if (s == 1)
+	{
+		j++;int k = 0, b = 0;
+		for (; j < roi.rows; j++)
+		{	
+			int f = roi.at<uchar>(j, i);
+			if (f == 0 && k == 0)
+			{
+				k++; b = j;
+			}
+			if ((j - b) == 1)
+			{
+				if (f == 0)
+				{
+					k++; b = j;
+					if (k > 3)
+					{
+						z = 1; break;
+					}
+				}
+				else
+					k = 0;
+			}
+		}
+	}
+	if (z == 1)
+	{
+		j++;int k = 0, b = 0;
+		for (; j < roi.rows; j++)
+		{
+			int f = roi.at<uchar>(j, i);
+			if (f > 50 && k == 0)
+			{
+				k++; b = j;
+			}
+			if ((j - b) == 1)
+			{
+				if (f > 50)
+				{
+					k++; b = j;
+					if (k > 3)
+					{
+						return 1;
+					}
+				}
+				else
+					k = 0;
+			}
+		}
+	}
+	return 0;
+}
+
 void CornerPoint(Mat g_srcImage1)
 {
 	cvtColor(g_srcImage1, g_grayImage, CV_BGR2GRAY);
 
-	//ÉèÖÃ½Çµã¼ì²â²ÎÊı
+	//è®¾ç½®è§’ç‚¹æ£€æµ‹å‚æ•°  
 	std::vector<cv::Point2f> corners;
 	int max_corners = 200;
 	double quality_level = 0.01;
-	double min_distance = 20;//300   ´ıµ÷£¡£¡
+	double min_distance = 20;//300   å¾…è°ƒï¼ï¼
 	int block_size = 3;
 	bool use_harris = 1;
 	double k = 0.04;
@@ -557,11 +686,11 @@ void CornerPoint(Mat g_srcImage1)
 		rightdown[i].x = 0; rightdown[i].y = 0;
 		leftdown[i].x = 0; leftdown[i].y = 0;
 	}
-	int Thre = 165;  //µ÷
+	int Thre = 165;  //è°ƒ  è¿™é‡Œä¸æ˜¯äºŒå€¼åŒ–é˜ˆå€¼ 
 
 
 
-	//½Çµã¼ì²â
+	//è§’ç‚¹æ£€æµ‹  
 	cv::goodFeaturesToTrack(g_grayImage,
 		corners,
 		max_corners,
@@ -572,10 +701,10 @@ void CornerPoint(Mat g_srcImage1)
 		use_harris,
 		k);
 
-	//·ÖÀà£¬½«¼ì²âµ½µÄ½Çµã»æÖÆµ½Ô­Í¼ÉÏ
+	//åˆ†ç±»ï¼Œå°†æ£€æµ‹åˆ°çš„è§’ç‚¹ç»˜åˆ¶åˆ°åŸå›¾ä¸Š  
 	int a = 0; int b = 0; int c = 0; int d = 0;
 	for (int i = 0; i < corners.size(); i++)
-	{
+	{   
 		Point2f A, B, C, D;
 		A.x = corners[i].x - 5; A.y = corners[i].y - 5;
 		B.x = corners[i].x + 5; B.y = corners[i].y - 5;
@@ -584,13 +713,13 @@ void CornerPoint(Mat g_srcImage1)
 		if (0 < A.x&&A.x < g_grayImage.cols && 0 < B.x&&B.x < g_grayImage.cols && 0 < C.x&&C.x < g_grayImage.cols && 0 < D.x&&D.x < g_grayImage.cols) {
 			if (0 < A.y&&A.y < g_grayImage.rows && 0 < B.y&&B.y < g_grayImage.rows && 0 < C.y&&C.y < g_grayImage.rows && 0 < D.y&&D.y < g_grayImage.rows) {
 				//cv::circle(g_srcImage1, corners[i], 2, cv::Scalar(0, 0, 255), 2, 8, 0);
-				//cv::imshow("½Çµã", g_srcImage1);
+				//cv::imshow("è§’ç‚¹", g_srcImage1);
 				//waitKey(2000);
 				int k = g_grayImage.at<uchar>(A.y, A.x);
 				int p = g_grayImage.at<uchar>(B.y, B.x);
 				int q = g_grayImage.at<uchar>(C.y, C.x);
 				int z = g_grayImage.at<uchar>(D.y, D.x);
-				if (k < Thre&& p >= Thre&& q >= Thre&&z >= Thre)     //´Ë´¦ÎªÒ»¸ö½ÏºÃ¿´k p q zÖµµÄµ÷ÊÔ¶Ïµã
+				if (k < Thre&& p >= Thre&& q >= Thre&&z >= Thre)     //æ­¤å¤„ä¸ºä¸€ä¸ªè¾ƒå¥½çœ‹k p q zå€¼çš„è°ƒè¯•æ–­ç‚¹
 				{
 					leftup[a] = corners[i];
 					cv::circle(g_srcImage1, corners[i], 2, cv::Scalar(0, 0, 255), 2, 8, 0);
@@ -620,12 +749,14 @@ void CornerPoint(Mat g_srcImage1)
 			}
 		}
 		/*cv::circle(g_srcImage1, corners[i], 2, cv::Scalar(0, 0, 255), 2, 8, 0);
-		cv::imshow("½Çµã", g_srcImage1);
+		cv::imshow("è§’ç‚¹", g_srcImage1);
 		waitKey(2000);*/
 	}
 }
 
-//·µ»ØµÄÊÇ½Ç¶È ºÍÏàÓ¦ÏÂ±êÊı×é
+
+
+//è¿”å›çš„æ˜¯è§’åº¦ å’Œç›¸åº”ä¸‹æ ‡æ•°ç»„
 thetaData getTheta(Mat g_pBinaryImage) {
 
 	ROIData dataA[50];ROIData dataA1[10];ROIData dataA2[10];
@@ -650,7 +781,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 	int b[10] = { 0 };	int bb[10] = { 0 };
 	int c[10] = { 0 };	int cc[10] = { 0 };
 	int d[10] = { 0 };	int dd[10] = { 0 };
-	int det = 100;  //Á½ROI¼ä½Ç¶È²î£¬´ıµ÷½Ú!!!
+	int det = 100;  //ä¸¤ROIé—´è§’åº¦å·®ï¼Œå¾…è°ƒèŠ‚!!!
 	leftuppoint = 0, rightuppoint = 0, rightdownpoint = 0, leftdownpoint = 0;
 	Mat g_pBinaryImage2 = g_pBinaryImage.clone();
 
@@ -669,22 +800,22 @@ thetaData getTheta(Mat g_pBinaryImage) {
 		{
 			A = ROIset(g_pBinaryImage, i - 5, j - 10, 10, 10);//A = ROIset(g_pBinaryImage, i - 10, j - 20, 20, 20);
 			dataA[z] = A;
-			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//·ÀÖ¹nanºÍ-nanµÄ¸ÉÈÅ
+			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//é˜²æ­¢nanå’Œ-nançš„å¹²æ‰° 
 				break;
-			if ((dataA[z].center == dataA[z - 1].center) && z > 0)    //ÖØĞÄÖØ¸´
+			if ((dataA[z].center == dataA[z - 1].center) && z > 0)    //é‡å¿ƒé‡å¤
 				break;
-			if (z > 0)
+			if (z > 0) 
 			{
 				int mm = abs(dataA[z].theta - dataA[z - 1].theta);
-				if (mm > 15)              //´Ë´¦ÎªĞ¡¿ò×ÜÊı¼°½Ç¶È²îãĞÖµµ÷ÊÔµÄºÃ¶Ïµã
+				if (mm > 15)              //æ­¤å¤„ä¸ºå°æ¡†æ€»æ•°åŠè§’åº¦å·®é˜ˆå€¼è°ƒè¯•çš„å¥½æ–­ç‚¹
 					break;
 			}
-			//drawROI(g_pBinaryImage2, i - 10, j - 10, 10, 10);
+			//drawROI(g_pBinaryImage2, i - 10, j - 10, 10, 10);		
 			i = A.center.x; j = A.center.y;
 		}
 		if (z > 26&&z<43)
 		{
-			//cv::imshow("½Çµã", g_pBinaryImage2);
+			//cv::imshow("è§’ç‚¹", g_pBinaryImage2);
 			//waitKey(0);
 			float averge = 0;
 			for (int i = 0; i < z - 2; i++)
@@ -696,7 +827,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 			a[goodpointa] = qq;
 			goodpointa++;
 		}
-		//cv::imshow("½Çµã", g_pBinaryImage2);
+		//cv::imshow("è§’ç‚¹", g_pBinaryImage2);
 		//waitKey(0);
 	}
 	if (goodpointa >= 2)
@@ -704,7 +835,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 			float averge=0,sum=0;
 			int zhijiao = 0;
 			for(int kk=0;kk<goodpointa;kk++)
-			{
+			{ 
 				if (fabs(dataA1[kk].theta - 90) < 0.8)
 					zhijiao++;
 				averge += dataA1[kk].theta;
@@ -712,7 +843,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 			averge = averge / goodpointa;
 			for (int hh = 0; hh < goodpointa; hh++)
 			{
-				if (fabs(dataA1[hh].theta - averge) < 4)//5Õâ¸öãĞÖµ´ıµ÷
+				if (fabs(dataA1[hh].theta - averge) < 4)//5è¿™ä¸ªé˜ˆå€¼å¾…è°ƒ
 				{
 					dataA2[mm] = dataA1[hh];
 					thetapointa.point[mm] = a[hh];
@@ -722,7 +853,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 			}
 			if (mm > 1)
 			{
-				sum = sum / mm;
+				sum = sum / mm; 
 				leftuppoint = 1;
 				if (zhijiao > 0)
 				{
@@ -734,7 +865,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 				return thetapointa;
 			}
 		}
-
+	
 	if (mm < 2|| goodpointa<2)
 	{
 		float averge = 0, sum = 0;
@@ -749,29 +880,29 @@ thetaData getTheta(Mat g_pBinaryImage) {
 		{
 			A = ROIset(g_pBinaryImage, i-5, j - 10, 10, 10);//A = ROIset(g_pBinaryImage, i - 10, j - 20, 20, 20);
 			dataB[z] = A;
-			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//·ÀÖ¹nanºÍ-nanµÄ¸ÉÈÅ
+			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//é˜²æ­¢nanå’Œ-nançš„å¹²æ‰° 
 				break;
-			if ((dataB[z].center == dataB[z - 1].center) && z > 0)    //ÖØĞÄÖØ¸´
+			if ((dataB[z].center == dataB[z - 1].center) && z > 0)    //é‡å¿ƒé‡å¤
 				break;
 			if (z > 0)
 			{
 				int mm = abs(dataB[z].theta - dataB[z - 1].theta);
-				if (mm > 15)
+				if (mm > 15)              
 					break;
 			}
 			//drawROI(g_pBinaryImage2, i - 5, j - 10, 10, 10);
-
+			
 			i = A.center.x; j = A.center.y; int controlNum = 0;
-			while (g_pBinaryImage.at<uchar>(j, i) > 50)//ÎªÁË½µµÍÔÓµã³öÏÖµÄÇé¿ö
+			while (g_pBinaryImage.at<uchar>(j, i) > 50)//ä¸ºäº†é™ä½æ‚ç‚¹å‡ºç°çš„æƒ…å†µ
 			{
 				i++;
 				controlNum++;
 				if (controlNum > 5)
 					break;
 			}
-		}//cv::imshow("½Çµã", g_pBinaryImage2);
+		}//cv::imshow("è§’ç‚¹", g_pBinaryImage2);
 			//waitKey(10000);
-		if (z >24 && z<43) //´ıµ÷ £¡£¡£¡  //Ô­Îª33µ«½Ç¶È½Ï´óÊ±¼´¿ò½ÏĞ±Ê±ÊıÄ¿±ä´ó
+		if (z >24 && z<43) //å¾…è°ƒ ï¼ï¼ï¼  //åŸä¸º33ä½†è§’åº¦è¾ƒå¤§æ—¶å³æ¡†è¾ƒæ–œæ—¶æ•°ç›®å˜å¤§
 		{
 			float averge = 0;
 			for (int i = 0; i < z - 2; i++)
@@ -803,7 +934,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 			averge = averge / (goodpointa+goodpointb);
 			for (int hh = 0; hh < goodpointa; hh++)
 			{
-				if (abs(dataA1[hh].theta - averge) < 5)//5Õâ¸öãĞÖµ´ıµ÷
+				if (abs(dataA1[hh].theta - averge) < 5)//5è¿™ä¸ªé˜ˆå€¼å¾…è°ƒ
 				{
 					dataA2[aaa] = dataA1[hh];
 					thetapointa.point[aaa] = a[hh];
@@ -813,7 +944,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 			}
 			for (int hh = 0; hh < goodpointb; hh++)
 			{
-				if (abs(dataB1[hh].theta - averge) < 5)//5Õâ¸öãĞÖµ´ıµ÷
+				if (abs(dataB1[hh].theta - averge) < 5)//5è¿™ä¸ªé˜ˆå€¼å¾…è°ƒ
 				{
 					dataB2[bbb] = dataB1[hh];
 					thetapointb.point[bbb] = b[hh];
@@ -821,7 +952,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 					sum += dataB1[hh].theta;
 				}
 			}
-
+		
 			if ((aaa+bbb)>1)
 			{
 				sum = sum / (aaa + bbb);
@@ -835,10 +966,10 @@ thetaData getTheta(Mat g_pBinaryImage) {
 				}
 				if (aaa >= bbb)
 				{
-					leftuppoint = 1;
+					leftuppoint = 1; 
 					thetapointa.num = aaa;
 					return thetapointa;
-
+					
 				}
 				else
 				{
@@ -848,7 +979,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 				}
 			}
 		}
-		if ((goodpointa + goodpointb) < 2 || (aaa + bbb) < 2)
+		if ((goodpointa + goodpointb) < 2 || (aaa + bbb) < 2) 
 		{
 			for (int qq = 0; rightdown[qq].x != 0; qq++)
 			{
@@ -860,9 +991,9 @@ thetaData getTheta(Mat g_pBinaryImage) {
 				{
 					A = ROIset(g_pBinaryImage, i - 1, j + 10, 10, 10);//A = ROIset(g_pBinaryImage, i - 10, j - 20, 20, 20);
 					dataC[z] = A;
-					if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//·ÀÖ¹nanºÍ-nanµÄ¸ÉÈÅ
+					if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//é˜²æ­¢nanå’Œ-nançš„å¹²æ‰° 
 						break;
-					if ((dataC[z].center == dataC[z - 1].center) && z > 0)    //ÖØĞÄÖØ¸´
+					if ((dataC[z].center == dataC[z - 1].center) && z > 0)    //é‡å¿ƒé‡å¤
 						break;
 					if (z > 0)
 					{
@@ -871,10 +1002,10 @@ thetaData getTheta(Mat g_pBinaryImage) {
 							break;
 					}
 					//drawROI(g_pBinaryImage, i - 10, j - 10, 10, 10);
-					//cv::imshow("½Çµã", g_pBinaryImage);
+					//cv::imshow("è§’ç‚¹", g_pBinaryImage);
 					i = A.center.x; j = A.center.y;
 				}
-				if (z > 24 && z<43) //´ıµ÷ £¡£¡£¡
+				if (z > 24 && z<43) //å¾…è°ƒ ï¼ï¼ï¼
 				{
 					float averge = 0;
 					for (int i = 0; i < z - 2; i++)
@@ -913,7 +1044,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 				averge = averge / mm;
 				for (int hh = 0; hh < goodpointa; hh++)
 				{
-					if (abs(dataA1[hh].theta - averge) < 5)//5Õâ¸öãĞÖµ´ıµ÷
+					if (abs(dataA1[hh].theta - averge) < 5)//5è¿™ä¸ªé˜ˆå€¼å¾…è°ƒ
 					{
 						dataA2[a1] = dataA1[hh];
 						thetapointa.point[a1] = a[hh];
@@ -923,7 +1054,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 				}
 				for (int hh = 0; hh < goodpointb; hh++)
 				{
-					if (abs(dataB1[hh].theta - averge) < 5)//5Õâ¸öãĞÖµ´ıµ÷
+					if (abs(dataB1[hh].theta - averge) < 5)//5è¿™ä¸ªé˜ˆå€¼å¾…è°ƒ
 					{
 						dataB2[b1] = dataB1[hh];
 						thetapointb.point[b1] = b[hh];
@@ -933,7 +1064,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 				}
 				for (int hh = 0; hh < goodpointc; hh++)
 				{
-					if (abs(dataC1[hh].theta - averge) < 5)//5Õâ¸öãĞÖµ´ıµ÷
+					if (abs(dataC1[hh].theta - averge) < 5)//5è¿™ä¸ªé˜ˆå€¼å¾…è°ƒ
 					{
 						dataC2[b1] = dataC1[hh];
 						thetapointc.point[c1] = c[hh];
@@ -969,7 +1100,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 						rightdownpoint = 1; thetapointc.num = c1;
 						return thetapointc;
 					}
-
+					
 				}
 			}
 			if (mm <= 1 || (a1 + b1 + c1) <= 1)
@@ -984,9 +1115,9 @@ thetaData getTheta(Mat g_pBinaryImage) {
 					{
 						A = ROIset(g_pBinaryImage, i - 5, j + 10, 10, 10);//A = ROIset(g_pBinaryImage, i - 10, j - 20, 20, 20);
 						dataD[z] = A;
-						if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//·ÀÖ¹nanºÍ-nanµÄ¸ÉÈÅ
+						if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//é˜²æ­¢nanå’Œ-nançš„å¹²æ‰° 
 							break;
-						if ((dataD[z].center == dataD[z - 1].center) && z > 0)    //ÖØĞÄÖØ¸´
+						if ((dataD[z].center == dataD[z - 1].center) && z > 0)    //é‡å¿ƒé‡å¤
 							break;
 						if (z > 0)
 						{
@@ -995,10 +1126,10 @@ thetaData getTheta(Mat g_pBinaryImage) {
 								break;
 						}
 						//drawROI(after2, i - 5, j + 10, 10, 10);
-
+						
 						i = A.center.x; j = A.center.y;
-					}//cv::imshow("½Çµã", after2); waitKey(0);
-					if (z > 24 && z<43) //´ıµ÷ £¡£¡£¡
+					}//cv::imshow("è§’ç‚¹", after2); waitKey(0);
+					if (z > 24 && z<43) //å¾…è°ƒ ï¼ï¼ï¼
 					{
 						float averge = 0;
 						for (int i = 0; i < z - 2; i++)
@@ -1043,7 +1174,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 					averge = averge / nn;
 					for (int hh = 0; hh < goodpointa; hh++)
 					{
-						if (abs(dataA1[hh].theta - averge) < 5)//5Õâ¸öãĞÖµ´ıµ÷
+						if (abs(dataA1[hh].theta - averge) < 5)//5è¿™ä¸ªé˜ˆå€¼å¾…è°ƒ
 						{
 							dataA2[a1] = dataA1[hh];
 							thetapointa.point[aa1] = a[hh];
@@ -1053,7 +1184,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 					}
 					for (int hh = 0; hh < goodpointb; hh++)
 					{
-						if (abs(dataB1[hh].theta - averge) < 5)//5Õâ¸öãĞÖµ´ıµ÷
+						if (abs(dataB1[hh].theta - averge) < 5)//5è¿™ä¸ªé˜ˆå€¼å¾…è°ƒ
 						{
 							dataB2[b1] = dataB1[hh];
 							thetapointb.point[bb1] = b[hh];
@@ -1063,7 +1194,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 					}
 					for (int hh = 0; hh < goodpointc; hh++)
 					{
-						if (abs(dataC1[hh].theta - averge) < 5)//5Õâ¸öãĞÖµ´ıµ÷
+						if (abs(dataC1[hh].theta - averge) < 5)//5è¿™ä¸ªé˜ˆå€¼å¾…è°ƒ
 						{
 							dataC2[b1] = dataC1[hh];
 							thetapointc.point[cc1] = c[hh];
@@ -1073,7 +1204,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 					}
 					for (int hh = 0; hh < goodpointd; hh++)
 					{
-						if (abs(dataD1[hh].theta - averge) < 5)//5Õâ¸öãĞÖµ´ıµ÷
+						if (abs(dataD1[hh].theta - averge) < 5)//5è¿™ä¸ªé˜ˆå€¼å¾…è°ƒ
 						{
 							dataD2[b1] = dataD1[hh];
 							thetapointd.point[dd1] = d[hh];
@@ -1121,7 +1252,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 		}
 	}
 }
-
+			
 float angleangin(Mat after, Point2f k)
 {
 	if (leftuppoint)
@@ -1134,34 +1265,34 @@ float angleangin(Mat after, Point2f k)
 		{
 			A = ROIset(after, i - 5, j - 10, 10, 10);//A = ROIset(g_pBinaryImage, i - 10, j - 20, 20, 20);
 			dataA[z] = A;
-			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//·ÀÖ¹nanºÍ-nanµÄ¸ÉÈÅ
+			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//é˜²æ­¢nanå’Œ-nançš„å¹²æ‰° 
 				break;
-			if ((dataA[z].center == dataA[z - 1].center) && z > 0)    //ÖØĞÄÖØ¸´
+			if ((dataA[z].center == dataA[z - 1].center) && z > 0)    //é‡å¿ƒé‡å¤
 				break;
 			if (z > 0)
 			{
 				int mm = abs(dataA[z].theta - dataA[z - 1].theta);
-				if (mm > 15)              //´Ë´¦ÎªĞ¡¿ò×ÜÊı¼°½Ç¶È²îãĞÖµµ÷ÊÔµÄºÃ¶Ïµã
+				if (mm > 15)              //æ­¤å¤„ä¸ºå°æ¡†æ€»æ•°åŠè§’åº¦å·®é˜ˆå€¼è°ƒè¯•çš„å¥½æ–­ç‚¹
 					break;
 			}
-			//drawROI(after2, i - 5, j - 10, 10, 10);
-			//cv::imshow("½Çµã", after2);
+			//drawROI(after2, i - 5, j - 10, 10, 10);		
+			//cv::imshow("è§’ç‚¹", after2);
 			//waitKey(0);
 			i = A.center.x; j = A.center.y;
 		}
 		float averge = 0;
 		if (z > 26 && z<43)
 		{
-			//cv::imshow("½Çµã", g_pBinaryImage2);
+			//cv::imshow("è§’ç‚¹", g_pBinaryImage2);
 			//waitKey(0);
-
+			
 			for (int i = 0; i < z - 2; i++)
 			{
 				averge += dataA[i].theta;
 			}
 			averge = averge / (z - 2);
 		}
-		//cv::imshow("½Çµã", g_pBinaryImage2);
+		//cv::imshow("è§’ç‚¹", g_pBinaryImage2);
 		//waitKey(0);
 		if (averge > 88 && averge < 92)
 			return 0;
@@ -1177,9 +1308,9 @@ float angleangin(Mat after, Point2f k)
 		{
 			A = ROIset(after, i - 5, j - 10, 10, 10);//A = ROIset(g_pBinaryImage, i - 10, j - 20, 20, 20);
 			dataB[z] = A;
-			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//·ÀÖ¹nanºÍ-nanµÄ¸ÉÈÅ
+			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//é˜²æ­¢nanå’Œ-nançš„å¹²æ‰° 
 				break;
-			if ((dataB[z].center == dataB[z - 1].center) && z > 0)    //ÖØĞÄÖØ¸´
+			if ((dataB[z].center == dataB[z - 1].center) && z > 0)    //é‡å¿ƒé‡å¤
 				break;
 			if (z > 0)
 			{
@@ -1190,17 +1321,17 @@ float angleangin(Mat after, Point2f k)
 			//drawROI(after2, i - 5, j - 10, 10, 10);
 
 			i = A.center.x; j = A.center.y; int controlNum = 0;
-			while (after.at<uchar>(j, i) > 50)//ÎªÁË½µµÍÔÓµã³öÏÖµÄÇé¿ö
+			while (after.at<uchar>(j, i) > 50)//ä¸ºäº†é™ä½æ‚ç‚¹å‡ºç°çš„æƒ…å†µ
 			{
 				i++;
 				controlNum++;
 				if (controlNum > 5)
 					break;
 			}
-		}//cv::imshow("½Çµã", after2);
+		}//cv::imshow("è§’ç‚¹", after2);
 		 //waitKey(5000);
 		float averge = 0;
-		if (z >24 && z<43) //´ıµ÷ £¡£¡£¡  //Ô­Îª33µ«½Ç¶È½Ï´óÊ±¼´¿ò½ÏĞ±Ê±ÊıÄ¿±ä´ó
+		if (z >24 && z<43) //å¾…è°ƒ ï¼ï¼ï¼  //åŸä¸º33ä½†è§’åº¦è¾ƒå¤§æ—¶å³æ¡†è¾ƒæ–œæ—¶æ•°ç›®å˜å¤§
 		{
 			for (int i = 0; i < z - 2; i++)
 			{
@@ -1223,9 +1354,9 @@ float angleangin(Mat after, Point2f k)
 		{
 			A = ROIset(after, i - 1, j + 10, 10, 10);//A = ROIset(g_pBinaryImage, i - 10, j - 20, 20, 20);
 			dataC[z] = A;
-			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//·ÀÖ¹nanºÍ-nanµÄ¸ÉÈÅ
+			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//é˜²æ­¢nanå’Œ-nançš„å¹²æ‰° 
 				break;
-			if ((dataC[z].center == dataC[z - 1].center) && z > 0)    //ÖØĞÄÖØ¸´
+			if ((dataC[z].center == dataC[z - 1].center) && z > 0)    //é‡å¿ƒé‡å¤
 				break;
 			if (z > 0)
 			{
@@ -1234,13 +1365,13 @@ float angleangin(Mat after, Point2f k)
 					break;
 			}
 			//drawROI(g_pBinaryImage, i - 10, j - 10, 10, 10);
-			//cv::imshow("½Çµã", g_pBinaryImage);
+			//cv::imshow("è§’ç‚¹", g_pBinaryImage);
 			i = A.center.x; j = A.center.y;
 		}
 		float averge = 0;
-		if (z > 24 && z<43) //´ıµ÷ £¡£¡£¡
+		if (z > 24 && z<43) //å¾…è°ƒ ï¼ï¼ï¼
 		{
-
+			
 			for (int i = 0; i < z - 2; i++)
 			{
 				averge += dataC[i].theta;
@@ -1262,9 +1393,9 @@ float angleangin(Mat after, Point2f k)
 		{
 			A = ROIset(after, i - 5, j + 10, 10, 10);//A = ROIset(g_pBinaryImage, i - 10, j - 20, 20, 20);
 			dataD[z] = A;
-			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//·ÀÖ¹nanºÍ-nanµÄ¸ÉÈÅ
+			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//é˜²æ­¢nanå’Œ-nançš„å¹²æ‰° 
 				break;
-			if ((dataD[z].center == dataD[z - 1].center) && z > 0)    //ÖØĞÄÖØ¸´
+			if ((dataD[z].center == dataD[z - 1].center) && z > 0)    //é‡å¿ƒé‡å¤
 				break;
 			if (z > 0)
 			{
@@ -1273,13 +1404,13 @@ float angleangin(Mat after, Point2f k)
 					break;
 			}
 			//drawROI(g_pBinaryImage, i - 5, j + 10, 10, 10);
-			//cv::imshow("½Çµã", g_pBinaryImage);
+			//cv::imshow("è§’ç‚¹", g_pBinaryImage);
 			i = A.center.x; j = A.center.y;
 		}
 		float averge = 0;
-		if (z > 24 && z<43) //´ıµ÷ £¡£¡£¡
+		if (z > 24 && z<43) //å¾…è°ƒ ï¼ï¼ï¼
 		{
-
+			
 			for (int i = 0; i < z - 2; i++)
 			{
 				averge += dataD[i].theta;
@@ -1292,17 +1423,17 @@ float angleangin(Mat after, Point2f k)
 			return averge - 90;
 	}
 }
-
+		
 Mat ImageRotate(Mat src, Point2f center, double angle)
 {
-	//¼ÆËã¶şÎ¬Ğı×ªµÄ·ÂÉä±ä»»¾ØÕó
+	//è®¡ç®—äºŒç»´æ—‹è½¬çš„ä»¿å°„å˜æ¢çŸ©é˜µ  
 	Mat M = getRotationMatrix2D(center, angle, 1);
 	Mat dst;
 	warpAffine(src, dst, M, cvSize(src.cols, src.rows), CV_INTER_LINEAR);
 	return dst;
 }
 
-// »ñÈ¡Ö¸¶¨ÏñËØµã·ÅÉä±ä»»ºóµÄĞÂµÄ×ø±êÎ»ÖÃ
+// è·å–æŒ‡å®šåƒç´ ç‚¹æ”¾å°„å˜æ¢åçš„æ–°çš„åæ ‡ä½ç½®    
 Point2f getPointAffinedPos(Point2f src, Point2f center, double angle)
 {
 	Point2f dst;
@@ -1315,16 +1446,19 @@ Point2f getPointAffinedPos(Point2f src, Point2f center, double angle)
 	return dst;
 }
 
-//·µ»ØµÄÊÇÊı×ÖËùÔÚÎ»ÖÃÖĞĞÄºÍÊı×ÖµÄÖµ
+//è¿”å›çš„æ˜¯æ•°å­—æ‰€åœ¨ä½ç½®ä¸­å¿ƒå’Œæ•°å­—çš„å€¼
 ROIData numbertest(Point2f k,Mat after) {
-	int dets = 3500; //´ıµ÷£¡£¡3500
-	mat[0] = imread("../source/cam/0.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[1]= imread("../source/cam/1.jpg", CV_LOAD_IMAGE_UNCHANGED);mat[2] = imread("../source/cam/2.jpg", CV_LOAD_IMAGE_UNCHANGED);  //×¢Òâ²»¼ÓflagÄ¬ÈÏÒÔÈıÍ¨µÀ¶ÁÈë£¡£¡
+	int dets = 3800; //å¾…è°ƒï¼ï¼3500
+	//mat[0] = imread("0.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[1]= imread("1.jpg", CV_LOAD_IMAGE_UNCHANGED);mat[2] = imread("2.jpg", CV_LOAD_IMAGE_UNCHANGED);  //æ³¨æ„ä¸åŠ flagé»˜è®¤ä»¥ä¸‰é€šé“è¯»å…¥ï¼ï¼
+	//mat[3] = imread("3.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[4] = imread("4.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[5] = imread("5.jpg", CV_LOAD_IMAGE_UNCHANGED);
+	//mat[6] = imread("6.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[7] = imread("7.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[8] = imread("8.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[9] = imread("9.jpg", CV_LOAD_IMAGE_UNCHANGED);
+	mat[0] = imread("../source/cam/0.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[1] = imread("../source/cam/1.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[2] = imread("../source/cam/2.jpg", CV_LOAD_IMAGE_UNCHANGED);  //æ³¨æ„ä¸åŠ flagé»˜è®¤ä»¥ä¸‰é€šé“è¯»å…¥ï¼ï¼
 	mat[3] = imread("../source/cam/3.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[4] = imread("../source/cam/4.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[5] = imread("../source/cam/5.jpg", CV_LOAD_IMAGE_UNCHANGED);
 	mat[6] = imread("../source/cam/6.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[7] = imread("../source/cam/7.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[8] = imread("../source/cam/8.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[9] = imread("../source/cam/9.jpg", CV_LOAD_IMAGE_UNCHANGED);
 	ROIData place;
 	/*for (int i = 0; i < 10; i++)
 	{
-		int downlin = leftuprect(mat[i]);
+		int downlin = centercross(mat[i]);
 		cout << downlin << endl;
 	}*/
 	if (leftuppoint)
@@ -1334,7 +1468,7 @@ ROIData numbertest(Point2f k,Mat after) {
 			Mat roi = after(Rect(k.x - rec_width + 10, k.y - rec_width + 10, rec_width - 20, rec_width - 20));
 			 drawROI( after2, k.x - rec_width + 10, k.y - rec_width + 10, rec_width - 20, rec_width - 20);
 			//cv::imshow("src", after2);
-			//waitKey(2000);
+			//waitKey(0);
 			int num=bSums(roi);
 			if (num < dets)
 			{
@@ -1349,10 +1483,10 @@ ROIData numbertest(Point2f k,Mat after) {
 	{
 		if ((k.x+rec_width-10) <after.cols && (k.y - rec_width + 10) > 0)
 		{
-			Mat roi = after(Rect(k.x + 10, k.y - rec_width + 10, rec_width - 20, rec_width - 20));
-			drawROI(after2, k.x + 10, k.y - rec_width + 10, rec_width - 20, rec_width - 20);
+			Mat roi = after(Rect(k.x + 20, k.y - rec_width + 10, rec_width - 20, rec_width - 20));
+			drawROI(after2, k.x + 20, k.y - rec_width + 10, rec_width - 20, rec_width - 20);
 			//cv::imshow("src", after2);
-			//waitKey(3000);
+			//waitKey(0);
 			int num = bSums(roi);
 			if (num < dets)
 			{
@@ -1407,7 +1541,7 @@ void ModeMake(Mat src)
 	//src = imread("mode.jpg");
 	//src=prospective(src);
 	 cvtColor(src, gar, CV_BGR2GRAY);
-	 threshold(gar, bas, 160, 255, CV_THRESH_BINARY);     //×¢Òâµ÷ãĞÖµ
+	 threshold(gar, bas, thre, 255, CV_THRESH_BINARY);     //æ³¨æ„è°ƒé˜ˆå€¼
 	 int a = 325, b = 365, c = 60, d = 100;
 	/* drawROI(bas, a,b, c, d);
 	 cv::imshow("src",bas);
@@ -1423,7 +1557,7 @@ void ModeMake(Mat src)
 			 if (roi.at<uchar>(j, i) > 0)
 				 sumi++;
 		 }
-		 if (sumi > 3) //´ıµ÷£¡£¡
+		 if (sumi > 3) //å¾…è°ƒï¼ï¼
 		 {
 			 left = i;
 			 break;
@@ -1438,7 +1572,7 @@ void ModeMake(Mat src)
 			 if (roi.at<uchar>(j, i) > 0)
 				 sumi++;
 		 }
-		 if (sumi < 3)   //´ıµ÷£¡£¡
+		 if (sumi < 3)   //å¾…è°ƒï¼ï¼
 		 {
 			 right = i;
 			 break;
@@ -1449,7 +1583,7 @@ void ModeMake(Mat src)
 	/* drawROI(bas, a+left, b, right - left, roi.rows);
 	 cv::imshow("src", bas);
 	 waitKey(0);*/
-	 int j = 0, sumj = 0, top = 0, bottom = 0;//ÉÏÏÂÉ¨Ãè
+	 int j = 0, sumj = 0, top = 0, bottom = 0;//ä¸Šä¸‹æ‰«æ
 	 for (;  j<roi1.rows;j++)
 	 {
 		 for (int i = 0; i < roi1.cols;i++ )
@@ -1457,7 +1591,7 @@ void ModeMake(Mat src)
 			 if (roi1.at<uchar>(j, i) > 0)
 				 sumj++;
 		 }
-		 if (sumj > 3) //´ıµ÷£¡£¡
+		 if (sumj > 3) //å¾…è°ƒï¼ï¼
 		 {
 			 top = j;
 			 break;
@@ -1472,7 +1606,7 @@ void ModeMake(Mat src)
 			 if (roi1.at<uchar>(j, i) > 0)
 				 sumj++;
 		 }
-		 if (sumj < 3) //´ıµ÷£¡£¡
+		 if (sumj < 3) //å¾…è°ƒï¼ï¼
 		 {
 			 bottom = j;
 			 break;
@@ -1483,6 +1617,6 @@ void ModeMake(Mat src)
 	 /*drawROI(bas, a + left, b+top, right - left, bottom - top);
 	 cv::imshow("src", bas);
 	 waitKey(0);*/
-	 imwrite("modeafter.jpg", roi2);
+	 
 
 }

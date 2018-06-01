@@ -1,4 +1,4 @@
-//#include "cv.h"
+ï»¿//#include "cv.h"
 //#include "highgui.h"
 //#include "cxcore.h"
 #include <opencv2/opencv.hpp>
@@ -14,12 +14,12 @@
 using namespace cv;
 using namespace std;
 extern Mat mat[10];
-
+extern int thre;
 Mat map_matrix(3, 3, CV_32FC1);
 Mat mapInv_matrix, map_x, map_y;
 extern Mat g_srcImage, g_srcImage1, g_grayImage;
 
-/*@note srcTri[]Êı×éµÄÅäÖÃ
+/*@note srcTri[]æ•°ç»„çš„é…ç½®
 */
 void srcTri_config(Point2f srcTri[], int dot[]) {
 	srcTri[0].x = dot[0];//276;				271
@@ -33,19 +33,19 @@ void srcTri_config(Point2f srcTri[], int dot[]) {
 }
 
 
-/*@note »ñÈ¡±ä»»¾ØÕó
-**@para Mat* src:Ô­Ê¼Í¼Ïñ
-**@note ÔÚÉãÏñÍ·Î»ÖÃ±ä¶¯ºó£¬Çë×ÔĞĞÉèÖÃº¯ÊıÄÚ²ÎÊı
+/*@note è·å–å˜æ¢çŸ©é˜µ
+**@para Mat* src:åŸå§‹å›¾åƒ
+**@note åœ¨æ‘„åƒå¤´ä½ç½®å˜åŠ¨åï¼Œè¯·è‡ªè¡Œè®¾ç½®å‡½æ•°å†…å‚æ•°
 */
 void getmap_matrix() {
-	int dot[8] = { 276,256,402,256,438,378,248,378 };												
-	Size newCanvas = Size(640, 640);//ÉèÖÃĞÂ»­²¼·Ö±æÂÊ
+	int dot[8] = { 262,290,385,288,425,406,237,410 };												
+	Size newCanvas = Size(640, 640);//è®¾ç½®æ–°ç”»å¸ƒåˆ†è¾¨ç‡
 
-	int ratio = 4;//4¸öÏñËØ1ÀåÃ×
-	float side_len = 3.15;//¡ß640pixel=160cm,4pixel=1cm¡àratio=4;Ğ¡·½¸ñ±ß³¤side_len=3.15cm 
-	int bias = 12.2;//¾àºóÖá40cm´¦ÎªÍ¼Ïñµ×±ß£¬60cm´¦ÎªºÚ°×¸ñµ×Ïß£¬¦¤=20cm   //chuangyi 47.3  59.5
+	int ratio = 4;//4ä¸ªåƒç´ 1å˜ç±³
+	float side_len = 3.15;//âˆµ640pixel=160cm,4pixel=1cmâˆ´ratio=4;å°æ–¹æ ¼è¾¹é•¿side_len=3.15cm 
+	int bias = 9.2;//è·åè½´40cmå¤„ä¸ºå›¾åƒåº•è¾¹ï¼Œ60cmå¤„ä¸ºé»‘ç™½æ ¼åº•çº¿ï¼ŒÎ”=20cm   //chuangyi 51.8  52.8
 
-				  /*ÒÔÏÂÒ»°ãÎŞĞè¸ü¸Ä*/
+				  /*ä»¥ä¸‹ä¸€èˆ¬æ— éœ€æ›´æ”¹*/
 	Point2f srcTri[4], dstTri[4];
 	srcTri_config(srcTri, dot);
 
@@ -59,37 +59,37 @@ void getmap_matrix() {
 	dstTri[3].x = dstTri[0].x;
 	dstTri[3].y = dstTri[2].y;
 
-	map_matrix = getPerspectiveTransform(srcTri, dstTri);		//±ä»»¾ØÕó
-	mapInv_matrix = getPerspectiveTransform(dstTri, srcTri);  //»ñÈ¡Í¸ÊÓ±ä»»Õó
+	map_matrix = getPerspectiveTransform(srcTri, dstTri);		//å˜æ¢çŸ©é˜µ
+	mapInv_matrix = getPerspectiveTransform(dstTri, srcTri);  //è·å–é€è§†å˜æ¢é˜µ
 
 }
 
 
-/*note ÊäÈë(±ä»»ºó)Í¼Ïñ×ø±ê£¬Êä³ö¸Ãµã¾à³µÖĞĞÄÏßµÄÊµ¼Ê×ø±êPoint.x(cm)ºÍ¾à³µºóÖáµÄ×ø±êPoint.y(cm)
+/*note è¾“å…¥(å˜æ¢å)å›¾åƒåæ ‡ï¼Œè¾“å‡ºè¯¥ç‚¹è·è½¦ä¸­å¿ƒçº¿çš„å®é™…åæ ‡Point.x(cm)å’Œè·è½¦åè½´çš„åæ ‡Point.y(cm)
 */
 Point2f getRealXY(Point2f origin, int ratio = 4) {
-	int width = 640, height = 640;//ÉèÖÃĞÂ»­²¼·Ö±æÂÊ
-	float side_len = 3.15;//²ÎÊıÖµÓëgetmap_matrix()ÏàÍ¬
-	int bias = 12.2;
+	int width = 640, height = 640;//è®¾ç½®æ–°ç”»å¸ƒåˆ†è¾¨ç‡
+	float side_len = 3.15;//å‚æ•°å€¼ä¸getmap_matrix()ç›¸åŒ
+	int bias = 9.2;
 	Point2f RealXY;
 	RealXY.x = (origin.x - width / 2) / ratio;
-	RealXY.y = ((height - bias*ratio) - origin.y) / ratio + 59.5;	//Áõ ´Ë´¦¿ÉÖ±½Óheight-y+³µºóÖáµ½Í¼Ïñµ×±ß¾àÀë
-	//×¢£º59.5£ºÊµ¼Ê±ê×¢Ê±£¬ºÚ°×¸ñµ×±ß¾à³µÖáOµã59.5cm£»
+	RealXY.y = ((height - bias*ratio) - origin.y) / ratio + 44.1;	//åˆ˜ æ­¤å¤„å¯ç›´æ¥height-y+è½¦åè½´åˆ°å›¾åƒåº•è¾¹è·ç¦»
+	//æ³¨ï¼š59.5ï¼šå®é™…æ ‡æ³¨æ—¶ï¼Œé»‘ç™½æ ¼åº•è¾¹è·è½¦è½´Oç‚¹59.5cmï¼›
 	return RealXY;
 }
 
 
-/*@brief ÓÉÔ­Ê¼µã»ñµÃ¶ÔÓ¦±ä»»µã
-*@para Point2f src_p:Ô­Ê¼µã
-*@para Mat map_matrix:±ä»»¾ØÕó([3x3])
-*@return Point2f:¶ÔÓ¦±ä»»µã
+/*@brief ç”±åŸå§‹ç‚¹è·å¾—å¯¹åº”å˜æ¢ç‚¹
+*@para Point2f src_p:åŸå§‹ç‚¹
+*@para Mat map_matrix:å˜æ¢çŸ©é˜µ([3x3])
+*@return Point2f:å¯¹åº”å˜æ¢ç‚¹
 */
 Point2f GetCorrespondingPoint(Point2f src_p, Mat map_matrix) {
 	float point[] = { src_p.x,src_p.y,1 };
-	Mat warped_point(3, 1, CV_32FC1, point);				//¹¹Ôì[x,y,1]
+	Mat warped_point(3, 1, CV_32FC1, point);				//æ„é€ [x,y,1]
 
 	float homo[3];
-	Mat homogeneous(3, 1, CV_32FC1, homo);					//¶ÔÓ¦[x`,y`,1];
+	Mat homogeneous(3, 1, CV_32FC1, homo);					//å¯¹åº”[x`,y`,1];
 
 	map_matrix.convertTo(map_matrix, CV_32FC1);			//  mat1*mat2:only float types are accepted
 	homogeneous = map_matrix*warped_point;				//[3x3]*[3x1]
@@ -97,9 +97,9 @@ Point2f GetCorrespondingPoint(Point2f src_p, Mat map_matrix) {
 	return Point2f(homo[0] / homo[2], homo[1] / homo[2]);
 }
 
-/*@brief Ò»¸öÍêÕûµÄµ¥Í¼Æ¬±ä»»Àı×Ó
-*@para sImag:ÊäÈëÍ¼Ïñ
-*@retun Mat:±ä»»ºóÍ¼Ïñ
+/*@brief ä¸€ä¸ªå®Œæ•´çš„å•å›¾ç‰‡å˜æ¢ä¾‹å­
+*@para sImag:è¾“å…¥å›¾åƒ
+*@retun Mat:å˜æ¢åå›¾åƒ
 */
 Mat prospective(Mat sImg) {
 	Mat ImageIPM(640, 640, CV_32FC1);
@@ -110,24 +110,24 @@ Mat prospective(Mat sImg) {
 
 Mat picture_prehandle(Mat srcImage)
 {
-	srcImage = prospective(srcImage);   //¿É¸ù¾İ±ä»»ºó¹Û²ì¿ÉÓÃÇåÎúÇøÓòÖ»½øĞĞÌØ¶¨ÇøÓòÄæÍ¸ÊÓ
+	srcImage = prospective(srcImage);   //å¯æ ¹æ®å˜æ¢åè§‚å¯Ÿå¯ç”¨æ¸…æ™°åŒºåŸŸåªè¿›è¡Œç‰¹å®šåŒºåŸŸé€†é€è§†
 	cvtColor(srcImage, g_grayImage, COLOR_BGR2GRAY);
 	//blur(grayImage, grayImage2, Size(3, 3));
-	threshold(g_grayImage, g_grayImage, 180, 255, CV_THRESH_BINARY);   //ãĞÖµ´ıµ÷
+	threshold(g_grayImage, g_grayImage, thre, 255, CV_THRESH_BINARY);   //é˜ˆå€¼å¾…è°ƒ
 
 	return g_grayImage;
 }
 
 
 
-//ÅÅĞòº¯Êı
+//æ’åºå‡½æ•°
 void man()
 {
 	int a[10] = { 10,2,3,4,5,6,9,8,7,1 };
 	int i, j, t;
 	for (j = 0; j<10; j++)
 		for (i = 0; i<10 - 1 - j; i++)
-			if (a[i]<a[i + 1]) /* ÓÉĞ¡µ½´ó>,ÓÉ´óµ½Ğ¡Ê±¸ÄÎª< */
+			if (a[i]<a[i + 1]) /* ç”±å°åˆ°å¤§>,ç”±å¤§åˆ°å°æ—¶æ”¹ä¸º< */
 			{
 				t = a[i];
 				a[i] = a[i + 1];
@@ -141,7 +141,7 @@ void man()
 int getnumber(Mat roi)
 {
 	int mynumber;
-	int i = 0, sumi = 0, left = 0, right = 0, left2 = 0, right2 = 0, mode = 0;//×óÓÒÉ¨Ãè
+	int i = 0, sumi = 0, left = 0, right = 0, left2 = 0, right2 = 0, mode = 0;//å·¦å³æ‰«æ
 	for (; i < roi.cols; i++)
 	{
 		for (int j = 0; j < roi.rows; j++)
@@ -149,7 +149,7 @@ int getnumber(Mat roi)
 			if (roi.at<uchar>(j, i) > 0)
 				sumi++;
 		}
-		if (sumi > 3) //´ıµ÷£¡£¡
+		if (sumi > 3) //å¾…è°ƒï¼ï¼
 		{
 			left = i;
 			break;
@@ -164,31 +164,33 @@ int getnumber(Mat roi)
 			if (roi.at<uchar>(j, i) > 0)
 				sumi++;
 		}
-		if (sumi < 3)   //´ıµ÷£¡£¡
+		if (sumi < 3)   //å¾…è°ƒï¼ï¼
 		{
 			right = i;
 			break;
 		}
 		sumi = 0;
 	}
-	if (right < (roi.cols / 2 - 2))//´ıµ÷£¡£¡
-	{
-		i++; sumi = 0, mode = 1;
-		for (; i < roi.cols; i++)
+	//if (right < (roi.cols / 2 ))//å¾…è°ƒï¼ï¼
+	//{
+		i++; sumi = 0; //mode = 1;
+		for (; i < roi.cols-20; i++)
 		{
 			for (int j = 0; j < roi.rows; j++)
 			{
 				if (roi.at<uchar>(j, i) > 0)
 					sumi++;
 			}
-			if (sumi > 3) //´ıµ÷£¡£¡
+			if (sumi > 3) //å¾…è°ƒï¼ï¼
 			{
-				left2 = i;
+				left2 = i; mode = 1;
 				break;
 			}
 			sumi = 0;
 		}
-		i += 10; sumi = 0;
+		if(mode==1)
+		{
+			i += 10; sumi = 0;
 		for (; i < roi.cols; i++)
 		{
 			for (int j = 0; j < roi.rows; j++)
@@ -196,16 +198,18 @@ int getnumber(Mat roi)
 				if (roi.at<uchar>(j, i) > 0)
 					sumi++;
 			}
-			if (sumi < 3)   //´ıµ÷£¡£¡
+			if (sumi < 3)   //å¾…è°ƒï¼ï¼
 			{
 				right2 = i;
 				break;
 			}
 			sumi = 0;
 		}
-	}
+	   }
+	if (right <= (left+15))
+		return 0;
 	Mat roi1 = roi(Rect(left, 0, right - left, roi.rows));
-	int j = 0, sumj = 0, top = 0, bottom = 0;//ÉÏÏÂÉ¨Ãè
+	int j = 0, sumj = 0, top = 0, bottom = 0;//ä¸Šä¸‹æ‰«æ
 	for (; j < roi1.rows; j++)
 	{
 		for (int i = 0; i < roi1.cols; i++)
@@ -213,7 +217,7 @@ int getnumber(Mat roi)
 			if (roi1.at<uchar>(j, i) > 0)
 				sumj++;
 		}
-		if (sumj > 3) //´ıµ÷£¡£¡
+		if (sumj > 3) //å¾…è°ƒï¼ï¼
 		{
 			top = j;
 			break;
@@ -228,27 +232,29 @@ int getnumber(Mat roi)
 			if (roi1.at<uchar>(j, i) > 0)
 				sumj++;
 		}
-		if (sumj < 3) //´ıµ÷£¡£¡
+		if (sumj < 3) //å¾…è°ƒï¼ï¼
 		{
 			bottom = j;
 			break;
 		}
 		sumj = 0;
 	}
+	if (bottom <= (top+60))
+		return 0;
 	Mat roi2 = roi1(Rect(0, top, roi1.cols, bottom - top));
 	int number1 = 2, t = 0, number2 = 0, min = 0;
-	if (roi2.cols < 35)     //¿Éµ÷ãĞÖµ
+	if (roi2.cols < 40)     //å¯è°ƒé˜ˆå€¼
 	{
 		number1 = 1;
 	}
 	else {
 		for (int p = 2; p < 10; p++)
 		{
-			//char outputfile[70] = "D:/Ô­D/³µ¶Ó/´óÈıÏÂ/´´Òâ±ÈÈü/Í¼Ïñ/pic";
+			//char outputfile[70] = "D:/åŸD/è½¦é˜Ÿ/å¤§ä¸‰ä¸‹/åˆ›æ„æ¯”èµ›/å›¾åƒ/pic";
 			//Im_write(outputfile, p, roi2);
 			Mat res;
 			resize(roi2, roi2, mat[p].size(), 0, 0, INTER_LINEAR);
-			//char outputfile1[70] = "D:/Ô­D/³µ¶Ó/´óÈıÏÂ/´´Òâ±ÈÈü/Í¼Ïñ/pic2";
+			//char outputfile1[70] = "D:/åŸD/è½¦é˜Ÿ/å¤§ä¸‰ä¸‹/åˆ›æ„æ¯”èµ›/å›¾åƒ/pic2";
 			//Im_write(outputfile1, p, roi2);
 			absdiff(roi2, mat[p], res);
 			int k = bSums(res);
@@ -278,9 +284,11 @@ int getnumber(Mat roi)
 	if (mode == 1)
 	{
 		t = 0;
+		if (right2 <= (left2+15))
+			return 0;
 		Mat roi3 = roi(Rect(left2, 0, right2 - left2, roi.rows));
 		Mat roi4 = roi3(Rect(0, top, roi3.cols, bottom - top));
-		if (roi4.cols < 35)     //¿Éµ÷ãĞÖµ
+		if (roi4.cols < 35)     //å¯è°ƒé˜ˆå€¼
 		{
 			number2 = 1;
 		}
@@ -292,10 +300,10 @@ int getnumber(Mat roi)
 					continue;
 				}
 				Mat res;
-				//char outputfile2[70] = "D:/Ô­D/³µ¶Ó/´óÈıÏÂ/´´Òâ±ÈÈü/Í¼Ïñ/pic3";
+				//char outputfile2[70] = "D:/åŸD/è½¦é˜Ÿ/å¤§ä¸‰ä¸‹/åˆ›æ„æ¯”èµ›/å›¾åƒ/pic3";
 				//Im_write(outputfile2, p, roi4);
 				resize(roi4, roi4, mat[p].size(), 0, 0, INTER_LINEAR);
-				//char outputfile3[70] = "D:/Ô­D/³µ¶Ó/´óÈıÏÂ/´´Òâ±ÈÈü/Í¼Ïñ/pic4";
+				//char outputfile3[70] = "D:/åŸD/è½¦é˜Ÿ/å¤§ä¸‰ä¸‹/åˆ›æ„æ¯”èµ›/å›¾åƒ/pic4";
 				//Im_write(outputfile3, p, roi4);
 				absdiff(roi4, mat[p], res);
 				//imshow("1", roi4);
@@ -315,7 +323,7 @@ int getnumber(Mat roi)
 		}
 		if (number2 == 0)
 		{
-			if (leftline(roi4) || rightline(roi4))
+			if ((leftline(roi4) || rightline(roi4))&& !centercross(roi4))
 				;
 			else
 				number2 = 8;
@@ -341,3 +349,4 @@ int getnumber(Mat roi)
 	mynumber = number1;
 	return mynumber;
 }
+

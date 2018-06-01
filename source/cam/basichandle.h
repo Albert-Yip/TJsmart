@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <opencv2/opencv.hpp>  
 #include "opencv2/highgui/highgui.hpp"  
 #include "opencv2/imgproc/imgproc.hpp"  
@@ -59,5 +59,7 @@ int leftdownrect(Mat roi);
 int rightuprect(Mat roi);
 
 int rightdownrect(Mat roi);
+
+int centercross(Mat roi);
 
 int bSums(Mat src);

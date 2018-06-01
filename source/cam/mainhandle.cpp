@@ -1,62 +1,66 @@
-#include <opencv2/opencv.hpp>
-#include "opencv2/highgui/highgui.hpp"
-#include "opencv2/imgproc/imgproc.hpp"
-#include "basichandle.h"
-#include "prehandle.h"
+ï»¿#include <opencv2/opencv.hpp>  
+#include "opencv2/highgui/highgui.hpp"  
+#include "opencv2/imgproc/imgproc.hpp"  
+#include"basichandle.h"
+#include"prehandle.h"
 using namespace cv;
 using namespace std;
-//resize°ÑÔ­Í¼±äĞ¡ÔÙ²Ù×÷£¿ ÀûÓÃÌØÕ÷»òÒÑÖª°Ñ¿òÈ¡µÃ¸üĞ¡
-//¼ÓÈëãĞÖµµ÷½Ú ×¢ÒâÄ£°åãĞÖµÓëÊı×ÖãĞÖµÒ»ÖÂ ãĞÖµµ÷½ÚºóÔòÊÇ·ñÕÏ°­µÄãĞÖµÒ²±äÁË Ä£ĞÍÖÆ×÷º¯ÊıÍêÉÆ
-// ×îºó¼ÓÈë±ÜÕÏÈç¹û±ÈÈüÏÖ³¡²âÊÔ·¢ÏÖË«Ãæ½ºÌùÕÏ°­Ã»ÓÃÔòÊ¹ÓÃ
-//rec_widthµ÷½Ú
-//ÊÇ·ñÊÇÁ½Î»ÊıÅĞ¶ÏµÄ¸Ä½ø
-//¶ÔÆå×Ó µ²°åµÄÅĞ¶Ï
-//º¯ÊıµÄ·â×°
+#include <time.h> 
+//resizeæŠŠåŸå›¾å˜å°å†æ“ä½œï¼Ÿ åˆ©ç”¨ç‰¹å¾æˆ–å·²çŸ¥æŠŠæ¡†å–å¾—æ›´å° 
+//åŠ å…¥é˜ˆå€¼è°ƒèŠ‚ æ³¨æ„æ¨¡æ¿é˜ˆå€¼ä¸æ•°å­—é˜ˆå€¼ä¸€è‡´ é˜ˆå€¼è°ƒèŠ‚ååˆ™æ˜¯å¦éšœç¢çš„é˜ˆå€¼ä¹Ÿå˜äº† æ¨¡å‹åˆ¶ä½œå‡½æ•°å®Œå–„
+// æœ€ååŠ å…¥é¿éšœå¦‚æœæ¯”èµ›ç°åœºæµ‹è¯•å‘ç°åŒé¢èƒ¶è´´éšœç¢æ²¡ç”¨åˆ™ä½¿ç”¨
+//rec_widthè°ƒèŠ‚   
+//å¯¹æ£‹å­ æŒ¡æ¿çš„åˆ¤æ–­
+//å‡½æ•°çš„å°è£…              ä¸Šä¼ å‰æ³¨æ„è¯»å­˜ä½ç½®åŠæŠŠmainæ³¨   rightupæ¡†æ”¹äº† second ä¸¤ä¸ªæ‘„åƒå¤´çš„äº‹ nothingçš„åŸå› 
 
 ROIData number;
+extern int thre;
 
 Mat g_srcImage, g_srcImage1, g_grayImage, g_pBinaryImage,g_pBinaryImage1,after,after2,Image;
-extern Point2f leftup[20];//×óÉÏ     ºìÉ«
-extern Point2f rightup[20];//ÓÒÉÏ    ÂÌÉ«
-extern Point2f rightdown[20];//ÓÒÏÂ  À¶É«
-extern Point2f leftdown[20] ;//×óÏÂ   ºÚÉ«
+extern Point2f leftup[20];//å·¦ä¸Š     çº¢è‰²
+extern Point2f rightup[20];//å³ä¸Š    ç»¿è‰²
+extern Point2f rightdown[20];//å³ä¸‹  è“è‰²
+extern Point2f leftdown[20] ;//å·¦ä¸‹   é»‘è‰²
 extern int leftuppoint , rightuppoint , rightdownpoint , leftdownpoint ;
 extern int rec_width;
-
+int num = 1;
 ROIData maindoPicture()
 {
 	ROIData nothing; nothing.center.x = 0; nothing.center.y = 0; nothing.theta = 0;
 	ROIData last;
 
-	//Á¬ĞøÍ¼Æ¬¶ÁÈ¡´¦Àí
-	/*int num = 0;
-	do {
-		char filename[70] = "D:/Ô­D/³µ¶Ó/´óÈıÏÂ/´´Òâ±ÈÈü/Í¼Ïñ/";
+	//è¿ç»­å›¾ç‰‡è¯»å–å¤„ç†
+	
+	for (; num < 23;num++) {
+		double start, end, cost;
+		start = clock();
+		char filename[70] = "D:/åŸD/è½¦é˜Ÿ/å¤§ä¸‰ä¸‹/åˆ›æ„æ¯”èµ›/å›¾åƒ/";
 		g_srcImage = Im_read(filename, num);
 		if (g_srcImage.data == 0)
-			break;*/
+			continue;
 
-	g_srcImage = imread("../source/cam/a.jpg");
+	//g_srcImage = imread("D:/åŸD/è½¦é˜Ÿ/å¤§ä¸‰ä¸‹/åˆ›æ„æ¯”èµ›/å›¾åƒ/12.jpg");
 
 	if (!g_srcImage.data)
 	{
-		printf("error input!\n");
-		return nothing;
+		printf("è¯»å–å›¾ç‰‡é”™è¯¯ï¼ \n");
+		continue;
+		//return nothing;
 	}
 	g_srcImage1 = prospective(g_srcImage);
-
+	
 	CornerPoint(g_srcImage1);
 
-	threshold(g_grayImage, g_pBinaryImage, 160, 255, CV_THRESH_BINARY);//ÔÚÇ°ÃæµÄCornerPointÀïÓĞ×ª»Ò¶ÈÍ¼
+	threshold(g_grayImage, g_pBinaryImage, thre, 255, CV_THRESH_BINARY);//åœ¨å‰é¢çš„CornerPointé‡Œæœ‰è½¬ç°åº¦å›¾
 	g_pBinaryImage1 = g_pBinaryImage.clone();
-
+	
 	thetaData thedata=getTheta(g_pBinaryImage);
 
 	Point2f center; center.x = g_srcImage.cols / 2; center.y = g_srcImage.rows / 2;
 	Point2f k;
-	after = ImageRotate(g_pBinaryImage1, center, thedata.theta - 90);//theta.xÊÇĞı×ª½Ç¶È//thedata.theta-90
+	after = ImageRotate(g_pBinaryImage1, center, thedata.theta - 90);//theta.xæ˜¯æ—‹è½¬è§’åº¦//thedata.theta-90
 	float angle= thedata.theta;
-	after2 = after.clone();
+	//after2 = after.clone();
 	//imshow("6", after);
 	//waitKey(0);
 	if (leftuppoint)
@@ -67,14 +71,14 @@ ROIData maindoPicture()
 			a[i].x = 0; a[i].y = 0;
 		}
 		for (int n = 0; n < thedata.num; n++)
-			a[n] = getPointAffinedPos(leftup[thedata.point[n]], center, thedata.theta - 90);
+			a[n] = getPointAffinedPos(leftup[thedata.point[n]], center, thedata.theta - 90); 
 		int i, j;
 		Point2f t;
 		for (j = 0; j < 10; j++)
 		{
 			for (i = 0; i < 10 - 1 - j; i++)
 			{
-				if (a[i].y < a[i + 1].y) /* ÓÉĞ¡µ½´ó>,ÓÉ´óµ½Ğ¡< */
+				if (a[i].y < a[i + 1].y) /* ç”±å°åˆ°å¤§>,ç”±å¤§åˆ°å°< */
 				{
 					t = a[i];
 					a[i] = a[i + 1];
@@ -92,7 +96,7 @@ ROIData maindoPicture()
 				a[1] = w;
 			}
 		}
-		for (int n = 0; n < thedata.num; n++)
+		for (int n = 0; n < thedata.num; n++) 
 		{
 			if ((a[n].x - rec_width + 10) > 0 && (a[n].y - rec_width + 10) > 0)
 			{
@@ -116,7 +120,7 @@ ROIData maindoPicture()
 		{
 			for (i = 0; i < 10 - 1 - j; i++)
 			{
-				if (a[i].y < a[i + 1].y) /* ÓÉĞ¡µ½´ó>,ÓÉ´óµ½Ğ¡Ê±¸ÄÎª< */
+				if (a[i].y < a[i + 1].y) /* ç”±å°åˆ°å¤§>,ç”±å¤§åˆ°å°æ—¶æ”¹ä¸º< */
 				{
 					t = a[i];
 					a[i] = a[i + 1];
@@ -162,7 +166,7 @@ ROIData maindoPicture()
 		{
 			for (i = 0; i < 10 - 1 - j; i++)
 			{
-				if (a[i].y < a[i + 1].y) /* ÓÉĞ¡µ½´ó>,ÓÉ´óµ½Ğ¡Ê±¸ÄÎª< */
+				if (a[i].y < a[i + 1].y) /* ç”±å°åˆ°å¤§>,ç”±å¤§åˆ°å°æ—¶æ”¹ä¸º< */
 				{
 					t = a[i];
 					a[i] = a[i + 1];
@@ -184,7 +188,7 @@ ROIData maindoPicture()
 		{
 	        if ((a[n].x + rec_width - 10) <after.cols && (a[n].y + rec_width - 10) <after.rows)
 			{
-				k = a[n];
+				k = a[n]; 
 				break;
 			}
 		}
@@ -204,7 +208,7 @@ ROIData maindoPicture()
 		{
 			for (i = 0; i < 10 - 1 - j; i++)
 			{
-				if (a[i].y < a[i + 1].y) /* ÓÉĞ¡µ½´ó>,ÓÉ´óµ½Ğ¡Ê±¸ÄÎª< */
+				if (a[i].y < a[i + 1].y) /* ç”±å°åˆ°å¤§>,ç”±å¤§åˆ°å°æ—¶æ”¹ä¸º< */
 				{
 					t = a[i];
 					a[i] = a[i + 1];
@@ -232,18 +236,20 @@ ROIData maindoPicture()
 		}
 	}
 	else
-		return nothing;//	break;//ÔÚ¿ª×ÅÉãÏñÍ·Ê±Ê¹ÓÃ Ã»ÓĞÕÒµ½ºÏÊÊµã Ôò¼ÓÔØÏÂÒ»ÕÅÍ¼
+		continue;
+		//return nothing;//	break;//åœ¨å¼€ç€æ‘„åƒå¤´æ—¶ä½¿ç”¨ æ²¡æœ‰æ‰¾åˆ°åˆé€‚ç‚¹ åˆ™åŠ è½½ä¸‹ä¸€å¼ å›¾
 	float second=angleangin(after, k);
-	if (second != 0)
+	/*if (second != 0)
 	{
 		after = ImageRotate(after, center, second);
 		after2 = after.clone();
 		k = getPointAffinedPos(k, center, second);
 		angle = angle+second;
-	}
+	}*/
 	number= numbertest(k, after);
 	if (number.theta < 1 || number.theta>64)
-		return nothing;
+		continue;
+		//return nothing;
 	drawCenter(after2, number.center, 255, 5);
 	Point2f afterpoint=getRealXY(number.center, 4);
 	int shang = int(number.theta-1) / 8;
@@ -254,265 +260,254 @@ ROIData maindoPicture()
 	last.center.x = location.x; last.center.y = location.y;
 	last.theta = angle;
 
-	//char outputfile[70] = "D:/Ô­D/³µ¶Ó/´óÈıÏÂ/´´Òâ±ÈÈü/Í¼Ïñ2/";
-	//Im_write(outputfile, num, after2);
-	//num++;
-    return last;
-	////if(num>300)
-	////break;
-	//} while (g_srcImage.data);
+	char outputfile[70] = "D:/åŸD/è½¦é˜Ÿ/å¤§ä¸‰ä¸‹/åˆ›æ„æ¯”èµ›/å›¾åƒ2/";
+	Im_write(outputfile, num, after2);
+	num++;
+	end = clock();
+	cost = ((end - start)/CLOCKS_PER_SEC)*1000;
+	printf("%f/n", cost);
+     //return last;
+	}
 
-	cv::imshow("corner", g_srcImage1);
-	cv::imshow("rotate", after2);
-	cv::imshow("binary", g_pBinaryImage);
+	cv::imshow("è§’ç‚¹", g_srcImage1);
+	cv::imshow("æ—‹è½¬", after2);
+	cv::imshow("äºŒå€¼", g_pBinaryImage);
 	waitKey(0);
+	return nothing;
 }
 
-int num = 0;
 
 ROIData maindoCamera()
 {
-
-	ROIData nothing; nothing.center.x = 0; nothing.center.y = 0; nothing.theta = 0;
+    ROIData nothing; nothing.center.x = 0; nothing.center.y = 0; nothing.theta = 0;
 	ROIData last;
-
-
-
 	if (Image.empty())
 		return nothing;
 	Image.copyTo(g_srcImage);
+		char outputfile1[70] = "../memory/";
+		char outputfile2[70] = "../memory2/";
+		Im_write(outputfile2, num, g_srcImage);
+		num++;
+		g_srcImage1 = prospective(g_srcImage);
 
-    //int num = 0; Èç¹û´æÍ¼º¯ÊıÍâÓ¦ÓĞnum
-	char outputfile1[70] = "../memory/";
-	//char outputfile2[70] = "D:/³µ¶Ó/´óÈıÉÏ/µÂ¹úÈü/¹ØÓÚÍ¼ÏñÊ¶±ğ/ĞÂÍ¼×ó±ß½ç½á¹û/";
-	Im_write(outputfile1, num,g_srcImage );
+		CornerPoint(g_srcImage1);
 
-	num++;
+		threshold(g_grayImage, g_pBinaryImage, thre, 255, CV_THRESH_BINARY);//åœ¨å‰é¢çš„CornerPointé‡Œæœ‰è½¬ç°åº¦å›¾
+		g_pBinaryImage1 = g_pBinaryImage.clone();
 
-	g_srcImage1 = prospective(g_srcImage);
+		thetaData thedata = getTheta(g_pBinaryImage);
 
-	CornerPoint(g_srcImage1);
-
-	threshold(g_grayImage, g_pBinaryImage, 160, 255, CV_THRESH_BINARY);//ÔÚÇ°ÃæµÄCornerPointÀïÓĞ×ª»Ò¶ÈÍ¼
-	g_pBinaryImage1 = g_pBinaryImage.clone();
-
-	thetaData thedata = getTheta(g_pBinaryImage);
-
-	Point2f center; center.x = g_srcImage.cols / 2; center.y = g_srcImage.rows / 2;
-	Point2f k;
-	after = ImageRotate(g_pBinaryImage1, center, thedata.theta - 90);//theta.xÊÇĞı×ª½Ç¶È//thedata.theta-90
-	float angle = thedata.theta;
-	after2 = after.clone();
-	//imshow("6", after);
-	//waitKey(0);
-	if (leftuppoint)
-	{
-		Point2f a[10];
-		for (int i = 0; i < 10; i++)
-		{
-			a[i].x = 0; a[i].y = 0;
-		}
-		for (int n = 0; n < thedata.num; n++)
-			a[n] = getPointAffinedPos(leftup[thedata.point[n]], center, thedata.theta - 90);
-		int i, j;
-		Point2f t;
-		for (j = 0; j < 10; j++)
-		{
-			for (i = 0; i < 10 - 1 - j; i++)
-			{
-				if (a[i].y < a[i + 1].y) /* ÓÉĞ¡µ½´ó>,ÓÉ´óµ½Ğ¡< */
-				{
-					t = a[i];
-					a[i] = a[i + 1];
-					a[i + 1] = t;
-				}
-			}
-		}
-		if (thedata.num > 1)
-		{
-			if ((a[0].x < a[1].x) && fabs(a[0].y - a[1].y)<50)
-			{
-				Point2f w;
-				w = a[0];
-				a[0] = a[1];
-				a[1] = w;
-			}
-		}
-		for (int n = 0; n < thedata.num; n++)
-		{
-			if ((a[n].x - rec_width + 10) > 0 && (a[n].y - rec_width + 10) > 0)
-			{
-				k = a[n];
-				break;
-			}
-		}
-	}
-	else if (rightuppoint)
-	{
-		Point2f a[10];
-		for (int i = 0; i < 10; i++)
-		{
-			a[i].x = 0; a[i].y = 0;
-		}
-		for (int n = 0; n < thedata.num; n++)
-			a[n] = getPointAffinedPos(rightup[thedata.point[n]], center, thedata.theta - 90);
-		int i, j;
-		Point2f t;
-		for (j = 0; j < 10; j++)
-		{
-			for (i = 0; i < 10 - 1 - j; i++)
-			{
-				if (a[i].y < a[i + 1].y) /* ÓÉĞ¡µ½´ó>,ÓÉ´óµ½Ğ¡Ê±¸ÄÎª< */
-				{
-					t = a[i];
-					a[i] = a[i + 1];
-					a[i + 1] = t;
-				}
-			}
-		}
-		if (thedata.num > 1)
-		{
-			if ((a[0].x > a[1].x) && fabs(a[0].y - a[1].y)<50)
-			{
-				Point2f w;
-				w = a[0];
-				a[0] = a[1];
-				a[1] = w;
-			}
-		}
-		for (int n = 0; n < thedata.num; n++)
-		{
-			if ((a[n].x + rec_width - 10) <after.cols && (a[n].y - rec_width + 10) > 0)
-			{
-				k = a[n];
-				break;
-			}
-		}
-	}
-	else if (rightdownpoint)
-	{
-		Point2f a[10];
-		for (int i = 0; i < 10; i++)
-		{
-			a[i].x = 0; a[i].y = 0;
-		}
-		for (int n = 0; n < thedata.num; n++)
-			a[n] = getPointAffinedPos(rightdown[thedata.point[n]], center, thedata.theta - 90);
-		int i, j;
-		Point2f t;
-		for (j = 0; j < 10; j++)
-		{
-			for (i = 0; i < 10 - 1 - j; i++)
-			{
-				if (a[i].y < a[i + 1].y) /* ÓÉĞ¡µ½´ó>,ÓÉ´óµ½Ğ¡Ê±¸ÄÎª< */
-				{
-					t = a[i];
-					a[i] = a[i + 1];
-					a[i + 1] = t;
-				}
-			}
-		}
-		if (thedata.num > 1)
-		{
-			if ((a[0].x > a[1].x) && fabs(a[0].y - a[1].y)<50)
-			{
-				Point2f w;
-				w = a[0];
-				a[0] = a[1];
-				a[1] = w;
-			}
-		}
-		for (int n = 0; n < thedata.num; n++)
-		{
-			if ((a[n].x + rec_width - 10) <after.cols && (a[n].y + rec_width - 10) <after.rows)
-			{
-				k = a[n];
-				break;
-			}
-		}
-	}
-	else if (leftdownpoint)
-	{
-		Point2f a[10];
-		for (int i = 0; i < 10; i++)
-		{
-			a[i].x = 0; a[i].y = 0;
-		}
-		for (int n = 0; n < thedata.num; n++)
-			a[n] = getPointAffinedPos(rightdown[thedata.point[n]], center, thedata.theta - 90);
-		int i, j;
-		Point2f t;
-		for (j = 0; j < 10; j++)
-		{
-			for (i = 0; i < 10 - 1 - j; i++)
-			{
-				if (a[i].y < a[i + 1].y) /* ÓÉĞ¡µ½´ó>,ÓÉ´óµ½Ğ¡Ê±¸ÄÎª< */
-				{
-					t = a[i];
-					a[i] = a[i + 1];
-					a[i + 1] = t;
-				}
-			}
-		}
-		if (thedata.num > 1)
-		{
-			if ((a[0].x < a[1].x) && fabs(a[0].y - a[1].y)<50)
-			{
-				Point2f w;
-				w = a[0];
-				a[0] = a[1];
-				a[1] = w;
-			}
-		}
-		for (int n = 0; n < thedata.num; n++)
-		{
-			if ((a[n].x - rec_width + 10) > 0 && (a[n].y + rec_width - 10) <after.rows)
-			{
-				k = a[n];
-				break;
-			}
-		}
-	}
-	else
-		return nothing;//	break;//ÔÚ¿ª×ÅÉãÏñÍ·Ê±Ê¹ÓÃ Ã»ÓĞÕÒµ½ºÏÊÊµã Ôò¼ÓÔØÏÂÒ»ÕÅÍ¼
-	float second = angleangin(after, k);
-	if (second != 0)
-	{
-		after = ImageRotate(after, center, second);
+		Point2f center; center.x = g_srcImage.cols / 2; center.y = g_srcImage.rows / 2;
+		Point2f k;
+		after = ImageRotate(g_pBinaryImage1, center, thedata.theta - 90);
+		float angle = thedata.theta;
 		after2 = after.clone();
-		k = getPointAffinedPos(k, center, second);
-		angle = angle + second;
+		//imshow("6", after);
+		//waitKey(0);
+		if (leftuppoint)
+		{
+			Point2f a[10];
+			for (int i = 0; i < 10; i++)
+			{
+				a[i].x = 0; a[i].y = 0;
+			}
+			for (int n = 0; n < thedata.num; n++)
+				a[n] = getPointAffinedPos(leftup[thedata.point[n]], center, thedata.theta - 90);
+			int i, j;
+			Point2f t;
+			for (j = 0; j < 10; j++)
+			{
+				for (i = 0; i < 10 - 1 - j; i++)
+				{
+					if (a[i].y < a[i + 1].y) /* ç”±å°åˆ°å¤§>,ç”±å¤§åˆ°å°< */
+					{
+						t = a[i];
+						a[i] = a[i + 1];
+						a[i + 1] = t;
+					}
+				}
+			}
+			if (thedata.num > 1)
+			{
+				if ((a[0].x < a[1].x) && fabs(a[0].y - a[1].y) < 50)
+				{
+					Point2f w;
+					w = a[0];
+					a[0] = a[1];
+					a[1] = w;
+				}
+			}
+			for (int n = 0; n < thedata.num; n++)
+			{
+				if ((a[n].x - rec_width + 10) > 0 && (a[n].y - rec_width + 10) > 0)
+				{
+					k = a[n];
+					break;
+				}
+			}
+		}
+		else if (rightuppoint)
+		{
+			Point2f a[10];
+			for (int i = 0; i < 10; i++)
+			{
+				a[i].x = 0; a[i].y = 0;
+			}
+			for (int n = 0; n < thedata.num; n++)
+				a[n] = getPointAffinedPos(rightup[thedata.point[n]], center, thedata.theta - 90);
+			int i, j;
+			Point2f t;
+			for (j = 0; j < 10; j++)
+			{
+				for (i = 0; i < 10 - 1 - j; i++)
+				{
+					if (a[i].y < a[i + 1].y) /* ç”±å°åˆ°å¤§>,ç”±å¤§åˆ°å°æ—¶æ”¹ä¸º< */
+					{
+						t = a[i];
+						a[i] = a[i + 1];
+						a[i + 1] = t;
+					}
+				}
+			}
+			if (thedata.num > 1)
+			{
+				if ((a[0].x > a[1].x) && fabs(a[0].y - a[1].y) < 50)
+				{
+					Point2f w;
+					w = a[0];
+					a[0] = a[1];
+					a[1] = w;
+				}
+			}
+			for (int n = 0; n < thedata.num; n++)
+			{
+				if ((a[n].x + rec_width - 10) < after.cols && (a[n].y - rec_width + 10) > 0)
+				{
+					k = a[n];
+					break;
+				}
+			}
+		}
+		else if (rightdownpoint)
+		{
+			Point2f a[10];
+			for (int i = 0; i < 10; i++)
+			{
+				a[i].x = 0; a[i].y = 0;
+			}
+			for (int n = 0; n < thedata.num; n++)
+				a[n] = getPointAffinedPos(rightdown[thedata.point[n]], center, thedata.theta - 90);
+			int i, j;
+			Point2f t;
+			for (j = 0; j < 10; j++)
+			{
+				for (i = 0; i < 10 - 1 - j; i++)
+				{
+					if (a[i].y < a[i + 1].y) /* ç”±å°åˆ°å¤§>,ç”±å¤§åˆ°å°æ—¶æ”¹ä¸º< */
+					{
+						t = a[i];
+						a[i] = a[i + 1];
+						a[i + 1] = t;
+					}
+				}
+			}
+			if (thedata.num > 1)
+			{
+				if ((a[0].x > a[1].x) && fabs(a[0].y - a[1].y) < 50)
+				{
+					Point2f w;
+					w = a[0];
+					a[0] = a[1];
+					a[1] = w;
+				}
+			}
+			for (int n = 0; n < thedata.num; n++)
+			{
+				if ((a[n].x + rec_width - 10) < after.cols && (a[n].y + rec_width - 10) < after.rows)
+				{
+					k = a[n];
+					break;
+				}
+			}
+		}
+		else if (leftdownpoint)
+		{
+			Point2f a[10];
+			for (int i = 0; i < 10; i++)
+			{
+				a[i].x = 0; a[i].y = 0;
+			}
+			for (int n = 0; n < thedata.num; n++)
+				a[n] = getPointAffinedPos(rightdown[thedata.point[n]], center, thedata.theta - 90);
+			int i, j;
+			Point2f t;
+			for (j = 0; j < 10; j++)
+			{
+				for (i = 0; i < 10 - 1 - j; i++)
+				{
+					if (a[i].y < a[i + 1].y) /* ç”±å°åˆ°å¤§>,ç”±å¤§åˆ°å°æ—¶æ”¹ä¸º< */
+					{
+						t = a[i];
+						a[i] = a[i + 1];
+						a[i + 1] = t;
+					}
+				}
+			}
+			if (thedata.num > 1)
+			{
+				if ((a[0].x < a[1].x) && fabs(a[0].y - a[1].y) < 50)
+				{
+					Point2f w;
+					w = a[0];
+					a[0] = a[1];
+					a[1] = w;
+				}
+			}
+			for (int n = 0; n < thedata.num; n++)
+			{
+				if ((a[n].x - rec_width + 10) > 0 && (a[n].y + rec_width - 10) < after.rows)
+				{
+					k = a[n];
+					break;
+				}
+			}
+		}
+		else
+			return nothing;//	break;//åœ¨å¼€ç€æ‘„åƒå¤´æ—¶ä½¿ç”¨ æ²¡æœ‰æ‰¾åˆ°åˆé€‚ç‚¹ åˆ™åŠ è½½ä¸‹ä¸€å¼ å›¾
+		float second = angleangin(after, k);
+		/*if (second != 0)
+		{
+			after = ImageRotate(after, center, second);
+			after2 = after.clone();
+			k = getPointAffinedPos(k, center, second);
+			angle = angle + second;
+		}*/
+		number = numbertest(k, after);
+		if (number.theta < 1 || number.theta>64)
+			return nothing;
+		drawCenter(after2, number.center, 255, 5);
+		Point2f afterpoint = getRealXY(number.center, 4);
+		int shang = int(number.theta - 1) / 8;
+		int yushu = int(number.theta - 1) % 8;
+		Point2f location;
+		location.x = yushu * 50 + 25 - afterpoint.x;
+		location.y = shang * 50 + 25 + afterpoint.y;
+		last.center.x = location.x; last.center.y = location.y;
+		last.theta = angle;
+		Im_write(outputfile1, num, after2);
+		return last;
 	}
-	ROIData number = numbertest(k, after);
-	if (number.theta < 1 || number.theta>64)
-		return nothing;
-	drawCenter(after2, number.center, 255, 5);
-	Point2f afterpoint = getRealXY(number.center, 4);
-	int shang = int(number.theta - 1) / 8;
-	int yushu = int(number.theta - 1) % 8;
-	Point2f location;
-	location.x = yushu * 50 + 25 - afterpoint.x;
-	location.y = shang * 50 + 25 + afterpoint.y;
-	last.center.x = location.x; last.center.y = location.y;
-	last.theta = angle;
-	//Im_write(outputfile1, num, after2);
-	//num++;
-	return last;
 
-}
 
-// int main()
-// {
-// 	//maindoPicture();
-// 	//maindoCamera();
-// 	for(int i=0;i<20;i++)
-//     {
-//         if(maindoCamera().center.x == 0)
-//          {
-//             printf("nothing!\n");
+//int main() 
+//{
+//	//VideoCapture cap;
+//	//cap.open(1);   //0æ˜¯ç”µè„‘æ‘„åƒå¤´
+//		maindoPicture();
+//	//for (int l = 0; l < 20; l++) {
+//		//cap >> Image;
+//		//ROIData tt= maindoCamera();
+//	//}
+//}
 
-//         }
-//     }
-//     printf("%d\n",num );
-// }
 

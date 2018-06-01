@@ -515,6 +515,7 @@ void uart_read_gyro(char* read_data)
             {
                 switch((unsigned char)read_data[1])
                 {
+                case 0x50:
                 case 0x51:
                 case 0x52:
                 case 0x53:
@@ -532,7 +533,7 @@ void uart_read_gyro(char* read_data)
         //     printf("cannot receive data\n");
         // }
         //usleep(5000000);//5s;
-        usleep(500);//0.5ms;
+        //usleep(500);//0.5ms;
     }
 
     counter = 0;
