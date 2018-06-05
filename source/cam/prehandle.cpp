@@ -281,12 +281,49 @@ int getnumber(Mat roi)
 		else
 			number1 = 9;
 	}
+	if (number1 == 8)
+	{
+		if (leftdownrect(roi2) || rightuprect(roi2))
+			number1 = 5;
+	}
 	if (mode == 1)
 	{
 		t = 0;
 		if (right2 <= (left2+15))
 			return 0;
 		Mat roi3 = roi(Rect(left2, 0, right2 - left2, roi.rows));
+		int j = 0, sumj = 0, top = 0, bottom = 0;//上下扫描
+		for (; j < roi3.rows; j++)
+		{
+			for (int i = 0; i < roi3.cols; i++)
+			{
+				if (roi3.at<uchar>(j, i) > 0)
+					sumj++;
+			}
+			if (sumj > 3) //待调！！
+			{
+				top = j;
+				break;
+			}
+			sumj = 0;
+		}
+		j += 30; sumj = 0;
+		for (; j < roi3.rows; j++)
+		{
+			for (int i = 0; i < roi3.cols; i++)
+			{
+				if (roi3.at<uchar>(j, i) > 0)
+					sumj++;
+			}
+			if (sumj < 3) //待调！！
+			{
+				bottom = j;
+				break;
+			}
+			sumj = 0;
+		}
+		if (bottom <= (top + 60))
+			return 0;
 		Mat roi4 = roi3(Rect(0, top, roi3.cols, bottom - top));
 		if (roi4.cols < 35)     //可调阈值
 		{
@@ -334,6 +371,11 @@ int getnumber(Mat roi)
 				;
 			else
 				number2 = 8;
+		}
+		if (number2 == 8)
+		{
+			if (leftdownrect(roi4) || rightuprect(roi4))
+				number2 = 5;
 		}
 		if (number2 == 2)
 		{
