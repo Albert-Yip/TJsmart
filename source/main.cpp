@@ -58,7 +58,7 @@ int main(int argc, char const *argv[])
     {
         queen_path(strcmp(argv[1],"0"));
         printf("\n\n\n\npath send by uart:\n");
-        //while(1);
+        while(1);
         toChar_send_path();
     }
 

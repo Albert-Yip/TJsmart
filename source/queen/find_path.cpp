@@ -18,13 +18,13 @@ void swap(chessNode *a, chessNode *b)
 	*b = m;
 }
 
-void perm(chessNode list[], int low, int high,int low2, chessNode list2[])
+void perm(chessNode list[], int low, int high,int low2, chessNode list2[])//list[] for solution; list2[] for chess.
 {
 	int i,j;
 	if (low >high)
-	{
+	{//perm has been done one times for list1.
 		if (low2 >high)
-		{
+		{//perm has been done two times for two list.
 
 			n++;
 			int newDist = abs(list2[0].x - START_POINT_X) + abs(list2[0].y - START_POINT_Y);//起点到第一个棋子距离
@@ -33,6 +33,33 @@ void perm(chessNode list[], int low, int high,int low2, chessNode list2[])
 				newDist += abs(list2[i].x - list[i].x) + abs(list2[i].y - list[i].y)+ abs(list2[i+1].x - list[i].x) + abs(list2[i+1].y - list[i].y);
 			}
 			newDist += abs(list2[high].x - list[high].x) + abs(list2[high].y - list[high].y);
+
+			/*
+			 *
+			 *for to end policy
+			 *
+			 */
+			int x_to_end = 0;
+			int y_to_end = 0;
+			if(list[high].x<=4)
+				x_to_end = list[high].x;
+			else
+				x_to_end = 9 - list[high].x;
+
+			if(list[high].y<=4)
+				y_to_end = list[high].y;
+			else
+				y_to_end = 9 - list[high].y;
+
+			if(x_to_end<y_to_end)
+				newDist += x_to_end;
+			else
+				newDist += y_to_end;
+			/*
+			 *
+			 *for to end policy
+			 *
+			 */
 			if (newDist < minDist)
 			{
 				minDist = newDist;
@@ -78,8 +105,8 @@ void path()
 	cout << " ("<<START_POINT_X<<","<<START_POINT_Y<<")" << endl;
 	for (int i = 0; i <= NUM-1; i++)
 	{
-		cout << " (" << routeB[i].x << "," << routeB[i].y << ") " ;
-		cout << " (" << routeA[i].x << "," << routeA[i].y << ") " << endl;
+		cout << " (" << routeB[i].x << "," << routeB[i].y << ") " ;//B:original chess position
+		cout << " (" << routeA[i].x << "," << routeA[i].y << ") " << endl;//A:target solution position
 	}
 	cout << n <<endl;
 	//
