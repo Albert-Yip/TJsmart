@@ -55,7 +55,7 @@ int UART0_Open(int fd,char* port)
         //printf("Open Serial Port successul!\n");
     }
     //printf("fd->open=%d\n",fd);
-    printf("Open Serial Port successul!\n");
+    //printf("Open Serial Port successul!\n");
     return fd;
 }
 /*******************************************************************

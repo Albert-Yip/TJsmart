@@ -38,12 +38,12 @@ void srcTri_config(Point2f srcTri[], int dot[]) {
 **@note 在摄像头位置变动后，请自行设置函数内参数
 */
 void getmap_matrix() {
-	int dot[8] = { 262,290,385,288,425,406,237,410 };												
+	int dot[8] = { 263,278,395,278,435,419,229,418 };												
 	Size newCanvas = Size(640, 640);//设置新画布分辨率
 
 	int ratio = 4;//4个像素1厘米
 	float side_len = 3.15;//∵640pixel=160cm,4pixel=1cm∴ratio=4;小方格边长side_len=3.15cm 
-	int bias = 9.2;//距后轴40cm处为图像底边，60cm处为黑白格底线，Δ=20cm   //chuangyi 51.8  52.8
+	int bias = 6.8;//距后轴40cm处为图像底边，60cm处为黑白格底线，Δ=20cm   //chuangyi 51.8  52.8
 
 				  /*以下一般无需更改*/
 	Point2f srcTri[4], dstTri[4];
@@ -70,10 +70,10 @@ void getmap_matrix() {
 Point2f getRealXY(Point2f origin, int ratio = 4) {
 	int width = 640, height = 640;//设置新画布分辨率
 	float side_len = 3.15;//参数值与getmap_matrix()相同
-	int bias = 9.2;
+	int bias = 6.8;
 	Point2f RealXY;
 	RealXY.x = (origin.x - width / 2) / ratio;
-	RealXY.y = ((height - bias*ratio) - origin.y) / ratio + 44.1;	//刘 此处可直接height-y+车后轴到图像底边距离
+	RealXY.y = ((height - bias*ratio) - origin.y) / ratio +39.1;	//刘 此处可直接height-y+车后轴到图像底边距离
 	//注：59.5：实际标注时，黑白格底边距车轴O点59.5cm；
 	return RealXY;
 }

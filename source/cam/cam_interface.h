@@ -14,3 +14,4 @@ typedef struct
 ROIData maindoCamera();
 ROIData maindoPicture();
 
+

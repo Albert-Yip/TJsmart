@@ -11,7 +11,7 @@
 
 
 extern int num;
-extern Mat Image;
+extern Mat Image,Image2;
 using namespace std;
 
 int queen_path(int flag);
@@ -19,7 +19,7 @@ void toChar_send_position(ROIData position_car);
 void toChar_send_path();
 
 int main(int argc, char const *argv[])
-{
+{  int n = 0;
     if(argc != 3)
     {
         printf("Usage: %s 2/1/0(test/input/not) 1/0(for cam) \n",argv[0]);
@@ -30,7 +30,6 @@ int main(int argc, char const *argv[])
     {
 
         int *position;
-        int n = 0;
         printf("please input n : \n");
         scanf("%d",&n);
         position = (int*) malloc(n * sizeof(int));
@@ -57,13 +56,13 @@ int main(int argc, char const *argv[])
     else
     {
         queen_path(strcmp(argv[1],"0"));
+        //while(1);
         printf("\n\n\n\npath send by uart:\n");
-        while(1);
         toChar_send_path();
     }
 
 
-    //while(1);
+    while(1);
 
 
     uart_read_charFour();
@@ -90,12 +89,23 @@ int main(int argc, char const *argv[])
     if(strcmp(argv[2],"0") == 1)//=1
     {
         VideoCapture cap;
-        cap.open(1);
-
-        int work_time = 1000;
+        VideoCapture cap2;
+        while(!cap.open(1));
+        while(!cap2.open(2));
+        int work_time = n*300;
         while(work_time--)
         {
-            cap>>Image;
+            cap>>Image;cap2>>Image2;
+            while (Image.empty())
+            {
+		        cap.open(1); cap>>Image;printf("cam open retrying");
+
+            }
+            while (Image2.empty())
+            {
+		        cap2.open(2); cap2>>Image2;printf("cam2 open retrying");
+
+            }
             position_car = maindoCamera();
             if(position_car.center.x == 0)
              {
@@ -171,7 +181,7 @@ void toChar_send_path()
     }
     for(int i=0;i<NUM;i++)
     {
-        fourByteData[2] = routeB[i].x;
+        fourByteData[2] = routeB[i].x;//the chess
         fourByteData[3] = 'X';
         uart_send_charList(fourByteData,4);
 
@@ -179,7 +189,7 @@ void toChar_send_path()
         fourByteData[3] = 'Y';
         uart_send_charList(fourByteData,4);
 
-        fourByteData[2] = routeA[i].x;
+        fourByteData[2] = routeA[i].x;//the position
         fourByteData[3] = 'X';
         uart_send_charList(fourByteData,4);
 
@@ -189,6 +199,32 @@ void toChar_send_path()
 
 
     }
+
+    //the end point
+    char end_fourByteData[4] = {0,0,0,'E'};
+    for(int i=0;i<4;i++)
+    {
+        end_fourByteData[i]=0;
+    }
+    if(abs(routeA[NUM-1].x - 4.5) < abs(routeA[NUM-1].y - 4.5))
+    {
+        //x is the chosen ending
+        if(routeA[NUM-1].x - 4.5 > 0)
+            end_fourByteData[3]='R';
+        else
+            end_fourByteData[3]='L';
+    }
+    else
+    {
+        //y is the chosen ending
+        if(routeA[NUM-1].y - 4.5 > 0)
+            end_fourByteData[3]='B';
+        else
+            end_fourByteData[3]='F';
+    }
+    uart_send_charList(end_fourByteData,4);
+
+
 
 }
 

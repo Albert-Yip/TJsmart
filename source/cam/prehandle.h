@@ -10,3 +10,7 @@ Mat prospective(Mat sImg);
 Point2f getRealXY(Point2f origin, int ratio = 4);
 
 int getnumber(Mat roi);
+
+Mat prospective2(Mat sImg);
+
+Point2f getRealXY2(Point2f origin, int ratio = 4);

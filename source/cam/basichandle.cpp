@@ -5,8 +5,8 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <iostream>
-//#include "Windows.h"
-#include <stdio.h>
+//#include "Windows.h" 
+#include <stdio.h>  
 #include"basichandle.h"
 #include"prehandle.h"
 
@@ -24,7 +24,7 @@ Point2f rightdown[20] ;//右下  蓝色
 Point2f leftdown[20];//左下   黑色
 
 int leftuppoint = 0, rightuppoint = 0, rightdownpoint = 0, leftdownpoint = 0;
-int rec_width = 170;
+int rec_width = 180;//45*4=180
 int thre = 160;//二值化阈值
 //获得某点像素值
 int get_pixel(Mat & img, Point pt) {
@@ -147,7 +147,7 @@ int upline(Mat roi) //上横线检测 有返回1无返回0  1 5 7有
 	int y = 0;
 	int m = 0, n = 0;
 	for (int j = 0; j < roi.rows / 4; j++)
-	{
+	{   
 		int k = 0,b=0;
 		for(int i=0;i<roi.cols;i++)
 		{
@@ -191,7 +191,7 @@ int upline(Mat roi) //上横线检测 有返回1无返回0  1 5 7有
 			}
 			else
 				y = 0;
-
+			
 		}
 	}
 	return 0;
@@ -374,7 +374,7 @@ int leftuprect(Mat roi) //左上横贯间隙  1 2 3 4 7有
 			int f = roi.at<uchar>(j, i);
 			if (f > 0 )
 			{
-				k++;
+				k++; 
 			}
 			if (k > 2)
 				break;
@@ -592,7 +592,7 @@ int centercross(Mat roi) //中间线过白线检测，为了区分0和8    3 5 8
 	{
 		j++;int k = 0, b = 0;
 		for (; j < roi.rows; j++)
-		{
+		{		
 			int f = roi.at<uchar>(j, i);
 			if (f > 50 && k == 0)
 			{
@@ -617,7 +617,7 @@ int centercross(Mat roi) //中间线过白线检测，为了区分0和8    3 5 8
 	{
 		j++;int k = 0, b = 0;
 		for (; j < roi.rows; j++)
-		{
+		{	
 			int f = roi.at<uchar>(j, i);
 			if (f == 0 && k == 0)
 			{
@@ -668,17 +668,16 @@ int centercross(Mat roi) //中间线过白线检测，为了区分0和8    3 5 8
 
 void CornerPoint(Mat g_srcImage1)
 {
-	cvtColor(g_srcImage1, g_grayImage, CV_BGR2GRAY);
+	//cvtColor(g_srcImage1, g_grayImage, CV_BGR2GRAY);
 
-	//设置角点检测参数
+	//设置角点检测参数  
 	std::vector<cv::Point2f> corners;
 	int max_corners = 200;
 	double quality_level = 0.01;
-	double min_distance = 20;//300   待调！！
+	double min_distance = 20;//300   待调！！//100之前对二值可以 彩图用20
 	int block_size = 3;
 	bool use_harris = 1;
 	double k = 0.04;
-
 	for (int i = 0; i < 20; i++)
 	{
 		leftup[i].x = 0; leftup[i].y = 0;
@@ -686,12 +685,12 @@ void CornerPoint(Mat g_srcImage1)
 		rightdown[i].x = 0; rightdown[i].y = 0;
 		leftdown[i].x = 0; leftdown[i].y = 0;
 	}
-	int Thre = 165;  //调  这里不是二值化阈值
+	int Thre = 165;  //调  这里不是二值化阈值 
 
 
 
-	//角点检测
-	cv::goodFeaturesToTrack(g_grayImage,
+	//角点检测  
+	cv::goodFeaturesToTrack(g_srcImage1,
 		corners,
 		max_corners,
 		quality_level,
@@ -701,10 +700,10 @@ void CornerPoint(Mat g_srcImage1)
 		use_harris,
 		k);
 
-	//分类，将检测到的角点绘制到原图上
+	//分类，将检测到的角点绘制到原图上  
 	int a = 0; int b = 0; int c = 0; int d = 0;
 	for (int i = 0; i < corners.size(); i++)
-	{
+	{   
 		Point2f A, B, C, D;
 		A.x = corners[i].x - 5; A.y = corners[i].y - 5;
 		B.x = corners[i].x + 5; B.y = corners[i].y - 5;
@@ -718,38 +717,38 @@ void CornerPoint(Mat g_srcImage1)
 				int k = g_grayImage.at<uchar>(A.y, A.x);
 				int p = g_grayImage.at<uchar>(B.y, B.x);
 				int q = g_grayImage.at<uchar>(C.y, C.x);
-				int z = g_grayImage.at<uchar>(D.y, D.x);
+				int z = g_grayImage.at<uchar>(D.y, D.x); //&&corners[i].y>g_grayImage.rows / 2
 				if (k < Thre&& p >= Thre&& q >= Thre&&z >= Thre)     //此处为一个较好看k p q z值的调试断点
 				{
 					leftup[a] = corners[i];
-					cv::circle(g_srcImage1, corners[i], 2, cv::Scalar(0, 0, 255), 2, 8, 0);
+					cv::circle(g_srcImage, corners[i], 2, cv::Scalar(0, 0, 255), 2, 8, 0);
 					a++;
 				}
 
 				if (p < Thre&& k >= Thre&& q >= Thre&&z >= Thre)
 				{
 					rightup[b] = corners[i];
-					cv::circle(g_srcImage1, corners[i], 2, cv::Scalar(0, 255, 0), 2, 8, 0);
+					cv::circle(g_srcImage, corners[i], 2, cv::Scalar(0, 255, 0), 2, 8, 0);
 					b++;
 				}
 
 				if (q < Thre&& k >= Thre&& p >= Thre&& z>= Thre)
 				{
 					rightdown[c] = corners[i];
-					cv::circle(g_srcImage1, corners[i], 2, cv::Scalar(255, 0, 0), 2, 8, 0);
+					cv::circle(g_srcImage, corners[i], 2, cv::Scalar(255, 0, 0), 2, 8, 0);
 					c++;
 				}
 
 				if (z < Thre&&k >= Thre&&p >= Thre&&q >= Thre)
 				{
 					leftdown[d] = corners[i];
-					cv::circle(g_srcImage1, corners[i], 2, cv::Scalar(0, 0, 0), 2, 8, 0);
+					cv::circle(g_srcImage, corners[i], 2, cv::Scalar(0, 0, 0), 2, 8, 0);
 					d++;
 				}
 			}
 		}
-		/*cv::circle(g_srcImage1, corners[i], 2, cv::Scalar(0, 0, 255), 2, 8, 0);
-		cv::imshow("角点", g_srcImage1);
+		/*cv::circle(g_grayImage, corners[i], 2, cv::Scalar(255,255, 255), 2, 8, 0);
+		cv::imshow("角点", g_grayImage);
 		waitKey(2000);*/
 	}
 }
@@ -794,24 +793,32 @@ thetaData getTheta(Mat g_pBinaryImage) {
 	{
 		ROIData A;
 		int z = 0;
-		int i = leftup[qq].x + 5, j = leftup[qq].y - 2;
+		int i = leftup[qq].x + 3, j = leftup[qq].y - 2;
 
 		for (; z < 40; z++)
 		{
 			A = ROIset(g_pBinaryImage, i - 5, j - 10, 10, 10);//A = ROIset(g_pBinaryImage, i - 10, j - 20, 20, 20);
 			dataA[z] = A;
-			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰
+			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰 
 				break;
 			if ((dataA[z].center == dataA[z - 1].center) && z > 0)    //重心重复
 				break;
-			if (z > 0)
+			if (z > 0) 
 			{
 				int mm = abs(dataA[z].theta - dataA[z - 1].theta);
 				if (mm > 15)              //此处为小框总数及角度差阈值调试的好断点
 					break;
 			}
-			//drawROI(g_pBinaryImage2, i - 10, j - 10, 10, 10);
+			//drawROI(g_pBinaryImage2, i - 5, j - 10, 10, 10);	cv::imshow("角点", g_pBinaryImage2);waitKey(2000);
 			i = A.center.x; j = A.center.y;
+			int controlNum = 0;
+			while (g_pBinaryImage.at<uchar>(j, i) > 50)//为了降低杂点出现的情况
+			{
+				i--;
+				controlNum++;
+				if (controlNum > 4)
+					break;
+			}
 		}
 		if (z > 26&&z<43)
 		{
@@ -835,7 +842,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 			float averge=0,sum=0;
 			int zhijiao = 0;
 			for(int kk=0;kk<goodpointa;kk++)
-			{
+			{ 
 				if (fabs(dataA1[kk].theta - 90) < 0.8)
 					zhijiao++;
 				averge += dataA1[kk].theta;
@@ -853,7 +860,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 			}
 			if (mm > 1)
 			{
-				sum = sum / mm;
+				sum = sum / mm; 
 				leftuppoint = 1;
 				if (zhijiao > 0)
 				{
@@ -865,7 +872,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 				return thetapointa;
 			}
 		}
-
+	
 	if (mm < 2|| goodpointa<2)
 	{
 		float averge = 0, sum = 0;
@@ -880,24 +887,24 @@ thetaData getTheta(Mat g_pBinaryImage) {
 		{
 			A = ROIset(g_pBinaryImage, i-5, j - 10, 10, 10);//A = ROIset(g_pBinaryImage, i - 10, j - 20, 20, 20);
 			dataB[z] = A;
-			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰
+			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰 
 				break;
 			if ((dataB[z].center == dataB[z - 1].center) && z > 0)    //重心重复
 				break;
 			if (z > 0)
 			{
 				int mm = abs(dataB[z].theta - dataB[z - 1].theta);
-				if (mm > 15)
+				if (mm > 15)              
 					break;
 			}
-			//drawROI(g_pBinaryImage2, i - 5, j - 10, 10, 10);
-
+			//drawROI(g_pBinaryImage2, i - 5, j - 10, 10, 10); cv::imshow("角点", g_pBinaryImage2);waitKey(2000);
+			
 			i = A.center.x; j = A.center.y; int controlNum = 0;
 			while (g_pBinaryImage.at<uchar>(j, i) > 50)//为了降低杂点出现的情况
 			{
 				i++;
 				controlNum++;
-				if (controlNum > 5)
+				if (controlNum > 4)
 					break;
 			}
 		}//cv::imshow("角点", g_pBinaryImage2);
@@ -952,7 +959,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 					sum += dataB1[hh].theta;
 				}
 			}
-
+		
 			if ((aaa+bbb)>1)
 			{
 				sum = sum / (aaa + bbb);
@@ -966,10 +973,10 @@ thetaData getTheta(Mat g_pBinaryImage) {
 				}
 				if (aaa >= bbb)
 				{
-					leftuppoint = 1;
+					leftuppoint = 1; 
 					thetapointa.num = aaa;
 					return thetapointa;
-
+					
 				}
 				else
 				{
@@ -979,19 +986,19 @@ thetaData getTheta(Mat g_pBinaryImage) {
 				}
 			}
 		}
-		if ((goodpointa + goodpointb) < 2 || (aaa + bbb) < 2)
+		if ((goodpointa + goodpointb) < 2 || (aaa + bbb) < 2) 
 		{
 			for (int qq = 0; rightdown[qq].x != 0; qq++)
 			{
 				ROIData A;
 				int z = 0;
-				int i = rightdown[qq].x - 4, j = rightdown[qq].y + 2;
+				int i = rightdown[qq].x -1, j = rightdown[qq].y+5 ;
 
 				for (; z < 40; z++)
 				{
-					A = ROIset(g_pBinaryImage, i - 1, j + 10, 10, 10);//A = ROIset(g_pBinaryImage, i - 10, j - 20, 20, 20);
+					A = ROIset(g_pBinaryImage, i - 5, j+2 , 10, 10);//A = ROIset(g_pBinaryImage, i - 10, j - 20, 20, 20);
 					dataC[z] = A;
-					if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰
+					if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰 
 						break;
 					if ((dataC[z].center == dataC[z - 1].center) && z > 0)    //重心重复
 						break;
@@ -1001,9 +1008,15 @@ thetaData getTheta(Mat g_pBinaryImage) {
 						if (mm > 15)
 							break;
 					}
-					//drawROI(g_pBinaryImage, i - 10, j - 10, 10, 10);
-					//cv::imshow("角点", g_pBinaryImage);
-					i = A.center.x; j = A.center.y;
+					//drawROI(g_pBinaryImage2, i - 5, j+2 , 10, 10);cv::imshow("角点", g_pBinaryImage2); waitKey(2000);
+					i = A.center.x; j = A.center.y; int controlNum = 0;
+					while (g_pBinaryImage.at<uchar>(j, i) > 50)//为了降低杂点出现的情况
+					{
+						i++;
+						controlNum++;
+						if (controlNum > 4)
+							break;
+					}
 				}
 				if (z > 24 && z<43) //待调 ！！！
 				{
@@ -1100,7 +1113,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 						rightdownpoint = 1; thetapointc.num = c1;
 						return thetapointc;
 					}
-
+					
 				}
 			}
 			if (mm <= 1 || (a1 + b1 + c1) <= 1)
@@ -1113,9 +1126,9 @@ thetaData getTheta(Mat g_pBinaryImage) {
 
 					for (; z < 40; z++)
 					{
-						A = ROIset(g_pBinaryImage, i - 5, j + 10, 10, 10);//A = ROIset(g_pBinaryImage, i - 10, j - 20, 20, 20);
+						A = ROIset(g_pBinaryImage, i - 5, j + 2, 10, 10);//A = ROIset(g_pBinaryImage, i - 10, j - 20, 20, 20);
 						dataD[z] = A;
-						if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰
+						if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰 
 							break;
 						if ((dataD[z].center == dataD[z - 1].center) && z > 0)    //重心重复
 							break;
@@ -1125,9 +1138,16 @@ thetaData getTheta(Mat g_pBinaryImage) {
 							if (mm > 15)
 								break;
 						}
-						//drawROI(after2, i - 5, j + 10, 10, 10);
-
-						i = A.center.x; j = A.center.y;
+						//drawROI(after2, i - 5, j + 10, 10, 10);cv::imshow("角点", after2); waitKey(2000);
+						
+						i = A.center.x; j = A.center.y; int controlNum = 0;
+						while (g_pBinaryImage.at<uchar>(j, i) > 50)//为了降低杂点出现的情况
+						{
+							i--;
+							controlNum++;
+							if (controlNum > 4)
+								break;
+						}
 					}//cv::imshow("角点", after2); waitKey(0);
 					if (z > 24 && z<43) //待调 ！！！
 					{
@@ -1252,7 +1272,7 @@ thetaData getTheta(Mat g_pBinaryImage) {
 		}
 	}
 }
-
+			
 float angleangin(Mat after, Point2f k)
 {
 	if (leftuppoint)
@@ -1265,7 +1285,7 @@ float angleangin(Mat after, Point2f k)
 		{
 			A = ROIset(after, i - 5, j - 10, 10, 10);//A = ROIset(g_pBinaryImage, i - 10, j - 20, 20, 20);
 			dataA[z] = A;
-			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰
+			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰 
 				break;
 			if ((dataA[z].center == dataA[z - 1].center) && z > 0)    //重心重复
 				break;
@@ -1275,7 +1295,7 @@ float angleangin(Mat after, Point2f k)
 				if (mm > 15)              //此处为小框总数及角度差阈值调试的好断点
 					break;
 			}
-			//drawROI(after2, i - 5, j - 10, 10, 10);
+			//drawROI(after2, i - 5, j - 10, 10, 10);		
 			//cv::imshow("角点", after2);
 			//waitKey(0);
 			i = A.center.x; j = A.center.y;
@@ -1285,7 +1305,7 @@ float angleangin(Mat after, Point2f k)
 		{
 			//cv::imshow("角点", g_pBinaryImage2);
 			//waitKey(0);
-
+			
 			for (int i = 0; i < z - 2; i++)
 			{
 				averge += dataA[i].theta;
@@ -1308,7 +1328,7 @@ float angleangin(Mat after, Point2f k)
 		{
 			A = ROIset(after, i - 5, j - 10, 10, 10);//A = ROIset(g_pBinaryImage, i - 10, j - 20, 20, 20);
 			dataB[z] = A;
-			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰
+			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰 
 				break;
 			if ((dataB[z].center == dataB[z - 1].center) && z > 0)    //重心重复
 				break;
@@ -1354,7 +1374,7 @@ float angleangin(Mat after, Point2f k)
 		{
 			A = ROIset(after, i - 1, j + 10, 10, 10);//A = ROIset(g_pBinaryImage, i - 10, j - 20, 20, 20);
 			dataC[z] = A;
-			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰
+			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰 
 				break;
 			if ((dataC[z].center == dataC[z - 1].center) && z > 0)    //重心重复
 				break;
@@ -1371,7 +1391,7 @@ float angleangin(Mat after, Point2f k)
 		float averge = 0;
 		if (z > 24 && z<43) //待调 ！！！
 		{
-
+			
 			for (int i = 0; i < z - 2; i++)
 			{
 				averge += dataC[i].theta;
@@ -1393,7 +1413,7 @@ float angleangin(Mat after, Point2f k)
 		{
 			A = ROIset(after, i - 5, j + 10, 10, 10);//A = ROIset(g_pBinaryImage, i - 10, j - 20, 20, 20);
 			dataD[z] = A;
-			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰
+			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰 
 				break;
 			if ((dataD[z].center == dataD[z - 1].center) && z > 0)    //重心重复
 				break;
@@ -1410,7 +1430,7 @@ float angleangin(Mat after, Point2f k)
 		float averge = 0;
 		if (z > 24 && z<43) //待调 ！！！
 		{
-
+			
 			for (int i = 0; i < z - 2; i++)
 			{
 				averge += dataD[i].theta;
@@ -1423,17 +1443,17 @@ float angleangin(Mat after, Point2f k)
 			return averge - 90;
 	}
 }
-
+		
 Mat ImageRotate(Mat src, Point2f center, double angle)
 {
-	//计算二维旋转的仿射变换矩阵
+	//计算二维旋转的仿射变换矩阵  
 	Mat M = getRotationMatrix2D(center, angle, 1);
 	Mat dst;
 	warpAffine(src, dst, M, cvSize(src.cols, src.rows), CV_INTER_LINEAR);
 	return dst;
 }
 
-// 获取指定像素点放射变换后的新的坐标位置
+// 获取指定像素点放射变换后的新的坐标位置    
 Point2f getPointAffinedPos(Point2f src, Point2f center, double angle)
 {
 	Point2f dst;
@@ -1446,14 +1466,53 @@ Point2f getPointAffinedPos(Point2f src, Point2f center, double angle)
 	return dst;
 }
 
+//由旋转后图的坐标得到旋转前的
+Point2f getPointBack(Point2f src, Point2f center, double angle)
+{
+	Point2f dst;
+	int x = src.x - center.x;
+	int y = src.y - center.y;
+	double angle1 = angle * CV_PI / 180;
+
+	dst.x = cvRound(x * cos(angle1) + y * sin(angle1) + center.x);
+	dst.y = cvRound(-x * sin(angle1) + y * cos(angle1) + center.y);
+	return dst;
+}
+
+Point2f getPoint(Point2f src, Point2f center, double angle)
+{
+	Point2f dst;
+	if (angle < 90) {
+		double angle1 = angle * CV_PI / 180;
+
+		dst.x = cvRound((-src.x - (src.y / tan(angle1)))*sin(angle1));
+		dst.y = cvRound(src.y / sin(angle1));
+		return dst;
+	}
+	if (angle > 90)
+	{
+		double angle1 = (angle-90) * CV_PI / 180;
+
+		dst.x = cvRound((src.y - (src.x / tan(angle1)))*sin(angle1));
+		//dst.y = cvRound(dst.x / tan(angle1)+ src.x/ sin(angle1));
+		dst.y = cvRound(src.x/ sin(angle1)+(src.y - src.x /tan(angle1))*cos(angle1));
+		return dst;
+	}
+	else {
+		dst.x = -src.x;
+		dst.y = src.y;
+		return dst;
+	}
+}
+
 //返回的是数字所在位置中心和数字的值
 ROIData numbertest(Point2f k,Mat after) {
-	int dets = 4800; //待调！！3500
+	//int dets = 4800; //待调！！3500
 	//mat[0] = imread("0.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[1]= imread("1.jpg", CV_LOAD_IMAGE_UNCHANGED);mat[2] = imread("2.jpg", CV_LOAD_IMAGE_UNCHANGED);  //注意不加flag默认以三通道读入！！
 	//mat[3] = imread("3.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[4] = imread("4.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[5] = imread("5.jpg", CV_LOAD_IMAGE_UNCHANGED);
 	//mat[6] = imread("6.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[7] = imread("7.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[8] = imread("8.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[9] = imread("9.jpg", CV_LOAD_IMAGE_UNCHANGED);
-	mat[0] = imread("../source/cam/0.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[1] = imread("../source/cam/1.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[2] = imread("../source/cam/2.jpg", CV_LOAD_IMAGE_UNCHANGED);  //注意不加flag默认以三通道读入！！
-	mat[3] = imread("../source/cam/3.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[4] = imread("../source/cam/4.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[5] = imread("../source/cam/5.jpg", CV_LOAD_IMAGE_UNCHANGED);
+    mat[0] = imread("../source/cam/0.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[1] = imread("../source/cam/1.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[2] = imread("../source/cam/2.jpg", CV_LOAD_IMAGE_UNCHANGED);  //注意不加flag默认以三通道读入！！
+    mat[3] = imread("../source/cam/3.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[4] = imread("../source/cam/4.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[5] = imread("../source/cam/5.jpg", CV_LOAD_IMAGE_UNCHANGED);
 	mat[6] = imread("../source/cam/6.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[7] = imread("../source/cam/7.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[8] = imread("../source/cam/8.jpg", CV_LOAD_IMAGE_UNCHANGED); mat[9] = imread("../source/cam/9.jpg", CV_LOAD_IMAGE_UNCHANGED);
 	ROIData place;
 	/*for (int i = 0; i < 10; i++)
@@ -1463,14 +1522,14 @@ ROIData numbertest(Point2f k,Mat after) {
 	}*/
 	if (leftuppoint)
 	{
-		if ((k.x - rec_width + 10) > 0 && (k.y - rec_width + 10) > 0)
+		if ((k.x - rec_width + 15) > 0 && (k.y - rec_width + 15) > 0)
 		{
-			Mat roi = after(Rect(k.x - rec_width + 10, k.y - rec_width + 10, rec_width - 20, rec_width - 20));
-			 drawROI( after2, k.x - rec_width + 10, k.y - rec_width + 10, rec_width - 20, rec_width - 20);
-			//cv::imshow("src", after2);
-			//waitKey(0);
-			int num=bSums(roi);
-			if (num < dets)
+			Mat roi = after(Rect(k.x - rec_width + 15, k.y - rec_width + 15, rec_width - 30, rec_width - 30));
+			 drawROI( after2, k.x - rec_width + 15, k.y - rec_width + 15, rec_width - 30, rec_width - 30);
+			////cv::imshow("src", after2);
+			////waitKey(0);
+			//int num=bSums(roi);
+			//if (num < dets)
 			{
 				place.center.x = k.x - rec_width / 2;
 				place.center.y = k.y - rec_width / 2;
@@ -1481,14 +1540,14 @@ ROIData numbertest(Point2f k,Mat after) {
 	}
 	else if (rightuppoint)
 	{
-		if ((k.x+rec_width-10) <after.cols && (k.y - rec_width + 10) > 0)
+		if ((k.x+rec_width-15) <after.cols && (k.y - rec_width + 15) > 0)
 		{
-			Mat roi = after(Rect(k.x +15, k.y - rec_width + 10, rec_width - 20, rec_width - 20));
-			drawROI(after2, k.x + 15, k.y - rec_width + 10, rec_width - 20, rec_width - 20);
+			Mat roi = after(Rect(k.x +15, k.y - rec_width + 15, rec_width - 30, rec_width - 30));
+			drawROI(after2, k.x + 15, k.y - rec_width + 15, rec_width - 30, rec_width - 30);
 			//cv::imshow("src", after2);
 			//waitKey(0);
-			int num = bSums(roi);
-			if (num < dets)
+			//int num = bSums(roi);
+			//if (num < dets)
 			{
 				place.center.x = k.x + rec_width / 2;
 				place.center.y = k.y - rec_width / 2;
@@ -1499,14 +1558,14 @@ ROIData numbertest(Point2f k,Mat after) {
 	}
 	else if (rightdownpoint)
 	{
-		if ((k.x + rec_width - 10) <after.cols && (k.y + rec_width - 10) <after.rows)
+		if ((k.x + rec_width - 15) <after.cols && (k.y + rec_width - 15) <after.rows)
 		{
-			Mat roi = after(Rect(k.x +10, k.y +10, rec_width - 20, rec_width - 20));
-			drawROI(after2, k.x + 10, k.y + 10, rec_width - 20, rec_width - 20);
+			Mat roi = after(Rect(k.x +15, k.y +15, rec_width - 30, rec_width - 30));
+			drawROI(after2, k.x + 15, k.y + 15, rec_width - 30, rec_width - 30);
 			//cv::imshow("src", after);
 			//waitKey(2000);
-			int num = bSums(roi);
-			if (num < dets)
+			//int num = bSums(roi);
+			//if (num < dets)
 			{
 				place.center.x = k.x + rec_width / 2;
 				place.center.y = k.y + rec_width / 2;
@@ -1517,14 +1576,14 @@ ROIData numbertest(Point2f k,Mat after) {
 	}
 	else if (leftdownpoint)
 	{
-		if ((k.x - rec_width + 10) >0 && (k.y + rec_width - 10) <after.rows)
+		if ((k.x - rec_width + 15) >0 && (k.y + rec_width - 15) <after.rows)
 		{
-			Mat roi = after(Rect(k.x - rec_width + 10, k.y + 10, rec_width - 20, rec_width - 20));
-			drawROI(after2, k.x - rec_width + 10, k.y + 10, rec_width - 20, rec_width - 20);
+			Mat roi = after(Rect(k.x - rec_width + 15, k.y + 15, rec_width - 30, rec_width - 30));
+			drawROI(after2, k.x - rec_width + 15, k.y + 15, rec_width - 30, rec_width - 30);
 			//cv::imshow("src", after);
 			//waitKey(2000);
-			int num = bSums(roi);
-			if (num < dets)
+			//int num = bSums(roi);
+			//if (num < dets)
 			{
 				place.center.x = k.x + rec_width / 2;
 				place.center.y = k.y + rec_width / 2;
@@ -1617,6 +1676,6 @@ void ModeMake(Mat src)
 	 /*drawROI(bas, a + left, b+top, right - left, bottom - top);
 	 cv::imshow("src", bas);
 	 waitKey(0);*/
-
+	 
 
 }

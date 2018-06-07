@@ -63,3 +63,7 @@ int rightdownrect(Mat roi);
 int centercross(Mat roi);
 
 int bSums(Mat src);
+
+Point2f getPointBack(Point2f src, Point2f center, double angle);
+
+Point2f getPoint(Point2f src, Point2f center, double angle);
