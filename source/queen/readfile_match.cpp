@@ -98,9 +98,9 @@ void read_and_match()
         printf("  %d  ", y);
         for (int x = 1; x <= 8; x++)//x是列号
         {
-            for(int i=0;i<max_coincide;i++)
+            for(int i=8 - max_coincide;i<8;i++)
             {
-                if(x == chess[max_coincide+i].x && y == chess[max_coincide+i].y)//in the same place
+                if(x == chess[i].x && y == chess[i].y)//in the same place
                 {
                     printf("@ ");
                     flag_Display = 1;
