@@ -323,14 +323,12 @@ void uart_send_charList(char* send_data,int data_len)
     do
     {
         err = UART0_Init(fd,9600,0,8,1,'N');
-        printf("Set Port Exactly!\n");
+        //printf("Set Port Exactly!\n");
     }while(FALSE == err || FALSE == fd);
 
 
     len = UART0_Send(fd,send_data,data_len);
-    if(len > 0)
-        printf(" sent %d data successful\n\n",len);
-    else
+    if(len <= 0)
         printf("send data failed!\n\n");
 
     usleep(10000);//10ms
@@ -354,7 +352,7 @@ void uart_read_charFour()
     do
     {
         err = UART0_Init(fd,9600,0,8,1,'N');
-        printf("Set Port Exactly!\n");
+        //printf("Set Port Exactly!\n");
     }while(FALSE == err || FALSE == fd);
 
 
@@ -364,11 +362,11 @@ void uart_read_charFour()
         if(len > 0)
         {
             //rcv_buf[len] = '\0';
-            printf("receive data is\n");
-            for(int i=0;i<4;i++)
-            {
-                printf("%d\n",(unsigned char)read_data[i]);
-            }
+            //printf("receive data is\n");
+            // for(int i=0;i<4;i++)
+            // {
+            //     printf("%d\n",(unsigned char)read_data[i]);
+            // }
             printf("len = %d\n",len);
             if(read_data[0]==0x66)
             {
@@ -388,7 +386,7 @@ void uart_read_charFour()
         }
         else
         {
-            printf("cannot receive data\n");
+            //printf("cannot receive data\n");
         }
         //usleep(5000000);//5s;
         usleep(10000);//10ms;

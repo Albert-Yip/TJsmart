@@ -62,10 +62,10 @@ int main(int argc, char const *argv[])
     }
 
 
-    while(1);
+    //while(1);
 
 
-    uart_read_charFour();
+    //uart_read_charFour();
 
     // char fourByteDataX[4] = {0,0,100,'x'};
     // char fourByteDataY[4] = {0,0,100,'y'};
@@ -88,8 +88,10 @@ int main(int argc, char const *argv[])
     ROIData position_car;
     if(strcmp(argv[2],"0") == 1)//=1
     {
+        printf("ready to go!\n");
         VideoCapture cap;
         VideoCapture cap2;
+        //while(1);
         while(!cap.open(1));
         while(!cap2.open(2));
         int work_time = n*300;
@@ -107,7 +109,7 @@ int main(int argc, char const *argv[])
 
             }
             position_car = maindoCamera();
-            if(position_car.center.x == 0)
+            if(position_car.center.x == 0 && position_car.center.y == 0 && position_car.theta == 0)
              {
                 printf("nothing!\n");
             }
@@ -117,10 +119,12 @@ int main(int argc, char const *argv[])
         //printf("%d\n",num );
     }
     else
-        {
-            position_car = maindoPicture();
-            toChar_send_position(position_car);
-        }
+    {
+        //printf("ready to go???????????\n");
+        position_car = maindoPicture();
+        toChar_send_position(position_car);
+    }
+    //printf("???????????\n");
 }
 
 
@@ -206,21 +210,21 @@ void toChar_send_path()
     {
         end_fourByteData[i]=0;
     }
-    if(abs(routeA[NUM-1].x - 4.5) < abs(routeA[NUM-1].y - 4.5))
+    if(abs(routeA[NUM-1].x - 4.5) > abs(routeA[NUM-1].y - 4.5))
     {
         //x is the chosen ending
         if(routeA[NUM-1].x - 4.5 > 0)
-            end_fourByteData[3]='R';
+            end_fourByteData[3]='R';//ascii: 82
         else
-            end_fourByteData[3]='L';
+            end_fourByteData[3]='L';//ascii: 76
     }
     else
     {
         //y is the chosen ending
         if(routeA[NUM-1].y - 4.5 > 0)
-            end_fourByteData[3]='B';
+            end_fourByteData[3]='B';//ascii: 66
         else
-            end_fourByteData[3]='F';
+            end_fourByteData[3]='F';//ascii: 70
     }
     uart_send_charList(end_fourByteData,4);
 
