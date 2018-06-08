@@ -19,7 +19,8 @@ void toChar_send_position(ROIData position_car);
 void toChar_send_path();
 
 int main(int argc, char const *argv[])
-{  int n = 0;
+{
+    int n = 0;
     if(argc != 3)
     {
         printf("Usage: %s 2/1/0(test/input/not) 1/0(for cam) \n",argv[0]);
@@ -51,7 +52,27 @@ int main(int argc, char const *argv[])
             fourByteData[3] = 'Y';
             uart_send_charList(fourByteData,4);
         }
-
+            //the end point
+        char end_fourByteData[4] = {0,0,0,'E'};
+        int end_X = (*(position+n-1) - 1) % 8 + 1;
+        int end_Y = (*(position+n-1) - 1) / 8 + 1;
+        if(abs(end_X - 4.5) > abs(end_Y - 4.5))
+        {
+            //x is the chosen ending
+            if(end_X - 4.5 > 0)
+                end_fourByteData[3]='R';//ascii: 82
+            else
+                end_fourByteData[3]='L';//ascii: 76
+        }
+        else
+        {
+            //y is the chosen ending
+            if(end_Y - 4.5 > 0)
+                end_fourByteData[3]='B';//ascii: 66
+            else
+                end_fourByteData[3]='F';//ascii: 70
+        }
+        uart_send_charList(end_fourByteData,4);
     }
     else
     {
@@ -59,6 +80,7 @@ int main(int argc, char const *argv[])
         //while(1);
         printf("\n\n\n\npath send by uart:\n");
         toChar_send_path();
+        n = 2 * NUM;
     }
 
 
@@ -206,10 +228,7 @@ void toChar_send_path()
 
     //the end point
     char end_fourByteData[4] = {0,0,0,'E'};
-    for(int i=0;i<4;i++)
-    {
-        end_fourByteData[i]=0;
-    }
+
     if(abs(routeA[NUM-1].x - 4.5) > abs(routeA[NUM-1].y - 4.5))
     {
         //x is the chosen ending
