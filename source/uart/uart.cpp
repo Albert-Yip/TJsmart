@@ -15,7 +15,8 @@
 
 
 #include "global_var.h"
-
+extern int sum_X,sum_Y;
+int show_flag = 0;
 //input function
 void toChar_send_path();
 
@@ -266,6 +267,12 @@ int UART0_Recv(int fd, char *rcv_buf,int data_len)
     {
         len = read(fd,rcv_buf,data_len);
         //printf("I am right!(version1.2) len = %d fs_sel = %d\n",len,fs_sel);
+        printf("read data is \n");
+        for(int i=0;i<data_len;i++)
+        {
+            printf("%d\n",(unsigned char)rcv_buf[i]);
+        }
+
         return len;
     }
     else
@@ -289,12 +296,16 @@ int UART0_Send(int fd, char *send_buf,int data_len)
     len = write(fd,send_buf,data_len);
     if (len == data_len )
     {
-        printf("send data is \n");
-        for(int i=0;i<data_len;i++)
+        if(!show_flag)
         {
-            printf("%d\n",(unsigned char)send_buf[i]);
+            printf("send data is \n");
+            for(int i=0;i<data_len;i++)
+            {
+                printf("%d\n",(unsigned char)send_buf[i]);
+            }
+            return len;
         }
-        return len;
+
     }
     else
     {
@@ -370,7 +381,7 @@ void uart_read_charFour()
             printf("len = %d\n",len);
             if(read_data[0]==0x66)
             {
-                if((unsigned char)read_data[3]==0xff)
+                if((unsigned char)read_data[3]==0xff && (unsigned char)read_data[1]==sum_X && (unsigned char)read_data[2]==sum_Y)
                 {
                     printf("5604 receive successful!\n");
                     break;

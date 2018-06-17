@@ -11,9 +11,10 @@
 
 
 extern int num;
-extern Mat Image,Image2;
+extern Mat Image,Image2,Image3,Image4;
 using namespace std;
-
+extern int show_flag;
+int sum_X=0, sum_Y=0;
 int queen_path(int flag);
 void toChar_send_position(ROIData position_car);
 void toChar_send_path();
@@ -48,9 +49,17 @@ int main(int argc, char const *argv[])
             fourByteData[3] = 'X';
             uart_send_charList(fourByteData,4);
 
+            sum_X += fourByteData[2];
+
             fourByteData[2] = (*(position+i) - 1) / 8 + 1;
             fourByteData[3] = 'Y';
             uart_send_charList(fourByteData,4);
+
+
+            //sum_X += routeA[i].x;
+            sum_Y += fourByteData[2];
+            //sum_Y += routeA[i].y;
+
         }
             //the end point
         char end_fourByteData[4] = {0,0,0,'E'};
@@ -77,7 +86,7 @@ int main(int argc, char const *argv[])
     else
     {
         queen_path(strcmp(argv[1],"0"));
-        //while(1);
+        while(1);
         printf("\n\n\n\npath send by uart:\n");
         toChar_send_path();
         n = 2 * NUM;
@@ -86,8 +95,8 @@ int main(int argc, char const *argv[])
 
     //while(1);
 
-
-    //uart_read_charFour();
+    printf("\n\nnow waiting for the 5604:  and the right answer is %d,%d\n",sum_X,sum_Y);
+    uart_read_charFour();
 
     // char fourByteDataX[4] = {0,0,100,'x'};
     // char fourByteDataY[4] = {0,0,100,'y'};
@@ -104,7 +113,7 @@ int main(int argc, char const *argv[])
     //while(1);
 
 
-
+    show_flag = 1;
 
     printf("\n\n\n\nlocation send by uart:\n");
     ROIData position_car;
@@ -113,13 +122,21 @@ int main(int argc, char const *argv[])
         printf("ready to go!\n");
         VideoCapture cap;
         VideoCapture cap2;
+        // VideoCapture cap3;
+        // VideoCapture cap4;
         //while(1);
         while(!cap.open(1));
         while(!cap2.open(2));
+        // while(!cap3.open(3));//L
+        // while(!cap4.open(4));//R
         int work_time = n*300;
         while(work_time--)
         {
-            cap>>Image;cap2>>Image2;
+            cap>>Image;
+            cap2>>Image2;
+            // cap3>>Image3;
+            // cap4>>Image4;
+
             while (Image.empty())
             {
 		        cap.open(1); cap>>Image;printf("cam open retrying");
@@ -130,6 +147,16 @@ int main(int argc, char const *argv[])
 		        cap2.open(2); cap2>>Image2;printf("cam2 open retrying");
 
             }
+            // while (Image3.empty())
+            // {
+            //     cap3.open(3); cap>>Image3;printf("cam3 open retrying");
+
+            // }
+            // while (Image4.empty())
+            // {
+            //     cap4.open(4); cap2>>Image4;printf("cam4 open retrying");
+
+            // }
             position_car = maindoCamera();
             if(position_car.center.x == 0 && position_car.center.y == 0 && position_car.theta == 0)
              {
@@ -175,7 +202,7 @@ void toChar_send_position(ROIData position_car)
     int p_x = (int)position_car.center.x;
     int p_y = (int)position_car.center.y;
     int p_theta = (int)(position_car.theta*10);
-    printf("%d,%d,%d\n",p_x,p_y,p_theta);
+    printf("(%d,%d,%d)\n",p_x,p_y,p_theta);
 
     fourByteData[1] = p_x>>8;
     fourByteData[2] = p_x;
@@ -223,7 +250,10 @@ void toChar_send_path()
         fourByteData[3] = 'Y';
         uart_send_charList(fourByteData,4);
 
-
+        sum_X += routeB[i].x;
+        sum_X += routeA[i].x;
+        sum_Y += routeB[i].y;
+        sum_Y += routeA[i].y;
     }
 
     //the end point
