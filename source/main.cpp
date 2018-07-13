@@ -18,72 +18,28 @@ int sum_X=0, sum_Y=0;
 int queen_path(int flag);
 void toChar_send_position(ROIData position_car);
 void toChar_send_path();
-void send_wall();
-void send_chess();
+void send_wall_1();
+void send_chess_n(int n);
+void one_time_move();
 
 int main(int argc, char const *argv[])
 {
     int n = 0;
     if(argc != 3)
     {
-        printf("Usage: %s 2/1/0(test/input/not) 1/0(for cam) \n",argv[0]);
+        printf("Usage: %s 3/2/1/0(chess or wall/queen test/input/not) 1/0(for cam) \n",argv[0]);
         return 0;
     }
-
-    if(strcmp(argv[1],"2") == 0)//for test =2
+    if(strcmp(argv[1],"3") == 0)//for chess or wall, move one time
+    {
+    	one_time_move();
+    }
+    else if(strcmp(argv[1],"2") == 0)//for test =2
     {
 
-        int *position;
-        printf("please input n : \n");
+        printf("please input n (how many step you wanna go): \n");
         scanf("%d",&n);
-        position = (int*) malloc(n * sizeof(int));
-        for(int i=0;i<n;i++)
-        {
-            printf("please input a position for test %d: \n",i);
-            scanf("%d",position+i);
-        }
-        char fourByteData[4] = {0,0,n,'N'};
-        uart_send_charList(fourByteData,4);
-        for(int i=0;i<n;i++)
-        {
-
-            fourByteData[2] = (*(position+i) - 1) % 8 + 1;
-            fourByteData[3] = 'X';
-            uart_send_charList(fourByteData,4);
-
-            sum_X += fourByteData[2];
-
-            fourByteData[2] = (*(position+i) - 1) / 8 + 1;
-            fourByteData[3] = 'Y';
-            uart_send_charList(fourByteData,4);
-
-
-            //sum_X += routeA[i].x;
-            sum_Y += fourByteData[2];
-            //sum_Y += routeA[i].y;
-
-        }
-            //the end point
-        char end_fourByteData[4] = {0,0,0,'E'};
-        int end_X = (*(position+n-1) - 1) % 8 + 1;
-        int end_Y = (*(position+n-1) - 1) / 8 + 1;
-        if(abs(end_X - 4.5) > abs(end_Y - 4.5))
-        {
-            //x is the chosen ending
-            if(end_X - 4.5 > 0)
-                end_fourByteData[3]='R';//ascii: 82
-            else
-                end_fourByteData[3]='L';//ascii: 76
-        }
-        else
-        {
-            //y is the chosen ending
-            if(end_Y - 4.5 > 0)
-                end_fourByteData[3]='B';//ascii: 66
-            else
-                end_fourByteData[3]='F';//ascii: 70
-        }
-        uart_send_charList(end_fourByteData,4);
+        send_chess_n(n);
     }
     else
     {
@@ -178,6 +134,149 @@ int main(int argc, char const *argv[])
     //printf("???????????\n");
 }
 
+
+void one_time_move()
+{
+	
+	int cw=0;
+    printf("move chess or wall? 0->chess/1->wall: \n");
+    scanf("%d",&cw);
+    if(!cw)//chess
+    {
+    	send_chess_n(1);
+    }
+    else//wall
+    {
+    	send_wall_1();
+    }
+    
+}
+
+void send_wall_1()
+{
+	int *position;
+	char heading;
+	printf("please input the 2 positions for wall and its heading(awsd) : \n",n);
+    for(int i=0;i<2;i++)
+    {
+        scanf("%d",position+i);
+    }
+	scanf("%c",&heading);
+	char fourByteData[4] = {0,0,0,'W'};
+    uart_send_charList(fourByteData,4);
+    for(int i=0;i<2;i++)
+    {
+
+        fourByteData[2] = (*(position+i) - 1) % 8 + 1;//original X
+        if(heading == 'a')
+    	{
+    		fourByteData[2] = fourByteData[2] *2 - 1 ;
+    	}
+    	else if (heading == 'd')
+    	{
+    		fourByteData[2] = fourByteData[2] *2 + 1 ;//X = (X+-0.5)*2
+    	}
+
+        fourByteData[3] = 'X';
+        uart_send_charList(fourByteData,4);
+
+        sum_X += fourByteData[2];
+
+        fourByteData[2] = (*(position+i) - 1) / 8 + 1;//original Y
+        if(heading == 'w')
+    	{
+    		fourByteData[2] = fourByteData[2] *2 - 1 ;
+    	}
+    	else if (heading == 's')
+    	{
+    		fourByteData[2] = fourByteData[2] *2 + 1 ;//Y = (Y+-0.5)*2
+    	}
+        fourByteData[3] = 'Y';
+        uart_send_charList(fourByteData,4);
+
+
+        //sum_X += routeA[i].x;
+        sum_Y += fourByteData[2];
+        //sum_Y += routeA[i].y;
+
+    }
+    //the end point
+    // char end_fourByteData[4] = {0,0,0,'E'};
+    // int end_X = (*(position+n-1) - 1) % 8 + 1;
+    // int end_Y = (*(position+n-1) - 1) / 8 + 1;
+    // if(abs(end_X - 4.5) > abs(end_Y - 4.5))
+    // {
+    //     //x is the chosen ending
+    //     if(end_X - 4.5 > 0)
+    //         end_fourByteData[3]='R';//ascii: 82
+    //     else
+    //         end_fourByteData[3]='L';//ascii: 76
+    // }
+    // else
+    // {
+    //     //y is the chosen ending
+    //     if(end_Y - 4.5 > 0)
+    //         end_fourByteData[3]='B';//ascii: 66
+    //     else
+    //         end_fourByteData[3]='F';//ascii: 70
+    // }
+    char end_fourByteData[4] = {0,0,0,'E'};
+    end_fourByteData[3]='B';//ascii: 66
+    uart_send_charList(end_fourByteData,4);
+}
+
+void send_chess_n(int n)
+{
+	int *position;
+	position = (int*) malloc(n * sizeof(int));
+    printf("please input positions for %d times : \n",n);
+    for(int i=0;i<n;i++)
+    {
+        scanf("%d",position+i);
+    }
+    char fourByteData[4] = {0,0,n,'N'};
+    uart_send_charList(fourByteData,4);
+    for(int i=0;i<n;i++)
+    {
+
+        fourByteData[2] = (*(position+i) - 1) % 8 + 1;
+        fourByteData[3] = 'X';
+        uart_send_charList(fourByteData,4);
+
+        sum_X += fourByteData[2];
+
+        fourByteData[2] = (*(position+i) - 1) / 8 + 1;
+        fourByteData[3] = 'Y';
+        uart_send_charList(fourByteData,4);
+
+
+        //sum_X += routeA[i].x;
+        sum_Y += fourByteData[2];
+        //sum_Y += routeA[i].y;
+
+    }
+    //the end point
+    char end_fourByteData[4] = {0,0,0,'E'};
+    int end_X = (*(position+n-1) - 1) % 8 + 1;
+    int end_Y = (*(position+n-1) - 1) / 8 + 1;
+    if(abs(end_X - 4.5) > abs(end_Y - 4.5))
+    {
+        //x is the chosen ending
+        if(end_X - 4.5 > 0)
+            end_fourByteData[3]='R';//ascii: 82
+        else
+            end_fourByteData[3]='L';//ascii: 76
+    }
+    else
+    {
+        //y is the chosen ending
+        if(end_Y - 4.5 > 0)
+            end_fourByteData[3]='B';//ascii: 66
+        else
+            end_fourByteData[3]='F';//ascii: 70
+    }
+    uart_send_charList(end_fourByteData,4);
+}
 
 int queen_path(int flag)
 {
