@@ -137,7 +137,7 @@ int main(int argc, char const *argv[])
 
 void one_time_move()
 {
-	
+
 	int cw=0;
     printf("move chess or wall? 0->chess/1->wall: \n");
     scanf("%d",&cw);
@@ -149,14 +149,14 @@ void one_time_move()
     {
     	send_wall_1();
     }
-    
+
 }
 
 void send_wall_1()
 {
 	int *position;
 	char heading;
-	printf("please input the 2 positions for wall and its heading(awsd) : \n",n);
+	printf("please input the 2 positions for wall and its heading(awsd) : \n");
     for(int i=0;i<2;i++)
     {
         scanf("%d",position+i);
