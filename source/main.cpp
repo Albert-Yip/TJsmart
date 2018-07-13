@@ -18,6 +18,8 @@ int sum_X=0, sum_Y=0;
 int queen_path(int flag);
 void toChar_send_position(ROIData position_car);
 void toChar_send_path();
+void send_wall();
+void send_chess();
 
 int main(int argc, char const *argv[])
 {
