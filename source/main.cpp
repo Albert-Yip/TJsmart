@@ -103,7 +103,7 @@ int main(int argc, char const *argv[])
             while (Image2.empty())
             {
 		        cap2.open(2); cap2>>Image2;printf("cam2 open retrying");
-
+                
             }
             // while (Image3.empty())
             // {
@@ -176,7 +176,7 @@ void send_wall_1()
     	{
     		fourByteData[2] = fourByteData[2] *2 + 1 ;//X = (X+-0.5)*2
     	}
-
+        
         fourByteData[3] = 'X';
         uart_send_charList(fourByteData,4);
 
@@ -346,7 +346,7 @@ void toChar_send_path()
         fourByteData[2] = routeA[i].x;//the position
         fourByteData[3] = 'X';
         uart_send_charList(fourByteData,4);
-
+        
         fourByteData[2] = routeA[i].y;
         fourByteData[3] = 'Y';
         uart_send_charList(fourByteData,4);
