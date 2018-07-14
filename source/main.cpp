@@ -44,7 +44,7 @@ int main(int argc, char const *argv[])
     else
     {
         queen_path(strcmp(argv[1],"0"));
-        while(1);
+        //while(1);
         printf("\n\n\n\npath send by uart:\n");
         toChar_send_path();
         n = 2 * NUM;
