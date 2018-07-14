@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 2.8)
 
 project(onTX2)
 
+set(CMAKE_BUILD_TYPE "Debug")
+
 find_package( OpenCV REQUIRED )
 
 include_directories(${CMAKE_CURRENT_LIST_DIR}/source/queen ${CMAKE_CURRENT_LIST_DIR}/source/cam ${CMAKE_CURRENT_LIST_DIR}/source/uart)
