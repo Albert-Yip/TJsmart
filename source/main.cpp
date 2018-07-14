@@ -27,6 +27,7 @@ int main(int argc, char const *argv[])
     int n = 0;
     if(argc != 3)
     {
+        
         printf("Usage: %s 3/2/1/0(chess or wall/queen test/input/not) 1/0(for cam) \n",argv[0]);
         return 0;
     }
@@ -137,7 +138,6 @@ int main(int argc, char const *argv[])
 
 void one_time_move()
 {
-
 	int cw=0;
     printf("move chess or wall? 0->chess/1->wall: \n");
     scanf("%d",&cw);
@@ -161,22 +161,25 @@ void send_wall_1()
     {
         scanf("%d",position+i);
     }
-	scanf("%c",&heading);
+	scanf(" %c",&heading);
 	char fourByteData[4] = {0,0,0,'W'};
     uart_send_charList(fourByteData,4);
+    //printf("the heading is %c\n",heading);
     for(int i=0;i<2;i++)
     {
 
         fourByteData[2] = (*(position+i) - 1) % 8 + 1;//original X
         if(heading == 'a')
     	{
-    		fourByteData[2] = fourByteData[2] *2 - 1 ;
+    		fourByteData[2] = fourByteData[2] * 2 - 1 ;
     	}
     	else if (heading == 'd')
     	{
-    		fourByteData[2] = fourByteData[2] *2 + 1 ;//X = (X+-0.5)*2
+    		fourByteData[2] = fourByteData[2] * 2 + 1 ;//X = (X+-0.5)*2
     	}
-        
+        else
+            fourByteData[2] = fourByteData[2] * 2;
+
         fourByteData[3] = 'X';
         uart_send_charList(fourByteData,4);
 
@@ -191,6 +194,8 @@ void send_wall_1()
     	{
     		fourByteData[2] = fourByteData[2] *2 + 1 ;//Y = (Y+-0.5)*2
     	}
+        else
+            fourByteData[2] = fourByteData[2] * 2;
         fourByteData[3] = 'Y';
         uart_send_charList(fourByteData,4);
 
