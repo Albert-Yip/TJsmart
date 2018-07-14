@@ -155,6 +155,7 @@ void one_time_move()
 void send_wall_1()
 {
 	int *position;
+    position = (int*) malloc(2 * sizeof(int));
 	char heading;
 	printf("please input the 2 positions for wall and its heading(awsd) : \n");
     for(int i=0;i<2;i++)
