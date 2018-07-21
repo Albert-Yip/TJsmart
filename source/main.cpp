@@ -12,9 +12,13 @@
 
 extern int num;
 extern Mat Image,Image2,Image3,Image4;
+extern int flag;//chess position offset or not
 using namespace std;
 extern int show_flag;
+
+int turn_flag = 0;//turn 90 deg or not
 int sum_X=0, sum_Y=0;
+Point2f target_Point;
 int queen_path(int flag);
 void toChar_send_position(ROIData position_car);
 void toChar_send_path();
@@ -34,11 +38,12 @@ int main(int argc, char const *argv[])
     if(strcmp(argv[1],"3") == 0)//for chess or wall, move one time
     {
     	one_time_move();
+        n = 5;// 暂定一次最多处理5*300=1500张图片
     }
     else if(strcmp(argv[1],"2") == 0)//for test =2
     {
 
-        printf("please input n (how many step you wanna go): \n");
+        printf("please input n (how many steps you wanna go): \n");
         scanf("%d",&n);
         send_chess_n(n);
     }
@@ -116,23 +121,25 @@ int main(int argc, char const *argv[])
             //     cap4.open(4); cap2>>Image4;printf("cam4 open retrying");
 
             // }
-            position_car = maindoCamera();
+            position_car = maindoCamera(target_Point,turn_flag);
             if(position_car.center.x == 0 && position_car.center.y == 0 && position_car.theta == 0)
              {
                 printf("nothing!\n");
             }
             else
-                toChar_send_position(position_car);
+            {
+                toChar_send_position(position_car);                
+            }
+
         }
         //printf("%d\n",num );
     }
     else
     {
-        //printf("ready to go???????????\n");
-        position_car = maindoPicture();
-        toChar_send_position(position_car);
+        // position_car = maindoPicture();
+        // toChar_send_position(position_car);
+        cout<<"hey!"<<endl;
     }
-    //printf("???????????\n");
 }
 
 
@@ -143,7 +150,8 @@ void one_time_move()
     scanf("%d",&cw);
     if(!cw)//chess
     {
-    	send_chess_n(1);
+        flag = 1;        
+    	send_chess_n(2);
     }
     else//wall
     {
@@ -157,7 +165,7 @@ void send_wall_1()
 	int *position;
     position = (int*) malloc(2 * sizeof(int));
 	char heading;
-	printf("please input the 2 positions for wall and its heading(awsd) : \n");
+	printf("please input the 2 positions(1~64) for wall and its heading(awsd) : \n");
     for(int i=0;i<2;i++)
     {
         scanf("%d",position+i);
@@ -173,10 +181,12 @@ void send_wall_1()
         if(heading == 'a')
     	{
     		fourByteData[2] = fourByteData[2] * 2 - 1 ;
+            turn_flag = 1;
     	}
     	else if (heading == 'd')
     	{
     		fourByteData[2] = fourByteData[2] * 2 + 1 ;//X = (X+-0.5)*2
+            turn_flag = 2;
     	}
         else
             fourByteData[2] = fourByteData[2] * 2;
@@ -235,7 +245,7 @@ void send_chess_n(int n)
 {
 	int *position;
 	position = (int*) malloc(n * sizeof(int));
-    printf("please input positions for %d times : \n",n);
+    printf("please input positions（1~64） for %d times : \n",n);
     for(int i=0;i<n;i++)
     {
         scanf("%d",position+i);
@@ -260,6 +270,11 @@ void send_chess_n(int n)
         sum_Y += fourByteData[2];
         //sum_Y += routeA[i].y;
 
+    }
+    if(flag)
+    {
+        target_Point.x = (*(position+n-1) - 1) % 8 + 1;
+        target_Point.y = (*(position+n-1) - 1) / 8 + 1;
     }
     //the end point
     char end_fourByteData[4] = {0,0,0,'E'};
@@ -305,7 +320,17 @@ int queen_path(int flag)
 void toChar_send_position(ROIData position_car)
 {
     char fourByteData[4] = {0,0,0,0};
-
+    if(position_car.center2.x != 0 || position_car.center2.y != 0)
+    {
+        fourByteData[1] = (int)position_car.center2.x>>8;
+        fourByteData[2] = (int)position_car.center2.x;
+        fourByteData[3] = 'p';
+        uart_send_charList(fourByteData,4);
+        fourByteData[1] = (int)position_car.center2.y>>8;
+        fourByteData[2] = (int)position_car.center2.y;
+        fourByteData[3] = 'q';
+        uart_send_charList(fourByteData,4);
+    }
     int p_x = (int)position_car.center.x;
     int p_y = (int)position_car.center.y;
     int p_theta = (int)(position_car.theta*10);

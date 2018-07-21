@@ -13,6 +13,7 @@ void Fotographieren(int device, int time);
 typedef struct
 {
 	Point2f center;
+	Point2f center2;
 	double theta;
 } ROIData;
 
@@ -66,4 +67,5 @@ int bSums(Mat src);
 
 Point2f getPointBack(Point2f src, Point2f center, double angle);
 
-Point2f getPoint(Point2f src, Point2f center, double angle);
+Point2f getPoint(Point2f src, Point2f center, double angle, int flag);
+

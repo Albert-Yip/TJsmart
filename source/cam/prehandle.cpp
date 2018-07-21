@@ -38,12 +38,12 @@ void srcTri_config(Point2f srcTri[], int dot[]) {
 **@note 在摄像头位置变动后，请自行设置函数内参数
 */
 void getmap_matrix() {
-	int dot[8] = { 263,278,395,278,435,419,229,418 };												
+	int dot[8] = { 270,296,401,297,439,446,234,442 };												
 	Size newCanvas = Size(640, 640);//设置新画布分辨率
 
 	int ratio = 4;//4个像素1厘米
-	float side_len = 3.15;//∵640pixel=160cm,4pixel=1cm∴ratio=4;小方格边长side_len=3.15cm 
-	int bias = 6.8;//距后轴40cm处为图像底边，60cm处为黑白格底线，Δ=20cm   //chuangyi 51.8  52.8
+	float side_len = 3.1;//∵640pixel=160cm,4pixel=1cm∴ratio=4;小方格边长side_len=3.15cm 
+	int bias = 4;//距后轴40cm处为图像底边，60cm处为黑白格底线，Δ=20cm   //chuangyi 51.8  52.8
 
 				  /*以下一般无需更改*/
 	Point2f srcTri[4], dstTri[4];
@@ -69,11 +69,11 @@ void getmap_matrix() {
 */
 Point2f getRealXY(Point2f origin, int ratio = 4) {
 	int width = 640, height = 640;//设置新画布分辨率
-	float side_len = 3.15;//参数值与getmap_matrix()相同
-	int bias = 6.8;
+	float side_len = 3.1;//参数值与getmap_matrix()相同
+	int bias = 4;
 	Point2f RealXY;
 	RealXY.x = (origin.x - width / 2) / ratio;
-	RealXY.y = ((height - bias*ratio) - origin.y) / ratio +39.1;	//刘 此处可直接height-y+车后轴到图像底边距离
+	RealXY.y = ((height - bias*ratio) - origin.y) / ratio +38;	//刘 此处可直接height-y+车后轴到图像底边距离
 	//注：59.5：实际标注时，黑白格底边距车轴O点59.5cm；
 	return RealXY;
 }
@@ -156,6 +156,8 @@ int getnumber(Mat roi)
 		}
 		sumi = 0;
 	}
+	if (left > roi.cols/2-2)
+		return 0;
 	i += 10; sumi = 0;
 	for (; i < roi.cols; i++)
 	{
@@ -188,6 +190,11 @@ int getnumber(Mat roi)
 			}
 			sumi = 0;
 		}
+		if (mode != 1)
+		{
+			if (right < (roi.cols / 2 + 2))
+				return 0;
+		}
 		if(mode==1)
 		{
 			i += 10; sumi = 0;
@@ -207,6 +214,8 @@ int getnumber(Mat roi)
 		}
 	   }
 	if (right <= (left+15))
+		return 0;
+	if((right-left)>62)
 		return 0;
 	Mat roi1 = roi(Rect(left, 0, right - left, roi.rows));
 	int j = 0, sumj = 0, top = 0, bottom = 0;//上下扫描
@@ -276,8 +285,10 @@ int getnumber(Mat roi)
 	}
 	if (number1 == 2)
 	{
-		if (downline(roi2) || leftuprect(roi2))
+		if (downline(roi2) || leftuprect(roi2)&&(!rightline(roi2)))
 			;
+		else if (rightline(roi2))
+			number1 = 4;
 		else
 			number1 = 9;
 	}
@@ -379,8 +390,10 @@ int getnumber(Mat roi)
 		}
 		if (number2 == 2)
 		{
-			if (downline(roi4) || leftuprect(roi4))
+			if (downline(roi4) || leftuprect(roi4) && (!rightline(roi4)))
 				;
+			else if (rightline(roi4))
+				number2 = 4;
 			else
 				number2 = 9;
 		}

@@ -1299,13 +1299,21 @@ float angleangin(Mat after, Point2f k)
 			//cv::imshow("角点", after2);
 			//waitKey(0);
 			i = A.center.x; j = A.center.y;
+			int controlNum = 0;
+			while (after.at<uchar>(j, i) > 50)//为了降低杂点出现的情况
+			{
+				i--;
+				controlNum++;
+				if (controlNum > 4)
+					break;
+			}
 		}
 		float averge = 0;
 		if (z > 26 && z<43)
 		{
 			//cv::imshow("角点", g_pBinaryImage2);
 			//waitKey(0);
-			
+
 			for (int i = 0; i < z - 2; i++)
 			{
 				averge += dataA[i].theta;
@@ -1321,8 +1329,8 @@ float angleangin(Mat after, Point2f k)
 	}
 	else if (rightuppoint)
 	{
-		ROIData A;ROIData dataB[40];
-		int i =k.x - 1, j = k.y - 2,z=0;
+		ROIData A; ROIData dataB[40];
+		int i = k.x - 1, j = k.y - 2, z = 0;
 
 		for (; z < 40; z++)
 		{
@@ -1345,7 +1353,7 @@ float angleangin(Mat after, Point2f k)
 			{
 				i++;
 				controlNum++;
-				if (controlNum > 5)
+				if (controlNum > 4)
 					break;
 			}
 		}//cv::imshow("角点", after2);
@@ -1368,11 +1376,11 @@ float angleangin(Mat after, Point2f k)
 	{
 		ROIData A; ROIData dataC[40];
 		int z = 0;
-		int i =k.x - 4, j = k.y + 2;
+		int i = k.x - 1, j = k.y + 5;
 
 		for (; z < 40; z++)
 		{
-			A = ROIset(after, i - 1, j + 10, 10, 10);//A = ROIset(g_pBinaryImage, i - 10, j - 20, 20, 20);
+			A = ROIset(after, i - 5, j + 2, 10, 10);//A = ROIset(g_pBinaryImage, i - 10, j - 20, 20, 20);
 			dataC[z] = A;
 			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰 
 				break;
@@ -1386,12 +1394,19 @@ float angleangin(Mat after, Point2f k)
 			}
 			//drawROI(g_pBinaryImage, i - 10, j - 10, 10, 10);
 			//cv::imshow("角点", g_pBinaryImage);
-			i = A.center.x; j = A.center.y;
+			i = A.center.x; j = A.center.y; int controlNum = 0;
+			while (after.at<uchar>(j, i) > 50)//为了降低杂点出现的情况
+			{
+				i++;
+				controlNum++;
+				if (controlNum > 4)
+					break;
+			}
 		}
 		float averge = 0;
 		if (z > 24 && z<43) //待调 ！！！
 		{
-			
+
 			for (int i = 0; i < z - 2; i++)
 			{
 				averge += dataC[i].theta;
@@ -1407,11 +1422,11 @@ float angleangin(Mat after, Point2f k)
 	{
 		ROIData A; ROIData dataD[40];
 		int z = 0;
-		int i = k.x , j = k.y -3;
+		int i = k.x, j = k.y - 3;
 
 		for (; z < 40; z++)
 		{
-			A = ROIset(after, i - 5, j + 10, 10, 10);//A = ROIset(g_pBinaryImage, i - 10, j - 20, 20, 20);
+			A = ROIset(after, i - 5, j + 2, 10, 10);//A = ROIset(g_pBinaryImage, i - 10, j - 20, 20, 20);
 			dataD[z] = A;
 			if (!(isnormal((float)A.center.x)) || !(isnormal((float)A.center.y)))//防止nan和-nan的干扰 
 				break;
@@ -1425,12 +1440,19 @@ float angleangin(Mat after, Point2f k)
 			}
 			//drawROI(g_pBinaryImage, i - 5, j + 10, 10, 10);
 			//cv::imshow("角点", g_pBinaryImage);
-			i = A.center.x; j = A.center.y;
+			i = A.center.x; j = A.center.y; int controlNum = 0;
+			while (after.at<uchar>(j, i) > 50)//为了降低杂点出现的情况
+			{
+				i--;
+				controlNum++;
+				if (controlNum > 4)
+					break;
+			}
 		}
 		float averge = 0;
 		if (z > 24 && z<43) //待调 ！！！
 		{
-			
+
 			for (int i = 0; i < z - 2; i++)
 			{
 				averge += dataD[i].theta;
@@ -1443,7 +1465,7 @@ float angleangin(Mat after, Point2f k)
 			return averge - 90;
 	}
 }
-		
+
 Mat ImageRotate(Mat src, Point2f center, double angle)
 {
 	//计算二维旋转的仿射变换矩阵  
@@ -1461,8 +1483,8 @@ Point2f getPointAffinedPos(Point2f src, Point2f center, double angle)
 	int y = src.y - center.y;
 	double angle1 = angle * CV_PI / 180;
 
-	dst.x = cvRound(x * cos(angle1) + y * sin(angle1) + center.x);
-	dst.y = cvRound(-x * sin(angle1) + y * cos(angle1) + center.y);
+	dst.x =x * cos(angle1) + y * sin(angle1) + center.x;
+	dst.y = -x * sin(angle1) + y * cos(angle1) + center.y;
 	return dst;
 }
 
@@ -1474,28 +1496,39 @@ Point2f getPointBack(Point2f src, Point2f center, double angle)
 	int y = src.y - center.y;
 	double angle1 = angle * CV_PI / 180;
 
-	dst.x = cvRound(x * cos(angle1) + y * sin(angle1) + center.x);
-	dst.y = cvRound(-x * sin(angle1) + y * cos(angle1) + center.y);
+	dst.x =x * cos(angle1) + y * sin(angle1) + center.x;
+	dst.y = -x * sin(angle1) + y * cos(angle1) + center.y;
 	return dst;
 }
 
-Point2f getPoint(Point2f src, Point2f center, double angle)
+Point2f getPoint(Point2f src, Point2f center, double angle, int flag)
 {
 	Point2f dst;
+	if (flag == 1)
+	{
+		float t = src.x;
+		src.x = -src.y;
+		src.y = t;
+	}
+	if (flag == 2)
+	{
+		float t = src.x;
+		src.x = src.y;
+		src.y =-t;
+	}
 	if (angle < 90) {
 		double angle1 = angle * CV_PI / 180;
 
-		dst.x = cvRound((-src.x - (src.y / tan(angle1)))*sin(angle1));
-		dst.y = cvRound(src.y / sin(angle1));
+		dst.x = (-src.x - (src.y / tan(angle1)))*sin(angle1);
+		dst.y = src.y / sin(angle1)- (src.y / tan(angle1)+src.x)*cos(angle1);
 		return dst;
 	}
 	if (angle > 90)
 	{
 		double angle1 = (angle-90) * CV_PI / 180;
 
-		dst.x = cvRound((src.y - (src.x / tan(angle1)))*sin(angle1));
-		//dst.y = cvRound(dst.x / tan(angle1)+ src.x/ sin(angle1));
-		dst.y = cvRound(src.x/ sin(angle1)+(src.y - src.x /tan(angle1))*cos(angle1));
+		dst.x = - (src.x-src.y* tan(angle1))*cos(angle1);
+		dst.y = src.y/cos(angle1)+(src.x - src.y *tan(angle1))*sin(angle1);
 		return dst;
 	}
 	else {
@@ -1526,8 +1559,8 @@ ROIData numbertest(Point2f k,Mat after) {
 		{
 			Mat roi = after(Rect(k.x - rec_width + 15, k.y - rec_width + 15, rec_width - 30, rec_width - 30));
 			 drawROI( after2, k.x - rec_width + 15, k.y - rec_width + 15, rec_width - 30, rec_width - 30);
-			////cv::imshow("src", after2);
-			////waitKey(0);
+			/*cv::imshow("src", after2);
+			waitKey(2000);*/
 			//int num=bSums(roi);
 			//if (num < dets)
 			{

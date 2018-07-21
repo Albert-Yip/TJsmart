@@ -8,10 +8,11 @@ using namespace cv;
 typedef struct
 {
     Point2f center;
+    Point2f center2;
     double theta;
 } ROIData;
 
-ROIData maindoCamera();
+ROIData maindoCamera(Point2f yuanxin, int orientation);
 ROIData maindoPicture();
 
 
