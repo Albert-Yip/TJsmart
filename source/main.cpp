@@ -182,11 +182,13 @@ void send_wall_1()
     	{
     		fourByteData[2] = fourByteData[2] * 2 - 1 ;
             turn_flag = 1;
+            fourByteData[0] = 'a';
     	}
     	else if (heading == 'd')
     	{
     		fourByteData[2] = fourByteData[2] * 2 + 1 ;//X = (X+-0.5)*2
             turn_flag = 2;
+            fourByteData[0] = 'd';
     	}
         else
             fourByteData[2] = fourByteData[2] * 2;
@@ -200,10 +202,12 @@ void send_wall_1()
         if(heading == 'w')
     	{
     		fourByteData[2] = fourByteData[2] *2 - 1 ;
+            fourByteData[0] = 'w';
     	}
     	else if (heading == 's')
     	{
     		fourByteData[2] = fourByteData[2] *2 + 1 ;//Y = (Y+-0.5)*2
+            fourByteData[0] = 's';
     	}
         else
             fourByteData[2] = fourByteData[2] * 2;
