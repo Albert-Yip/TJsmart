@@ -19,7 +19,7 @@ extern int show_flag;
 int turn_flag = 0;//turn 90 deg or not
 int sum_X=0, sum_Y=0;
 Point2f target_Point;
-int queen_path(int flag);
+int queen_path(int q_flag);
 void toChar_send_position(ROIData position_car);
 void toChar_send_path();
 void send_wall_1();
@@ -152,6 +152,8 @@ int main(int argc, char const *argv[])
 void send_coordinate(int n)
 {
     vector<Point2i> pointList;
+    char end_List[4]={'R','L','B','F'}; 
+
     cout<<"please input (x,y) for "<<n<<" times\n"; 
     for(int i=0;i<n;i++)
     {
@@ -180,9 +182,22 @@ void send_coordinate(int n)
         {
             fourByteData[0] = keyBoard;
             if(keyBoard=='a')
+            {
                 turn_flag = 1;
+                end_List[0] = 'B';
+                end_List[1] = 'F';
+                end_List[2] = 'L';
+                end_List[3] = 'R';
+            }
+
             else if(keyBoard=='d')
+            {
                 turn_flag = 2;
+                end_List[0] = 'F';
+                end_List[1] = 'B';
+                end_List[2] = 'R';
+                end_List[3] = 'L';                
+            }
         }
         
     }
@@ -205,21 +220,23 @@ void send_coordinate(int n)
     char end_fourByteData[4] = {0,0,0,'E'};
     int end_X = pointList[n-1].x;
     int end_Y = pointList[n-1].y;
+    
+    
     if(abs(end_X - 200) > abs(end_Y - 200))
     {
         //x is the chosen ending
         if(end_X - 200 > 0)
-            end_fourByteData[3]='R';//ascii: 82
+            end_fourByteData[3]=end_List[0];//ascii: 82
         else
-            end_fourByteData[3]='L';//ascii: 76
+            end_fourByteData[3]=end_List[1];//ascii: 76
     }
     else
     {
         //y is the chosen ending
         if(end_Y - 200 > 0)
-            end_fourByteData[3]='B';//ascii: 66
+            end_fourByteData[3]=end_List[2];//ascii: 66
         else
-            end_fourByteData[3]='F';//ascii: 70
+            end_fourByteData[3]=end_List[3];//ascii: 70
     }
     uart_send_charList(end_fourByteData,4);
 }
@@ -386,12 +403,12 @@ void send_chess_n(int n)
     uart_send_charList(end_fourByteData,4);
 }
 
-int queen_path(int flag)
+int queen_path(int q_flag)
 {
     clock_t start, end;
     start = clock();
 
-    input_position(flag);
+    input_position(q_flag);
 
     read_and_match();
     NUM = 8 - max_coincide;
