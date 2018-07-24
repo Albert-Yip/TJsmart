@@ -25,6 +25,7 @@ void toChar_send_path();
 void send_wall_1();
 void send_chess_n(int n);
 void one_time_move();
+void send_coordinate(int n);
 
 int main(int argc, char const *argv[])
 {
@@ -32,10 +33,16 @@ int main(int argc, char const *argv[])
     if(argc != 3)
     {
         
-        printf("Usage: %s 3/2/1/0(chess or wall/queen test/input/not) 1/0(for cam) \n",argv[0]);
+        printf("Usage: %s 4/3/2/1/0(added/chess or wall/queen test/input/not) 1/0(for cam) \n",argv[0]);
         return 0;
     }
-    if(strcmp(argv[1],"3") == 0)//for chess or wall, move one time
+    if(strcmp(argv[1],"4") == 0)
+    {
+        printf("please input n (how many steps you wanna go): \n");
+        scanf("%d",&n);
+        send_coordinate(n);
+    }
+    else if(strcmp(argv[1],"3") == 0)//for chess or wall, move one time
     {
     	one_time_move();
         n = 5;// 暂定一次最多处理5*300=1500张图片
@@ -59,8 +66,8 @@ int main(int argc, char const *argv[])
 
     //while(1);
 
-    printf("\n\nnow waiting for the 5604:  and the right answer is %d,%d\n",sum_X,sum_Y);
-    uart_read_charFour();
+    // printf("\n\nnow waiting for the 5604:  and the right answer is %d,%d\n",sum_X,sum_Y);
+    // uart_read_charFour();
 
     // char fourByteDataX[4] = {0,0,100,'x'};
     // char fourByteDataY[4] = {0,0,100,'y'};
@@ -74,7 +81,7 @@ int main(int argc, char const *argv[])
     //     sleep(2);
     // }
 
-    //while(1);
+    while(1);
 
 
     show_flag = 1;
@@ -142,6 +149,80 @@ int main(int argc, char const *argv[])
     }
 }
 
+void send_coordinate(int n)
+{
+    vector<Point2i> pointList;
+    cout<<"please input (x,y) for "<<n<<" times\n"; 
+    for(int i=0;i<n;i++)
+    {
+        Point2i temp;
+        cin>>temp.x>>temp.y;
+        pointList.push_back(temp);
+    }
+    char fourByteData[4] = {0,0,n,'c'};
+
+    cout<<"wanna adjust heading? press Enter to continue, or heading:\n";
+    char keyBoard;
+    keyBoard=cin.get();
+    //cout<<keyBoard;
+    keyBoard=cin.get();
+
+    if(keyBoard!='\n')
+    {
+        if(keyBoard == '2')
+        {
+            cout<<"input heading "<<n<<" times for each move\n";
+            // char* headList;
+            // headList = (char*) malloc(n*sizeof(char));
+            cout<<"Sorry, this function is not finished yet!\n";
+        }
+        else
+        {
+            fourByteData[0] = keyBoard;
+            if(keyBoard=='a')
+                turn_flag = 1;
+            else if(keyBoard=='d')
+                turn_flag = 2;
+        }
+        
+    }
+
+    
+    uart_send_charList(fourByteData,4);
+    //char fourByteData[4] = {0,0,0,0};
+    for(int i=0;i<n;i++)
+    {
+        fourByteData[1] = pointList[i].x>>8;
+        fourByteData[2] = pointList[i].x;
+        fourByteData[3] = 'x';
+        uart_send_charList(fourByteData,4);
+        fourByteData[1] = pointList[i].y>>8;
+        fourByteData[2] = pointList[i].y;
+        fourByteData[3] = 'y';
+        uart_send_charList(fourByteData,4);
+    }
+    //the end point
+    char end_fourByteData[4] = {0,0,0,'E'};
+    int end_X = pointList[n-1].x;
+    int end_Y = pointList[n-1].y;
+    if(abs(end_X - 200) > abs(end_Y - 200))
+    {
+        //x is the chosen ending
+        if(end_X - 200 > 0)
+            end_fourByteData[3]='R';//ascii: 82
+        else
+            end_fourByteData[3]='L';//ascii: 76
+    }
+    else
+    {
+        //y is the chosen ending
+        if(end_Y - 200 > 0)
+            end_fourByteData[3]='B';//ascii: 66
+        else
+            end_fourByteData[3]='F';//ascii: 70
+    }
+    uart_send_charList(end_fourByteData,4);
+}
 
 void one_time_move()
 {
@@ -325,6 +406,7 @@ int queen_path(int flag)
 
 void toChar_send_position(ROIData position_car)
 {
+    
     char fourByteData[4] = {0,0,0,0};
     if(position_car.center2.x != 0 || position_car.center2.y != 0)
     {
