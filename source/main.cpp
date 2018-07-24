@@ -161,7 +161,7 @@ void send_coordinate(int n)
     }
     char fourByteData[4] = {0,0,n,'c'};
 
-    cout<<"wanna adjust heading? press Enter to continue, or heading:\n";
+    cout<<"wanna adjust heading? press Enter to continue, or input heading(awsd):\n";
     char keyBoard;
     keyBoard=cin.get();
     //cout<<keyBoard;
@@ -194,11 +194,11 @@ void send_coordinate(int n)
     {
         fourByteData[1] = pointList[i].x>>8;
         fourByteData[2] = pointList[i].x;
-        fourByteData[3] = 'x';
+        fourByteData[3] = 'j';
         uart_send_charList(fourByteData,4);
         fourByteData[1] = pointList[i].y>>8;
         fourByteData[2] = pointList[i].y;
-        fourByteData[3] = 'y';
+        fourByteData[3] = 'k';
         uart_send_charList(fourByteData,4);
     }
     //the end point
