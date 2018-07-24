@@ -81,7 +81,7 @@ int main(int argc, char const *argv[])
     //     sleep(2);
     // }
 
-    while(1);
+    //while(1);
 
 
     show_flag = 1;
