@@ -25,22 +25,24 @@ void toChar_send_path();
 void send_wall_1();
 void send_chess_n(int n);
 void one_time_move();
-void send_coordinate(int n);
+// void send_coordinate(int n);
+void send_coordinate();
+void SplitString(const std::string& s, std::vector<std::string>& v, const std::string& c);
 
 int main(int argc, char const *argv[])
 {
     int n = 0;
-    if(argc != 3)
+    if(argc != 2)
     {
         
-        printf("Usage: %s 4/3/2/1/0(added/chess or wall/queen test/input/not) 1/0(for cam) \n",argv[0]);
+        printf("Usage: %s 4/3/2/1/0(added/chess or wall/queen test/input/not) \n",argv[0]);
         return 0;
     }
     if(strcmp(argv[1],"4") == 0)
     {
-        printf("please input n (how many steps you wanna go): \n");
-        scanf("%d",&n);
-        send_coordinate(n);
+        // printf("please input n (how many steps you wanna go): \n");
+        // scanf("%d",&n);
+        send_coordinate();
     }
     else if(strcmp(argv[1],"3") == 0)//for chess or wall, move one time
     {
@@ -81,105 +83,93 @@ int main(int argc, char const *argv[])
     //     sleep(2);
     // }
 
-    //while(1);
+    while(1);
 
 
     show_flag = 1;
 
     printf("\n\n\n\nlocation send by uart:\n");
     ROIData position_car;
-    if(strcmp(argv[2],"0") == 1)//=1
+    
+    // if(strcmp(argv[2],"0") == 1)//=1
+    // {
+    printf("ready to go!\n");
+    VideoCapture cap;
+    VideoCapture cap2;
+    // VideoCapture cap3;
+    // VideoCapture cap4;
+    //while(1);
+    while(!cap.open(1));
+    while(!cap2.open(2));
+    // while(!cap3.open(3));//L
+    // while(!cap4.open(4));//R
+    int work_time = n*300;
+    while(work_time--)
     {
-        printf("ready to go!\n");
-        VideoCapture cap;
-        VideoCapture cap2;
-        // VideoCapture cap3;
-        // VideoCapture cap4;
-        //while(1);
-        while(!cap.open(1));
-        while(!cap2.open(2));
-        // while(!cap3.open(3));//L
-        // while(!cap4.open(4));//R
-        int work_time = n*300;
-        while(work_time--)
+        cap>>Image;
+        cap2>>Image2;
+        // cap3>>Image3;
+        // cap4>>Image4;
+
+        while (Image.empty())
         {
-            cap>>Image;
-            cap2>>Image2;
-            // cap3>>Image3;
-            // cap4>>Image4;
-
-            while (Image.empty())
-            {
-		        cap.open(1); cap>>Image;printf("cam open retrying");
-
-            }
-            while (Image2.empty())
-            {
-		        cap2.open(2); cap2>>Image2;printf("cam2 open retrying");
-                
-            }
-            // while (Image3.empty())
-            // {
-            //     cap3.open(3); cap>>Image3;printf("cam3 open retrying");
-
-            // }
-            // while (Image4.empty())
-            // {
-            //     cap4.open(4); cap2>>Image4;printf("cam4 open retrying");
-
-            // }
-            position_car = maindoCamera(target_Point,turn_flag);
-            if(position_car.center.x == 0 && position_car.center.y == 0 && position_car.theta == 0)
-             {
-                printf("nothing!\n");
-            }
-            else
-            {
-                toChar_send_position(position_car);                
-            }
+            cap.open(1); cap>>Image;printf("cam open retrying");
 
         }
-        //printf("%d\n",num );
-    }
-    else
-    {
-        // position_car = maindoPicture();
-        // toChar_send_position(position_car);
-        cout<<"hey!"<<endl;
-    }
-}
-
-void send_coordinate(int n)
-{
-    vector<Point2i> pointList;
-    char end_List[4]={'R','L','B','F'}; 
-
-    cout<<"please input (x,y) for "<<n<<" times\n"; 
-    for(int i=0;i<n;i++)
-    {
-        Point2i temp;
-        cin>>temp.x>>temp.y;
-        pointList.push_back(temp);
-    }
-    char fourByteData[4] = {0,0,n,'c'};
-
-    cout<<"wanna adjust heading? press Enter to continue, or input heading(awsd):\n";
-    char keyBoard;
-    keyBoard=cin.get();
-    //cout<<keyBoard;
-    keyBoard=cin.get();
-
-    if(keyBoard!='\n')
-    {
-        if(keyBoard == '2')
+        while (Image2.empty())
         {
-            cout<<"input heading "<<n<<" times for each move\n";
-            // char* headList;
-            // headList = (char*) malloc(n*sizeof(char));
-            cout<<"Sorry, this function is not finished yet!\n";
+            cap2.open(2); cap2>>Image2;printf("cam2 open retrying");
+            
+        }
+        // while (Image3.empty())
+        // {
+        //     cap3.open(3); cap>>Image3;printf("cam3 open retrying");
+
+        // }
+        // while (Image4.empty())
+        // {
+        //     cap4.open(4); cap2>>Image4;printf("cam4 open retrying");
+
+        // }
+        position_car = maindoCamera(target_Point,turn_flag);
+        if(position_car.center.x == 0 && position_car.center.y == 0 && position_car.theta == 0)
+            {
+            printf("nothing!\n");
         }
         else
         {
+            toChar_send_position(position_car);                
+        }
+
+    }
+        //printf("%d\n",num );
+    // }
+    // else
+    // {
+    //     // position_car = maindoPicture();
+    //     // toChar_send_position(position_car);
+    //     cout<<"hey!"<<endl;
+    // }
+}
+
+void send_coordinate()
+{
+    
+    char end_List[4]={'R','L','B','F'}; 
+    char fourByteData[4] = {0};
+	
+    cout<<"wanna adjust heading? press Enter to continue, or input heading(awsd):\n";
+    char keyBoard;
+    //cin.get();
+    //cout<<keyBoard;
+    
+    keyBoard=cin.get();
+
+
+
+    if(keyBoard!='\n')
+    {
+
             fourByteData[0] = keyBoard;
             if(keyBoard=='a')
             {
@@ -198,47 +188,174 @@ void send_coordinate(int n)
                 end_List[2] = 'R';
                 end_List[3] = 'L';                
             }
-        }
+        // }
         
     }
-
     
-    uart_send_charList(fourByteData,4);
-    //char fourByteData[4] = {0,0,0,0};
-    for(int i=0;i<n;i++)
+    int cw=0;
+    printf("move chess or wall? 0->chess/1->wall: \n");
+    scanf("%d",&cw);
+    //char c
+    if(!cw)//chess
     {
-        fourByteData[1] = pointList[i].x>>8;
-        fourByteData[2] = pointList[i].x;
-        fourByteData[3] = 'j';
-        uart_send_charList(fourByteData,4);
-        fourByteData[1] = pointList[i].y>>8;
-        fourByteData[2] = pointList[i].y;
-        fourByteData[3] = 'k';
-        uart_send_charList(fourByteData,4);
+        // flag = 1;        
+    	// send_chess_n(2);
+        cw = 'C';
     }
-    //the end point
-    char end_fourByteData[4] = {0,0,0,'E'};
-    int end_X = pointList[n-1].x;
-    int end_Y = pointList[n-1].y;
-    
-    
-    if(abs(end_X - 200) > abs(end_Y - 200))
+    else//wall
     {
-        //x is the chosen ending
-        if(end_X - 200 > 0)
-            end_fourByteData[3]=end_List[0];//ascii: 82
-        else
-            end_fourByteData[3]=end_List[1];//ascii: 76
+    	 send_wall_1();
+        cw = 'w';
+    }    
+    fourByteData[3] = (char)cw;
+    
+    cout<<"\nplease input position(1~64) with offset(awsd), f means ending:\n"\
+            "For example:\n10 14 d10 q38 d10 f36\n"; 
+
+    int position;
+    int offset = 0;
+    int motion_flag = -1;
+    int motion_step[2] = {100,100};
+    Point2i temp;
+    vector<Point2i> pointList;
+
+    string str;
+    cin.ignore(numeric_limits< std::streamsize>::max(),'\n');
+    getline(cin,str);
+    cout<<str<<endl;
+    if(str[0]!='\0')
+    {
+        vector<string> split_str;
+        SplitString(str,split_str," ");
+
+        for(int i=0;i<split_str.size();i++)
+        {
+            cout<< split_str[i]<<endl;
+            
+            switch (split_str[i][0])
+            {
+            
+                case 'a':
+                    split_str[i].erase(0,1);
+                    offset = stoi(split_str[i]);
+                    pointList.back().x -= offset;
+                    break;
+                case 'd':
+                    split_str[i].erase(0,1);
+                    offset = stoi(split_str[i]);
+                    pointList.back().x += offset;
+                    break;
+                case 'w':
+                    split_str[i].erase(0,1);
+                    offset = stoi(split_str[i]);
+                    pointList.back().y -= offset;
+                    break;
+                case 's':
+                    split_str[i].erase(0,1);
+                    offset = stoi(split_str[i]);
+                    pointList.back().y += offset;
+                    break;  
+                case 'q': // take the chess
+                    split_str[i].erase(0,1);
+
+                    motion_flag = 0;
+                    motion_step[0] = pointList.size();
+
+                    position = stoi(split_str[i]);
+                    
+                    temp.x = (position - 1) % 8 + 1;
+                    temp.x = 25 + 50 * (temp.x -1);
+                    temp.y = (position - 1) / 8 + 1;
+                    temp.y = 25 + 50 * (temp.y -1);
+                    pointList.push_back(temp);
+                    break;  
+                case 'f':// place the chess 
+                    split_str[i].erase(0,1);
+
+                    motion_flag = 1;
+                    motion_step[1] = pointList.size();
+
+                    position = stoi(split_str[i]);
+                    
+                    temp.x = (position - 1) % 8 + 1;
+                    temp.x = 25 + 50 * (temp.x -1);
+                    temp.y = (position - 1) / 8 + 1;
+                    temp.y = 25 + 50 * (temp.y -1);
+                    pointList.push_back(temp);
+                    break;        
+                default://is a num
+                    position = stoi(split_str[i]);
+                    
+                    temp.x = (position - 1) % 8 + 1;
+                    temp.x = 25 + 50 * (temp.x -1);
+                    temp.y = (position - 1) / 8 + 1;
+                    temp.y = 25 + 50 * (temp.y -1);
+                    pointList.push_back(temp);
+                    break;
+            }
+            
+        }
+
+
+        int n=pointList.size();
+        fourByteData[2] = n;
+
+        uart_send_charList(fourByteData,4);
+        //char fourByteData[4] = {0,0,0,0};
+        for(int i=0;i<n;i++)
+        {
+            
+            if(i == motion_step[0])//take the chess
+            {
+                fourByteData[0] = 'q';
+            }
+            else if(i == motion_step[1])// place the chess
+            {
+                fourByteData[0] = 'f';
+            }
+            else
+            {
+                fourByteData[0] = 'b';
+            }
+            fourByteData[1] = pointList[i].x>>8;
+            fourByteData[2] = pointList[i].x;
+            fourByteData[3] = 'j';
+            uart_send_charList(fourByteData,4);
+            fourByteData[1] = pointList[i].y>>8;
+            fourByteData[2] = pointList[i].y;
+            fourByteData[3] = 'k';
+            uart_send_charList(fourByteData,4);
+        }
+        //the end point
+        if(cw == 'C')
+        {
+            char end_fourByteData[4] = {0,0,0,'E'};
+            int end_X = pointList[n-1].x;
+            int end_Y = pointList[n-1].y;
+            
+            
+            if(abs(end_X - 200) > abs(end_Y - 200))
+            {
+                //x is the chosen ending
+                if(end_X - 200 > 0)
+                    end_fourByteData[3]=end_List[0];//ascii: 82
+                else
+                    end_fourByteData[3]=end_List[1];//ascii: 76
+            }
+            else
+            {
+                //y is the chosen ending
+                if(end_Y - 200 > 0)
+                    end_fourByteData[3]=end_List[2];//ascii: 66
+                else
+                    end_fourByteData[3]=end_List[3];//ascii: 70
+            }
+            uart_send_charList(end_fourByteData,4);     
+        }
+              
     }
     else
-    {
-        //y is the chosen ending
-        if(end_Y - 200 > 0)
-            end_fourByteData[3]=end_List[2];//ascii: 66
-        else
-            end_fourByteData[3]=end_List[3];//ascii: 70
-    }
-    uart_send_charList(end_fourByteData,4);
+        cout<< "go ahead to wall"<<endl;
 }
 
 void one_time_move()
@@ -354,7 +471,7 @@ void send_chess_n(int n)
     {
         scanf("%d",position+i);
     }
-    char fourByteData[4] = {0,0,n,'N'};
+    char fourByteData[4] = {0,0,char(n),'N'};
     uart_send_charList(fourByteData,4);
     for(int i=0;i<n;i++)
     {
@@ -461,7 +578,7 @@ void toChar_send_position(ROIData position_car)
 void toChar_send_path()
 {
 
-    char fourByteData[4] = {0,0,2*NUM,'N'};
+    char fourByteData[4] = {0,0,char(2*NUM),'N'};
     uart_send_charList(fourByteData,4);
 
 
@@ -519,6 +636,20 @@ void toChar_send_path()
 }
 
 
-
+void SplitString(const std::string& s, std::vector<std::string>& v, const std::string& c)
+{
+  std::string::size_type pos1, pos2;
+  pos2 = s.find(c);
+  pos1 = 0;
+  while(std::string::npos != pos2)
+  {
+    v.push_back(s.substr(pos1, pos2-pos1));
+ 
+    pos1 = pos2 + c.size();
+    pos2 = s.find(c, pos1);
+  }
+  if(pos1 != s.length())
+    v.push_back(s.substr(pos1));
+}
 
 

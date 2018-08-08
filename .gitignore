@@ -2,3 +2,5 @@ build/
 memory/
 .vscode/
 source/gyro/a.out
+source/a.out
+source/test.cpp
