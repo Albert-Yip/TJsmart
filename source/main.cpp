@@ -26,7 +26,7 @@ void send_wall_1();
 void send_chess_n(int n);
 void one_time_move();
 // void send_coordinate(int n);
-void send_coordinate();
+int send_coordinate();
 void SplitString(const std::string& s, std::vector<std::string>& v, const std::string& c);
 
 int main(int argc, char const *argv[])
@@ -42,7 +42,7 @@ int main(int argc, char const *argv[])
     {
         // printf("please input n (how many steps you wanna go): \n");
         // scanf("%d",&n);
-        send_coordinate();
+        n = send_coordinate();
     }
     else if(strcmp(argv[1],"3") == 0)//for chess or wall, move one time
     {
@@ -83,7 +83,7 @@ int main(int argc, char const *argv[])
     //     sleep(2);
     // }
 
-    while(1);
+    //while(1);
 
 
     show_flag = 1;
@@ -98,7 +98,7 @@ int main(int argc, char const *argv[])
     VideoCapture cap2;
     // VideoCapture cap3;
     // VideoCapture cap4;
-    //while(1);
+    // while(1);
     while(!cap.open(1));
     while(!cap2.open(2));
     // while(!cap3.open(3));//L
@@ -152,13 +152,13 @@ int main(int argc, char const *argv[])
     // }
 }
 
-void send_coordinate()
+int send_coordinate()
 {
     
     char end_List[4]={'R','L','B','F'}; 
     char fourByteData[4] = {0};
 	
-    cout<<"wanna adjust heading? press Enter to continue, or input heading(awsd):\n";
+    cout<<"wanna adjust heading? press Enter to continue, or input heading(a/d):\n";
     char keyBoard;
     //cin.get();
     //cout<<keyBoard;
@@ -171,6 +171,7 @@ void send_coordinate()
     {
 
             fourByteData[0] = keyBoard;
+            cin.ignore(numeric_limits< std::streamsize>::max(),'\n');
             if(keyBoard=='a')
             {
                 turn_flag = 1;
@@ -192,45 +193,47 @@ void send_coordinate()
         
     }
     
-    int cw=0;
-    printf("move chess or wall? 0->chess/1->wall: \n");
-    scanf("%d",&cw);
-    //char c
-    if(!cw)//chess
-    {
-        // flag = 1;        
-    	// send_chess_n(2);
-        cw = 'C';
-    }
-    else//wall
-    {
-    	 send_wall_1();
-        cw = 'w';
-    }    
-    fourByteData[3] = (char)cw;
+    // int cw=0;
+    // printf("move chess or wall? 0->chess/1->wall: \n");
+    // scanf("%d",&cw);
+    // //char c
+    // if(!cw)//chess
+    // {
+    //     // flag = 1;        
+    // 	// send_chess_n(2);
+    //     cw = 'C';
+    // }
+    // else//wall
+    // {
+    // 	 //send_wall_1();
+    //     cw = 'w';
+    // }    
+    // fourByteData[3] = (char)cw;
     
-    cout<<"\nplease input position(1~64) with offset(awsd), f means ending:\n"\
-            "For example:\n10 14 d10 q38 d10 f36\n"; 
+    cout<<"\nplease input position(1~64) with offset(awsd), f means ending, .*.* means wall:\n"\
+            "    For example:\n    chess:10 14 d10 q38 d10 f36\n     wall:36 12 w10 .14.15\n"; 
 
-    int position;
+    int number = 0;
+    int position,position2;
     int offset = 0;
-    int motion_flag = -1;
-    int motion_step[2] = {100,100};
-    Point2i temp;
+    //int motion_flag = -1;
+    int motion_step[3] = {100,100};
+    Point2i temp,temp2;
+    Point2f temp_f;
     vector<Point2i> pointList;
 
     string str;
-    cin.ignore(numeric_limits< std::streamsize>::max(),'\n');
+    // cin.ignore(numeric_limits< std::streamsize>::max(),'\n');
     getline(cin,str);
-    cout<<str<<endl;
-    if(str[0]!='\0')
-    {
-        vector<string> split_str;
+    //cout<<str<<endl;
+    // if(str[0]!='\0')
+    // {
+        vector<string> split_str, wall_str;
         SplitString(str,split_str," ");
-
+        //cout<<split_str.size()<<'\n';
         for(int i=0;i<split_str.size();i++)
         {
-            cout<< split_str[i]<<endl;
+           // cout<< split_str[i]<<endl;
             
             switch (split_str[i][0])
             {
@@ -258,7 +261,7 @@ void send_coordinate()
                 case 'q': // take the chess
                     split_str[i].erase(0,1);
 
-                    motion_flag = 0;
+                    //motion_flag = 0;
                     motion_step[0] = pointList.size();
 
                     position = stoi(split_str[i]);
@@ -272,7 +275,7 @@ void send_coordinate()
                 case 'f':// place the chess 
                     split_str[i].erase(0,1);
 
-                    motion_flag = 1;
+                    //motion_flag = 1;
                     motion_step[1] = pointList.size();
 
                     position = stoi(split_str[i]);
@@ -282,10 +285,51 @@ void send_coordinate()
                     temp.y = (position - 1) / 8 + 1;
                     temp.y = 25 + 50 * (temp.y -1);
                     pointList.push_back(temp);
-                    break;        
+                    break;    
+                case '.'://place the wall
+                    split_str[i].erase(0,1);
+                    SplitString(split_str[i],wall_str,".");
+                    //motion_flag = 2;
+                    motion_step[2] = pointList.size();
+
+                    position = stoi(wall_str[0]);
+                    //cout<<position<<",";
+                    position2 = stoi(wall_str[1]);
+                    //cout<<position2<<"\n";
+                    
+                    temp.x = (position - 1) % 8 + 1;
+                    temp.x = 25 + 50 * (temp.x -1);
+                    temp.y = (position - 1) / 8 + 1;
+                    temp.y = 25 + 50 * (temp.y -1);
+
+                    temp2.x = (position2 - 1) % 8 + 1;
+                    temp2.x = 25 + 50 * (temp2.x -1);
+                    temp2.y = (position2 - 1) / 8 + 1;
+                    temp2.y = 25 + 50 * (temp2.y -1);
+
+                    temp.x = (temp.x + temp2.x)/2;
+                    temp.y = (temp.y + temp2.y)/2;
+
+                    
+                    switch (turn_flag)
+                    {
+                        case 1:// a
+                            temp.x -=8;
+                            break;
+                        case 2://d
+                            temp.x +=8;
+                            break;
+                        default:
+                            temp.y -=8;
+                            break;
+                    }
+
+                    pointList.push_back(temp);
+                    break;
+
                 default://is a num
                     position = stoi(split_str[i]);
-                    
+                    //cout<<split_str[i]<<":here\n";
                     temp.x = (position - 1) % 8 + 1;
                     temp.x = 25 + 50 * (temp.x -1);
                     temp.y = (position - 1) / 8 + 1;
@@ -297,12 +341,13 @@ void send_coordinate()
         }
 
 
-        int n=pointList.size();
-        fourByteData[2] = n;
-
+        number=pointList.size();
+        //cout<<number<<'\n';
+        fourByteData[2] = number;
+        fourByteData[3] = 'C';
         uart_send_charList(fourByteData,4);
         //char fourByteData[4] = {0,0,0,0};
-        for(int i=0;i<n;i++)
+        for(int i=0;i<number;i++)
         {
             
             if(i == motion_step[0])//take the chess
@@ -312,6 +357,10 @@ void send_coordinate()
             else if(i == motion_step[1])// place the chess
             {
                 fourByteData[0] = 'f';
+            }
+            else if(i == motion_step[2])// place the chess
+            {
+                fourByteData[0] = 'w';
             }
             else
             {
@@ -327,35 +376,31 @@ void send_coordinate()
             uart_send_charList(fourByteData,4);
         }
         //the end point
-        if(cw == 'C')
+        
+        char end_fourByteData[4] = {0,0,0,'E'};
+        int end_X = pointList[number-1].x;
+        int end_Y = pointList[number-1].y;
+        
+        
+        if(abs(end_X - 200) > abs(end_Y - 200))
         {
-            char end_fourByteData[4] = {0,0,0,'E'};
-            int end_X = pointList[n-1].x;
-            int end_Y = pointList[n-1].y;
-            
-            
-            if(abs(end_X - 200) > abs(end_Y - 200))
-            {
-                //x is the chosen ending
-                if(end_X - 200 > 0)
-                    end_fourByteData[3]=end_List[0];//ascii: 82
-                else
-                    end_fourByteData[3]=end_List[1];//ascii: 76
-            }
+            //x is the chosen ending
+            if(end_X - 200 > 0)
+                end_fourByteData[3]=end_List[0];//ascii: 82
             else
-            {
-                //y is the chosen ending
-                if(end_Y - 200 > 0)
-                    end_fourByteData[3]=end_List[2];//ascii: 66
-                else
-                    end_fourByteData[3]=end_List[3];//ascii: 70
-            }
-            uart_send_charList(end_fourByteData,4);     
+                end_fourByteData[3]=end_List[1];//ascii: 76
         }
-              
-    }
-    else
-        cout<< "go ahead to wall"<<endl;
+        else
+        {
+            //y is the chosen ending
+            if(end_Y - 200 > 0)
+                end_fourByteData[3]=end_List[2];//ascii: 66
+            else
+                end_fourByteData[3]=end_List[3];//ascii: 70
+        }
+        uart_send_charList(end_fourByteData,4);     
+
+    return number;
 }
 
 void one_time_move()
