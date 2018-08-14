@@ -494,9 +494,9 @@ void send_wall_1()
         uart_send_charList(fourByteData,4,fd);
 
 
-        //sum_X += routeA[i].x;
+        //sum_X += routeA[min_route_index][i].x;
         sum_Y += fourByteData[2];
-        //sum_Y += routeA[i].y;
+        //sum_Y += routeA[min_route_index][i].y;
 
     }
     //the end point
@@ -549,9 +549,9 @@ void send_chess_n(int n)
         uart_send_charList(fourByteData,4,fd);
 
 
-        //sum_X += routeA[i].x;
+        //sum_X += routeA[min_route_index][i].x;
         sum_Y += fourByteData[2];
-        //sum_Y += routeA[i].y;
+        //sum_Y += routeA[min_route_index][i].y;
 
     }
     if(flag)
@@ -591,8 +591,17 @@ int queen_path(int q_flag)
 
     read_and_match();
     NUM = 8 - max_coincide;
-    routeA = (chessNode*) malloc(NUM * sizeof(chessNode));
-    routeB = (chessNode*) malloc(NUM * sizeof(chessNode));
+    // printf("he is here");
+    //while(1);
+	// for(int n=0;n<amount_coincidence;n++)
+    // {   
+    //     if(n<MAX_SOLUTION_AMOUNT)
+    //     {
+    //         // routeA[n] = (chessNode*) malloc(NUM * sizeof(chessNode));
+    //         // routeB[n] = (chessNode*) malloc(NUM * sizeof(chessNode));
+    //     }
+    // }
+    
     path();
 
     end = clock();
@@ -650,35 +659,35 @@ void toChar_send_path()
     }
     for(int i=0;i<NUM;i++)
     {
-        fourByteData[2] = routeB[i].x;//the chess
+        fourByteData[2] = routeB[min_route_index][i].x;//the chess
         fourByteData[3] = 'X';
         uart_send_charList(fourByteData,4,fd);
 
-        fourByteData[2] = routeB[i].y;
+        fourByteData[2] = routeB[min_route_index][i].y;
         fourByteData[3] = 'Y';
         uart_send_charList(fourByteData,4,fd);
 
-        fourByteData[2] = routeA[i].x;//the position
+        fourByteData[2] = routeA[min_route_index][i].x;//the position
         fourByteData[3] = 'X';
         uart_send_charList(fourByteData,4,fd);
         
-        fourByteData[2] = routeA[i].y;
+        fourByteData[2] = routeA[min_route_index][i].y;
         fourByteData[3] = 'Y';
         uart_send_charList(fourByteData,4,fd);
 
-        sum_X += routeB[i].x;
-        sum_X += routeA[i].x;
-        sum_Y += routeB[i].y;
-        sum_Y += routeA[i].y;
+        sum_X += routeB[min_route_index][i].x;
+        sum_X += routeA[min_route_index][i].x;
+        sum_Y += routeB[min_route_index][i].y;
+        sum_Y += routeA[min_route_index][i].y;
     }
 
     //the end point
     char end_fourByteData[4] = {0,0,0,'E'};
 
-    if(abs(routeA[NUM-1].x - 4.5) > abs(routeA[NUM-1].y - 4.5))
+    if(abs(routeA[min_route_index][NUM-1].x - 4.5) > abs(routeA[min_route_index][NUM-1].y - 4.5))
     {
         //x is the chosen ending
-        if(routeA[NUM-1].x - 4.5 > 0)
+        if(routeA[min_route_index][NUM-1].x - 4.5 > 0)
             end_fourByteData[3]='R';//ascii: 82
         else
             end_fourByteData[3]='L';//ascii: 76
@@ -686,7 +695,7 @@ void toChar_send_path()
     else
     {
         //y is the chosen ending
-        if(routeA[NUM-1].y - 4.5 > 0)
+        if(routeA[min_route_index][NUM-1].y - 4.5 > 0)
             end_fourByteData[3]='B';//ascii: 66
         else
             end_fourByteData[3]='F';//ascii: 70

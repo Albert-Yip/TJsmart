@@ -1,9 +1,12 @@
 #include "readfile_match.h"
-
+#include "vector"
 //global var
+using namespace std;
 
-chessNode chess[8],solution[8];//chess: the original positions; solution: the chosen solution
+chessNode chess[MAX_SOLUTION_AMOUNT][8],solution[MAX_SOLUTION_AMOUNT][8];//chess: the original positions; solution: the chosen solution
 int max_coincide = 0;//the sum of chess in the exact place
+int amount_coincidence = 0;
+// vector<vector<chessNode>> chess, solution;
 
 
 void read_and_match()
@@ -42,109 +45,130 @@ void read_and_match()
      *match the best solution and update solution[]
      **********************************/
     int coincide_n[92] = { 0 };
-    int max_Index = -1;
+    vector<int> max_Index;
+
     for (int i = 0; i < 92; i++)//第i个解
     {
         for (int n = 0; n < 8; n++)//原布局的第n个棋子
         {
-            if (all_Solution[i][chess[n].y] == chess[n].x)
+            if (all_Solution[i][chess[0][n].y] == chess[0][n].x)
                 coincide_n[i]++;
         }
         if (coincide_n[i] > max_coincide)
         {
             max_coincide = coincide_n[i];
-            max_Index = i;
+            max_Index.clear();
+            max_Index.push_back(i);
+        }
+        else if(coincide_n[i] == max_coincide)
+        {
+            max_Index.push_back(i);
         }
 
     }
+    amount_coincidence = max_Index.size();
+    printf("Amount of solution with the same coincident place: %d\n",amount_coincidence);
 
     //update
-    for(int i=0;i<8;i++)
-    {
-        solution[i].y = i+1;
-        solution[i].x=all_Solution[max_Index][i+1];
+    for(int n=0;n<amount_coincidence;n++)
+    {   
+        if(n<MAX_SOLUTION_AMOUNT)
+        {
+            for(int i=0;i<8;i++)
+            {
+                solution[n][i].y = i+1;
+                solution[n][i].x=all_Solution[max_Index[n]][i+1];
+            }            
+        }
+
     }
+    // for(int i=0;i<8;i++)
+    // {
+    //     solution[i].y = i+1;
+    //     solution[i].x=all_Solution[max_Index][i+1];
+    // }
 
     update_chess();
 
     /**********************************
      *test and show the result
      **********************************/
-    printf("\nchess originial place : \n");
-    for(int i=0;i<8;i++)
-    {
-        int num = chess[i].x + (chess[i].y-1)*8;
-        printf("%d ",num);
-    }
-    printf("\nchess target place : \n");
-    for(int i=0;i<8;i++)
-    {
-        int num = solution[i].x + (solution[i].y-1)*8;
-        printf("%d ",num);
-    }
 
-    printf("\n\nmax_Index = %d\n", max_Index);
-    printf("coincide = %d\n", max_coincide);
-
-
-    //show the result!
-    printf("     ");
-    for (int i = 1; i <= 8; i++)
-        printf("%d ", i);
-    printf("\n");
-    int flag_Display = 0;
-    for (int y = 1; y <= 8; y++)//y是行号
-    {
-        printf("  %d  ", y);
-        for (int x = 1; x <= 8; x++)//x是列号
+    for(int n=0;n<amount_coincidence;n++)
+    {   
+        if(n<MAX_SOLUTION_AMOUNT)
         {
-            for(int i=8 - max_coincide;i<8;i++)
-            {
-                if(x == chess[i].x && y == chess[i].y)//in the same place
-                {
-                    printf("@ ");
-                    flag_Display = 1;
-                    break;
-                }
-            }
-            if(!flag_Display)// have not displayed
-            {
-                for(int i=0;i<8-max_coincide;i++)
-                {
-                    if(x == chess[i].x && y == chess[i].y)//chess position
-                    {
-                        printf("C ");
-                        flag_Display = 1;
-                        break;
-                    }
-                }
 
-                if(!flag_Display)// have not displayed
-                {
-                    if (all_Solution[max_Index][y] == x)
-                    {
-                        printf("Q ");
-                    }
-                    else
-                    {
-                        printf(". ");
-                    }
-                }
+            printf("\nchess originial place : \n");
+            for(int i=0;i<8;i++)
+            {
+                int num = chess[n][i].x + (chess[n][i].y-1)*8;
+                printf("%d ",num);
             }
-            flag_Display = 0;
+            printf("\nchess target place : \n");
+            for(int i=0;i<8;i++)
+            {
+                int num = solution[n][i].x + (solution[n][i].y-1)*8;
+                printf("%d ",num);
+            }
 
-            // if (all_Solution[max_Index][y] == x)
-            // {
-            //     printf("Q ");
-            // }
-            // else
-            // {
-            //     printf(". ");
-            // }
+            printf("\n\nmax_Index = %d\n", max_Index[n]);
+            printf("coincide = %d\n", max_coincide);
+
+
+            //show the result!
+            printf("     ");
+            for (int i = 1; i <= 8; i++)
+                printf("%d ", i);
+            printf("\n");
+            int flag_Display = 0;
+            for (int y = 1; y <= 8; y++)//y是行号
+            {
+                printf("  %d  ", y);
+                for (int x = 1; x <= 8; x++)//x是列号
+                {
+                    for(int i=8 - max_coincide;i<8;i++)
+                    {
+                        if(x == chess[n][i].x && y == chess[n][i].y)//in the same place
+                        {
+                            printf("@ ");
+                            flag_Display = 1;
+                            break;
+                        }
+                    }
+                    if(!flag_Display)// have not displayed
+                    {
+                        for(int i=0;i<8-max_coincide;i++)
+                        {
+                            if(x == chess[n][i].x && y == chess[n][i].y)//chess position
+                            {
+                                printf("C ");
+                                flag_Display = 1;
+                                break;
+                            }
+                        }
+
+                        if(!flag_Display)// have not displayed
+                        {
+                            if (all_Solution[max_Index[n]][y] == x)
+                            {
+                                printf("Q ");
+                            }
+                            else
+                            {
+                                printf(". ");
+                            }
+                        }
+                    }
+                    flag_Display = 0;
+
+
+                }
+                printf("\n");
+            }
         }
-        printf("\n");
     }
-
+    // printf("read and match finished\n");
 
 }
 
@@ -162,21 +186,29 @@ void input_position(bool flag)
             //scanf("%d%d", &chess[i].x, &chess[i].y);
             int position = 0;
             scanf("%d",&position);
-            chess[i].x = (position - 1) % 8 + 1;
-            chess[i].y = (position - 1) / 8 + 1;
-            //chess[i].match = NULL;
+            for(int j=0;j<MAX_SOLUTION_AMOUNT;j++)
+            {
+                chess[j][i].x = (position - 1) % 8 + 1;
+                chess[j][i].y = (position - 1) / 8 + 1;
+                //chess[i].match = NULL;
+            }
+
 
 
         }
     }
     else
     {
-        int position[8] = {12,19,56,44,23,5,33,39};
+        // int position[8] = {12,19,56,44,23,5,33,39};
+        int position[8] = {12,45,62,25,29,36,49,22};
         for (int i = 0; i < 8; i++)
         {
-            chess[i].x = (position[i] - 1) % 8 + 1;
-            chess[i].y = (position[i] - 1) / 8 + 1;
-            //chess[i].match = NULL;
+            for(int j=0;j<MAX_SOLUTION_AMOUNT;j++)
+            {          
+                chess[j][i].x = (position[i] - 1) % 8 + 1;
+                chess[j][i].y = (position[i] - 1) / 8 + 1;
+                //chess[i].match = NULL;
+            }
         }
     }
 }
@@ -189,25 +221,27 @@ void update_chess()
 {
     chessNode temp;
     //int a = 0;
-    for(int i=7;i>=0;i--)
-    {
-        for(int j=7;j>=0;j--)
+    for(int n=0;n<amount_coincidence;n++)
+    {   
+        if(n<MAX_SOLUTION_AMOUNT)
         {
-
-            if(chess[i].x == solution[j].x && chess[i].y == solution[j].y)
+            for(int i=7;i>=0;i--)
             {
-                place_behind(chess,i);
-                place_behind(solution,j);
+                for(int j=7;j>=0;j--)
+                {
 
-                //a++;
-                break;
+                    if(chess[n][i].x == solution[n][j].x && chess[n][i].y == solution[n][j].y)
+                    {
+                        place_behind(chess[n],i);
+                        place_behind(solution[n],j);
+
+                        //a++;
+                        break;
+                    }
+                }
             }
         }
     }
-    // if(a!=max_coincide)
-    // {
-    //     printf("update failed!!!!!\na = %d",a);
-    // }
 }
 
 void place_behind(chessNode a[], int i)
