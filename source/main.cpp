@@ -18,6 +18,7 @@ extern int show_flag;
 
 int turn_flag = 0;//turn 90 deg or not
 int sum_X=0, sum_Y=0;
+int fd;
 Point2f target_Point;
 int queen_path(int q_flag);
 void toChar_send_position(ROIData position_car);
@@ -31,6 +32,17 @@ void SplitString(const std::string& s, std::vector<std::string>& v, const std::s
 
 int main(int argc, char const *argv[])
 {
+    // init uart
+    char addr[] = "/dev/ttyUSB0";
+    int err;
+    fd = UART0_Open(fd,addr); //打开串口，返回文件描述符
+    do
+    {
+        err = UART0_Init(fd,9600,0,8,1,'N');
+        printf("Set Port Exactly!\n");
+    }while(-1 == err || -1 == fd);
+    // end of init uart
+
     int n = 0;
     if(argc != 2)
     {
@@ -78,12 +90,12 @@ int main(int argc, char const *argv[])
     // {
     //     fourByteDataX[2] -= 5*i;
     //     fourByteDataY[2] += 5*i;
-    //     uart_send_charList(fourByteDataX,4);
-    //     uart_send_charList(fourByteDataY,4);
+    //     uart_send_charList(fourByteDataX,4,fd);
+    //     uart_send_charList(fourByteDataY,4,fd);
     //     sleep(2);
     // }
 
-    //while(1);
+    while(1);
 
 
     show_flag = 1;
@@ -106,6 +118,10 @@ int main(int argc, char const *argv[])
     int work_time = n*300;
     while(work_time--)
     {
+        cap.set(CV_CAP_PROP_AUTOFOCUS,0);
+        cap2.set(CV_CAP_PROP_AUTOFOCUS,0);
+        cap.set(CV_CAP_PROP_FOCUS,65);
+        cap2.set(CV_CAP_PROP_FOCUS,83);
         cap>>Image;
         cap2>>Image2;
         // cap3>>Image3;
@@ -150,6 +166,7 @@ int main(int argc, char const *argv[])
     //     // toChar_send_position(position_car);
     //     cout<<"hey!"<<endl;
     // }
+    close(fd);
 }
 
 int send_coordinate()
@@ -217,7 +234,7 @@ int send_coordinate()
     int position,position2;
     int offset = 0;
     //int motion_flag = -1;
-    int motion_step[3] = {100,100};
+    int motion_step[3] = {100,100,100};
     Point2i temp,temp2;
     Point2f temp_f;
     vector<Point2i> pointList;
@@ -345,7 +362,7 @@ int send_coordinate()
         //cout<<number<<'\n';
         fourByteData[2] = number;
         fourByteData[3] = 'C';
-        uart_send_charList(fourByteData,4);
+        uart_send_charList(fourByteData,4,fd);
         //char fourByteData[4] = {0,0,0,0};
         for(int i=0;i<number;i++)
         {
@@ -369,11 +386,11 @@ int send_coordinate()
             fourByteData[1] = pointList[i].x>>8;
             fourByteData[2] = pointList[i].x;
             fourByteData[3] = 'j';
-            uart_send_charList(fourByteData,4);
+            uart_send_charList(fourByteData,4,fd);
             fourByteData[1] = pointList[i].y>>8;
             fourByteData[2] = pointList[i].y;
             fourByteData[3] = 'k';
-            uart_send_charList(fourByteData,4);
+            uart_send_charList(fourByteData,4,fd);
         }
         //the end point
         
@@ -398,7 +415,7 @@ int send_coordinate()
             else
                 end_fourByteData[3]=end_List[3];//ascii: 70
         }
-        uart_send_charList(end_fourByteData,4);     
+        uart_send_charList(end_fourByteData,4,fd);     
 
     return number;
 }
@@ -435,7 +452,7 @@ void send_wall_1()
     printf("the heading is %c\n",heading);
 
     char fourByteData[4] = {heading,0,0,'W'};
-    uart_send_charList(fourByteData,4);
+    uart_send_charList(fourByteData,4,fd);
     for(int i=0;i<2;i++)
     {
 
@@ -456,7 +473,7 @@ void send_wall_1()
             fourByteData[2] = fourByteData[2] * 2;
 
         fourByteData[3] = 'X';
-        uart_send_charList(fourByteData,4);
+        uart_send_charList(fourByteData,4,fd);
 
         sum_X += fourByteData[2];
 
@@ -474,7 +491,7 @@ void send_wall_1()
         else
             fourByteData[2] = fourByteData[2] * 2;
         fourByteData[3] = 'Y';
-        uart_send_charList(fourByteData,4);
+        uart_send_charList(fourByteData,4,fd);
 
 
         //sum_X += routeA[i].x;
@@ -504,7 +521,7 @@ void send_wall_1()
     // }
     char end_fourByteData[4] = {0,0,0,'E'};
     end_fourByteData[3]='B';//ascii: 66
-    uart_send_charList(end_fourByteData,4);
+    uart_send_charList(end_fourByteData,4,fd);
 }
 
 void send_chess_n(int n)
@@ -517,19 +534,19 @@ void send_chess_n(int n)
         scanf("%d",position+i);
     }
     char fourByteData[4] = {0,0,char(n),'N'};
-    uart_send_charList(fourByteData,4);
+    uart_send_charList(fourByteData,4,fd);
     for(int i=0;i<n;i++)
     {
 
         fourByteData[2] = (*(position+i) - 1) % 8 + 1;
         fourByteData[3] = 'X';
-        uart_send_charList(fourByteData,4);
+        uart_send_charList(fourByteData,4,fd);
 
         sum_X += fourByteData[2];
 
         fourByteData[2] = (*(position+i) - 1) / 8 + 1;
         fourByteData[3] = 'Y';
-        uart_send_charList(fourByteData,4);
+        uart_send_charList(fourByteData,4,fd);
 
 
         //sum_X += routeA[i].x;
@@ -562,7 +579,7 @@ void send_chess_n(int n)
         else
             end_fourByteData[3]='F';//ascii: 70
     }
-    uart_send_charList(end_fourByteData,4);
+    uart_send_charList(end_fourByteData,4,fd);
 }
 
 int queen_path(int q_flag)
@@ -592,11 +609,11 @@ void toChar_send_position(ROIData position_car)
         fourByteData[1] = (int)position_car.center2.x>>8;
         fourByteData[2] = (int)position_car.center2.x;
         fourByteData[3] = 'p';
-        uart_send_charList(fourByteData,4);
+        uart_send_charList(fourByteData,4,fd);
         fourByteData[1] = (int)position_car.center2.y>>8;
         fourByteData[2] = (int)position_car.center2.y;
         fourByteData[3] = 'q';
-        uart_send_charList(fourByteData,4);
+        uart_send_charList(fourByteData,4,fd);
     }
     int p_x = (int)position_car.center.x;
     int p_y = (int)position_car.center.y;
@@ -606,17 +623,17 @@ void toChar_send_position(ROIData position_car)
     fourByteData[1] = p_x>>8;
     fourByteData[2] = p_x;
     fourByteData[3] = 'x';
-    uart_send_charList(fourByteData,4);
+    uart_send_charList(fourByteData,4,fd);
 
     fourByteData[1] = p_y>>8;
     fourByteData[2] = p_y;
     fourByteData[3] = 'y';
-    uart_send_charList(fourByteData,4);
+    uart_send_charList(fourByteData,4,fd);
 
     fourByteData[1] = p_theta>>8;
     fourByteData[2] = p_theta;
     fourByteData[3] = 'a';
-    uart_send_charList(fourByteData,4);
+    uart_send_charList(fourByteData,4,fd);
 
 }
 
@@ -624,7 +641,7 @@ void toChar_send_path()
 {
 
     char fourByteData[4] = {0,0,char(2*NUM),'N'};
-    uart_send_charList(fourByteData,4);
+    uart_send_charList(fourByteData,4,fd);
 
 
     for(int i=0;i<4;i++)
@@ -635,19 +652,19 @@ void toChar_send_path()
     {
         fourByteData[2] = routeB[i].x;//the chess
         fourByteData[3] = 'X';
-        uart_send_charList(fourByteData,4);
+        uart_send_charList(fourByteData,4,fd);
 
         fourByteData[2] = routeB[i].y;
         fourByteData[3] = 'Y';
-        uart_send_charList(fourByteData,4);
+        uart_send_charList(fourByteData,4,fd);
 
         fourByteData[2] = routeA[i].x;//the position
         fourByteData[3] = 'X';
-        uart_send_charList(fourByteData,4);
+        uart_send_charList(fourByteData,4,fd);
         
         fourByteData[2] = routeA[i].y;
         fourByteData[3] = 'Y';
-        uart_send_charList(fourByteData,4);
+        uart_send_charList(fourByteData,4,fd);
 
         sum_X += routeB[i].x;
         sum_X += routeA[i].x;
@@ -674,7 +691,7 @@ void toChar_send_path()
         else
             end_fourByteData[3]='F';//ascii: 70
     }
-    uart_send_charList(end_fourByteData,4);
+    uart_send_charList(end_fourByteData,4,fd);
 
 
 

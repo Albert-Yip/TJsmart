@@ -6,6 +6,7 @@
 #include <iostream>
 #include <time.h>
 #include "global_var.h"
+#include "math.h"
 using namespace std;
 
 void path();

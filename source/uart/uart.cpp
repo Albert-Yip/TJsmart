@@ -319,32 +319,32 @@ int UART0_Send(int fd, char *send_buf,int data_len)
 
 
 
-void uart_send_charList(char* send_data,int data_len)
+void uart_send_charList(char* send_data,int data_len,int fd)
 {
-    int fd;                            //文件描述符
-    int err;                           //返回调用函数的状态
+    // int fd;                            //文件描述符
+    // int err;                           //返回调用函数的状态
     int len;
     //char rcv_buf[100];
     //char send_buf[20]="tiger john";
 
 
-    char addr[] = "/dev/ttyUSB0";
+    // char addr[] = "/dev/ttyUSB0";
 
-    fd = UART0_Open(fd,addr); //打开串口，返回文件描述符
-    do
-    {
-        err = UART0_Init(fd,9600,0,8,1,'N');
-        //printf("Set Port Exactly!\n");
-    }while(FALSE == err || FALSE == fd);
+    // fd = UART0_Open(fd,addr); //打开串口，返回文件描述符
+    // do
+    // {
+    //     err = UART0_Init(fd,9600,0,8,1,'N');
+    //     //printf("Set Port Exactly!\n");
+    // }while(FALSE == err || FALSE == fd);
 
 
     len = UART0_Send(fd,send_data,data_len);
     if(len <= 0)
         printf("send data failed!\n\n");
 
-    usleep(10000);//10ms
+    usleep(5000);//5ms
 
-    UART0_Close(fd);
+    // UART0_Close(fd);
 
 }
 

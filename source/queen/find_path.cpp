@@ -3,7 +3,7 @@
 
 //global var
 static int n = 0;//全排列计数
-static int minDist = 65535;
+static double minDist = 5000.0;
 #define START_POINT_X 4
 #define START_POINT_Y 9
 int NUM = 8;//will be changed in main
@@ -18,6 +18,14 @@ void swap(chessNode *a, chessNode *b)
 	*b = m;
 }
 
+double dist_count(int x1, int x2, int y1, int y2)
+{
+	double d_x_2,d_y_2;
+	d_x_2 = (x1-x2)*(x1-x2);
+	d_y_2 = (y1-y2)*(y1-y2);
+	return sqrt(d_x_2+d_y_2);
+}
+
 void perm(chessNode list[], int low, int high,int low2, chessNode list2[])//list[] for solution; list2[] for chess.
 {
 	int i,j;
@@ -27,12 +35,19 @@ void perm(chessNode list[], int low, int high,int low2, chessNode list2[])//list
 		{//perm has been done two times for two list.
 
 			n++;
-			int newDist = abs(list2[0].x - START_POINT_X) + abs(list2[0].y - START_POINT_Y);//起点到第一个棋子距离
+			// int newDist = abs(list2[0].x - START_POINT_X) + abs(list2[0].y - START_POINT_Y);//起点到第一个棋子距离
+			// for (i = 0; i <= high-1; i++)
+			// {
+			// 	newDist += abs(list2[i].x - list[i].x) + abs(list2[i].y - list[i].y)+ abs(list2[i+1].x - list[i].x) + abs(list2[i+1].y - list[i].y);
+			// }
+			// newDist += abs(list2[high].x - list[high].x) + abs(list2[high].y - list[high].y);
+
+			double newDist = dist_count(START_POINT_X,list2[0].x,START_POINT_Y,list2[0].y);//起点到第一个棋子距离
 			for (i = 0; i <= high-1; i++)
 			{
-				newDist += abs(list2[i].x - list[i].x) + abs(list2[i].y - list[i].y)+ abs(list2[i+1].x - list[i].x) + abs(list2[i+1].y - list[i].y);
+				newDist += dist_count(list2[i].x , list[i].x , list2[i].y , list[i].y) + dist_count(list2[i+1].x , list[i].x , list2[i+1].y , list[i].y);
 			}
-			newDist += abs(list2[high].x - list[high].x) + abs(list2[high].y - list[high].y);
+			newDist += dist_count(list2[high].x , list[high].x , list2[high].y , list[high].y);
 
 			/*
 			 *
@@ -136,6 +151,20 @@ void path()
 // 	perm(chess, 0, NUM-1,0,solution);
 // 	//cout << "total:" << n <<","<<n2<< endl;
 // 	cout << "minDistance = " << minDist << endl;
+// 	cout << "(0,0)" << endl;
+// 	for (int i = 0; i <= NUM-1; i++)
+// 	{
+// 		cout << " (" << routeB[i].x << "," << routeB[i].y << ") " ;
+// 		cout << " (" << routeA[i].x << "," << routeA[i].y << ") " << endl;
+// 	}
+// 	cout << n <<endl;
+// 	//
+// 	end = clock();
+// 	printf("time=%f\n", (double)(end - start) / CLOCKS_PER_SEC);
+// 	//system("pause");
+// 	return 0;
+// }
+
 // 	cout << "(0,0)" << endl;
 // 	for (int i = 0; i <= NUM-1; i++)
 // 	{
